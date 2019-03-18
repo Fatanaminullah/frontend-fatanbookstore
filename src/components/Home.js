@@ -6,7 +6,8 @@ import ProductItems from './ProductItems';
 class Home extends Component {
     state = {
         products: [],
-        search:[]
+        productSearch:[],
+        onType: ""
     }
 
     componentDidMount() {
@@ -24,7 +25,8 @@ class Home extends Component {
         const search = this.inputSearch.value
         console.log(search);
         this.setState({
-            products: this.state.products.filter(product =>{
+            onType: search,
+            productSearch: this.state.products.filter(product =>{
                 if(search !== ''){
                     return (
                         product.name.toLowerCase().includes(search) || product.desc.toLowerCase().includes(search)       
@@ -41,7 +43,8 @@ class Home extends Component {
         const priceMax = this.maxPrice.value
         console.log(priceMin);
         this.setState({
-            products: this.state.products.filter(product =>{
+            onType: priceMax + priceMin,
+            productSearch: this.state.products.filter(product =>{
                 if(priceMin !== '' && priceMax !== ''){
                     console.log(product.price);
                     return( product.price >= parseInt(priceMin) && product.price <= parseInt(priceMax))
@@ -54,11 +57,19 @@ class Home extends Component {
     }
 
     renderList = () => {
-        return this.state.products.map(items => {
-            return (
-                <ProductItems item={items} />
-            )
-        })
+        if(this.state.onType !== ""){
+            return this.state.productSearch.map(items =>{
+                return (
+                    <ProductItems item={items} />
+                )
+            })
+        }else{
+            return this.state.products.map(items => {
+                return (
+                    <ProductItems item={items} />
+                )
+            })
+        }
     }
 
     render() {
@@ -82,9 +93,9 @@ class Home extends Component {
                                 Filter by Price
                     </div>
                             <div className="card-body">
-                                <input ref={input => this.minPrice = input} className="form-control" placeholder="Minimum" onKeyUp={this.filterPrice}></input>
+                                <input ref={input => this.minPrice = input} type="number" className="form-control" placeholder="Min" onKeyUp={this.filterPrice}></input>
                                 <h5 className="text-center">~</h5>
-                                <input ref={input => this.maxPrice = input} className="form-control" placeholder="Maximum" onKeyUp={this.filterPrice}></input>
+                                <input ref={input => this.maxPrice = input} type="number" className="form-control" placeholder="Max" onKeyUp={this.filterPrice}></input>
                                 {/* <button className="btn btn-secondary btn-block my-3">Search a Product!</button> */}
                             </div>
 

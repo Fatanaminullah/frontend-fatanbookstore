@@ -19,10 +19,10 @@ class Header extends Component {
                             </button>
 
                             <div className="collapse navbar-collapse row p-2" id="navbarNav2">
-                                <form className="input-group col-12 col-md-7 ml-auto">
+                                {/* <form className="input-group col-12 col-md-7 ml-auto">
                                     <input type="text" className="form-control mr-2" placeholder="Search" />
                                     <button className="btn btn-outline-success">Search</button>
-                                </form>
+                                </form> */}
                                 <ul className="navbar-nav col-12 col-md-5">
                                     <li className="nav-item m-2 ml-auto">
 
@@ -54,12 +54,11 @@ class Header extends Component {
                             <button className="navbar-toggler" data-toggle="collapse" data-target="#navbarNav2">
                                 <span className="navbar-toggler-icon"></span>
                             </button>
-
                             <div className="collapse navbar-collapse row p-2" id="navbarNav2">
-                                <form className="input-group col-12 col-md-7 ml-auto">
+                                {/* <form className="input-group col-12 col-md-7 ml-auto">
                                     <input type="text" className="form-control mr-2" placeholder="Search" />
                                     <button className="btn btn-outline-success">Search</button>
-                                </form>
+                                </form> */}
                                 <ul className="navbar-nav ml-auto col-12 col-md-5">
                                 <li className="nav-item m-2 ml-auto">
                                 </li>
