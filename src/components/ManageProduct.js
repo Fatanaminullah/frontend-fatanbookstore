@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
-import {Redirect} from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 
 class ManageProduct extends Component {
@@ -17,7 +17,7 @@ class ManageProduct extends Component {
     getProduct = () => {
         axios.get('http://localhost:1996/product')
             .then(res => {
-                this.setState({ product: res.data, selectedID: 0})
+                this.setState({ product: res.data, selectedID: 0 })
             })
     }
     saveEdit = (id) => {
@@ -29,11 +29,11 @@ class ManageProduct extends Component {
             name: name,
             desc: desc,
             price: price,
-            pict:pict
+            pict: pict
         }).then(() => {
             this.getProduct()
         })
-}
+    }
     editProduct = (id) => {
         this.setState({ selectedID: id })
     }
@@ -59,7 +59,7 @@ class ManageProduct extends Component {
             this.getProduct()
         })
     }
-    
+
 
     renderList = () => {
         return this.state.product.map(item => {
@@ -78,26 +78,26 @@ class ManageProduct extends Component {
                     </tr>
                 )
             } else {
-                return(
+                return (
                     <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td>
-                        <input className="form-control" ref={input => {this.editName = input}} type="text" defaultValue={item.name}/>
-                    </td>
-                    <td>
-                        <input className="form-control" ref={input => {this.editDesc = input}} type="text" defaultValue={item.desc}/>
-                    </td>
-                    <td>
-                        <input className="form-control" ref={input => {this.editPrice = input}} type="text" defaultValue={item.price}/>
-                    </td>
-                    <td>
-                        <input className="form-control" ref={input => {this.editPict = input}} type="text" defaultValue={item.pict}/>
-                    </td>
-                    <td>
-                        <button onClick={() => {this.saveEdit(item.id)}} className="btn btn-success mb-2">Save</button>
-                        <button onClick={() => {this.setState({selectedID: 0})}} className="btn btn-danger">Cancel</button>
-                    </td>
-</tr>
+                        <td>{item.id}</td>
+                        <td>
+                            <input className="form-control" ref={input => { this.editName = input }} type="text" defaultValue={item.name} />
+                        </td>
+                        <td>
+                            <input className="form-control" ref={input => { this.editDesc = input }} type="text" defaultValue={item.desc} />
+                        </td>
+                        <td>
+                            <input className="form-control" ref={input => { this.editPrice = input }} type="text" defaultValue={item.price} />
+                        </td>
+                        <td>
+                            <input className="form-control" ref={input => { this.editPict = input }} type="text" defaultValue={item.pict} />
+                        </td>
+                        <td>
+                            <button onClick={() => { this.saveEdit(item.id) }} className="btn btn-success mb-2">Save</button>
+                            <button onClick={() => { this.setState({ selectedID: 0 }) }} className="btn btn-danger">Cancel</button>
+                        </td>
+                    </tr>
                 )
 
             }
@@ -106,7 +106,7 @@ class ManageProduct extends Component {
 
 
     render() {
-        if(this.props.username !== ''){
+        if (this.props.username !== '') {
             return (
                 <div className="container">
                     <h1 className="display-4 text-center">Product Table</h1>
@@ -148,14 +148,14 @@ class ManageProduct extends Component {
                     </table>
                 </div>
             )
-        }else{
-            return <Redirect to="/"/>
+        } else {
+            return <Redirect to="/" />
         }
     }
 }
 
 const mapStateToProps = state => {
-    return {username: state.auth.username}
+    return { username: state.auth.username }
 }
 
 
