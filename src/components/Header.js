@@ -18,11 +18,7 @@ class Header extends Component {
                                     <span className="navbar-toggler-icon"></span>
                                 </button>
 
-                                <div className="collapse navbar-collapse row p-2" id="navbarNav2">
-                                    {/* <form className="input-group col-12 col-md-7 ml-auto">
-                                        <input type="text" className="form-control mr-2" placeholder="Search" />
-                                        <button className="btn btn-outline-success">Search</button>
-                                    </form> */}
+                                <div className="collapse navbar-collapse row" id="navbarNav2">
                                     <ul className="navbar-nav col-12">
                                         <li className="nav-item m-2 ml-auto">
 
@@ -30,10 +26,6 @@ class Header extends Component {
                                         <li className="nav-item mt-2 mx-auto mx-lg-0 m-lg-2">
                                             <Link className="nav-link" to="/">All Product</Link>
                                         </li>
-                                        <li className="nav-item mt-2 mx-auto mx-lg-0 m-lg-2">
-                                            <Link className="nav-link" to="/shoppingcart">Shopping Cart</Link>
-                                        </li>
-
                                         <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
                                             <Link className="nav-a" to="/register"><button className="btn btn-outline-light">Register</button></Link>
                                         </li>
@@ -57,11 +49,7 @@ class Header extends Component {
                                 <button className="navbar-toggler" data-toggle="collapse" data-target="#navbarNav2">
                                     <span className="navbar-toggler-icon"></span>
                                 </button>
-                                <div className="collapse navbar-collapse row p-2" id="navbarNav2">
-                                    {/* <form className="input-group col-12 col-md-7 ml-auto">
-                                        <input type="text" className="form-control mr-2" placeholder="Search" />
-                                        <button className="btn btn-outline-success">Search</button>
-                                    </form> */}
+                                <div className="collapse navbar-collapse row" id="navbarNav2">
                                     <ul className="navbar-nav ml-auto col-12 col-md-5">
                                     <li className="nav-item m-2 ml-auto">
                                     </li>
@@ -69,23 +57,14 @@ class Header extends Component {
                                         <li className="nav-item mt-2 mx-auto mx-lg-0 m-lg-2">
                                             <Link className="nav-link" to="/">All Product</Link>
                                         </li>
-                                        <li className="nav-item mt-2 mx-auto mx-lg-0 m-lg-2">
-                                            <Link className="nav-link" to="/shoppingcart">Shopping Cart</Link>
-                                        </li>
                                         <li className="nav-item dropdown mt-2 mx-auto mx-lg-0 m-lg-2">
                                             <Link to="/asd" className="nav-link dropdown-toggle" data-toggle="dropdown">Hallo {username}</Link>
                                             <div className="dropdown-menu">
                                                 <Link to="/manageproduct" className="dropdown-item">Manage Product</Link>
-                                                <Link to="/" className="dropdown-item">Link 2</Link>
+                                                <Link to="/shoppingcart" className="dropdown-item">Your Shopping Cart</Link>
                                                 <button onClick={this.props.onLogoutUsers} className="dropdown-item">Logout</button>
                                             </div>
                                         </li>
-                                        {/* <li className="nav-item m-1">
-                                        <Link className="nav-link" to="/register"><button className="btn btn-primary">Register</button></Link>
-                                    </li>
-                                    <li className="nav-item m-1">
-                                        <Link className="nav-link" to="/login"><button className="btn btn-success">Login</button></Link>
-                                    </li> */}
                                     </ul>
                                 </div>
                             </div>

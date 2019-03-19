@@ -3,38 +3,45 @@ import {Link} from 'react-router-dom'
 import axios from 'axios';
 import { connect } from 'react-redux';
 
+
 class ProductItems extends Component {
     addToCart = () =>{
         const {item} = this.props
         const {username} = this.props.user
-        axios.get("http://localhost:1996/shoppingcart",{
-            params: {
+        axios.get("http://localhost:1996/shoppingcart", {
+            params : {
                 idproduct:item.id
             }
         }).then(res => {
+            console.log(res.data);  
             if(res.data.length === 0){
-                axios.post("http://localhost:1996/shoppingcart",{
+                axios.post("http://localhost:1996/shoppingcart", {
                     idproduct: item.id,
                     username: username,
                     name: item.name,
-                    desc:item.desc,
-                    price:item.price,
-                    pict:item.pict,
-                    qty: this.qty.value
+                    desc: item.desc,
+                    price: item.price,
+                    pict: item.pict,
+                    qty: parseInt(this.qty.value)
                 }).then(res => {
                     console.log("success");
-                    
-                })  
+                })     
             }else{
-                axios.put(`http://localhost:1996/shoppingcart/${item.id}`,{
-                    qty: this.qty.value
-                }).then(res => {
-                    console.log("success adding");
+                axios.put("http://localhost:1996/shoppingcart/" +res.data[0].id,{
+                    idproduct: item.id,
+                    username: username,
+                    name: item.name,
+                    desc: item.desc,
+                    price: item.price,
+                    pict: item.pict,
+                    qty : res.data[0].qty + parseInt(this.qty.value)
+                }).then(res =>{
+                    console.log("succes put");
+                    
                 })
-               
+                
             }
         })
-
     }
 
     render () {

@@ -140,12 +140,13 @@ class Home extends Component {
                         <div className="card p-1">
                             <div className="card-header">Category</div>
                             <div className="card-body">
-                                <p className="lead"><input type="checkbox" value="baju"></input> Baju </p>
-                                <p className="lead"><input type="checkbox" value="celana"></input> Celana </p>
-                                <p className="lead"><input type="checkbox" value="jaket"></input> Jaket </p>
-                                <p className="lead"><input type="checkbox" value="sepatu"></input> Sepatu </p>
-                                <p className="lead"><input type="checkbox" value="tas"></input> Tas </p>
-                                <p className="lead"><input type="checkbox" value="topi"></input> Topi </p>
+                                <p className="lead"><input type="checkbox" value="baju"></input> Fantasy</p>
+                                <p className="lead"><input type="checkbox" value="celana"></input> Drama</p>
+                                <p className="lead"><input type="checkbox" value="jaket"></input> Biography</p>
+                                <p className="lead"><input type="checkbox" value="sepatu"></input> Comic</p>
+                                <p className="lead"><input type="checkbox" value="tas"></input> Novel</p>
+                                <p className="lead"><input type="checkbox" value="topi"></input> Kids</p>
+                                <p className="lead"><input type="checkbox" value="topi"></input> Romance</p>
                             </div>
 
 
