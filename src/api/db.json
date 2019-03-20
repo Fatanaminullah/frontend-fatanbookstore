@@ -48,24 +48,28 @@
       "id": 113
     },
     {
-      "idproduct": 17,
-      "username": "a",
-      "name": "Harry Potter 4",
-      "desc": "\tbuku anak fantasi",
-      "price": 100000,
-      "pict": "https://tse2.mm.bing.net/th?id=OIP.7Cn3oqfVBGXfPrh-WoQ6sAAAAA&pid=15.1&P=0&w=300&h=300",
-      "qty": 8,
-      "id": 114
-    },
-    {
       "idproduct": 16,
       "username": "a",
       "name": "Harry Potter",
       "desc": "\tbuku anak fantasi",
       "price": 100000,
       "pict": "https://tse2.mm.bing.net/th?id=OIP.7Cn3oqfVBGXfPrh-WoQ6sAAAAA&pid=15.1&P=0&w=300&h=300",
-      "qty": 4,
+      "qty": 7,
       "id": 115
+    }
+  ],
+  "checkout": [
+    {
+      "username": "a",
+      "quantity": "3",
+      "subtotal": 300000,
+      "id": 1
+    },
+    {
+      "username": "a",
+      "quantity": "3",
+      "subtotal": 300000,
+      "id": 2
     }
   ]
 }

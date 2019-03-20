@@ -5,7 +5,8 @@ import { Redirect } from "react-router-dom";
 
 class ShoppingCart extends Component {
   state = {
-    cartItem: []
+    cartItem: [],
+    checkOut : []
   };
   componentDidMount() {
     this.getProduct();
@@ -21,12 +22,13 @@ class ShoppingCart extends Component {
       this.getProduct();
     });
   };
-  renderList = () => {
-      
+  sumTotal = () =>{
+
+  }
+  renderList = () => { 
       const { username } = this.props.user;
       return this.state.cartItem.map(product => {
           if (username === product.username) {
-            console.log(typeof(product.qty));
         return (
           <div className="card m-2 col-12" key={product.id}>
             <div className="card-header">
@@ -63,22 +65,54 @@ class ShoppingCart extends Component {
       }
     });
   };
+  renderListCheckout = () =>{
+    const { username } = this.props.user;
+    
+    return this.state.cartItem.map(product =>{
+        var productName = product.name
+        var quantity = product.qty
+        var subtotal = product.qty * product.price
+       
+        if (username === product.username) {
+            return (
+                <div>
+                    <p className="card-text">
+                    {quantity} x {productName} 
+                    </p>
+                    <p className="card-text text-right">
+                        Rp. {subtotal}
+                    </p>
+                    {/* <p className="card-text text-right">
+                        Rp. {total}
+                    </p> */}
+                </div>
+            )
+        }
+    })
+  }
   render() {
     if (this.props.user.username !== "") {
+        var total = 0
+        var pengiriman = 9000
+        this.state.cartItem.forEach(items => { total += (items.qty * items.price)} )
       return (
         <div className="container">
           <div className="row">
             <h1 className="mx-auto display-4">Your Shopping Cart</h1>
           </div>
           <div className="row">
-            <div className="col-10">{this.renderList()}</div>
-            <div className="col-2">
+            <div className="col-8">{this.renderList()}</div>
+            <div className="col-4">
               <div className="card m-2 fixed">
                 <div className="card-header">Tagihan</div>
                 <div className="card-body">
-                  <p className="card-text">Total</p>
+                {this.renderListCheckout()}
+                  <p className="card-text">Subtotal</p>
+                  <p className="card-text text-right">Rp. {total}</p>
                   <p className="card-text">Pengiriman</p>
-                  <p className="card-text">Jumlah Total</p>
+                  <p className="card-text text-right">Rp. {pengiriman}</p>
+                  <p className="card-text">Total</p>
+                  <p className="card-text text-right">Rp. {total + pengiriman}</p>
                 </div>
               </div>
             </div>

@@ -21,9 +21,9 @@ class Home extends Component {
     };
 
     searchProduct = () => {
-        const search = this.inputSearch.value; // h
-        const min = parseInt(this.minPrice.value); // NaN
-        const max = parseInt(this.maxPrice.value); // NaN
+        const search = this.inputSearch.value;
+        const min = parseInt(this.minPrice.value);
+        const max = parseInt(this.maxPrice.value); 
 
         var arrSearch = this.state.products.filter(item => {
             if (isNaN(min) && isNaN(max)) {
