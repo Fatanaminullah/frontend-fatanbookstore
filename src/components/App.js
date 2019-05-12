@@ -12,6 +12,8 @@ import Register from './Register'
 import ManageProduct from './ManageProduct'
 import DetailProduct from './DetailProduct'
 import ShoppingCart from './ShoppingCart'
+import LoginAdmin from './LoginAdmin';
+import DashboardAdmin from './DashboardAdmin';
 // import ProductItems from './ProductItems'
 
 const cookie = new cookies()
@@ -41,6 +43,8 @@ class App extends Component {
                 <Route path="/manageproduct" component={ManageProduct}/>
                 <Route path="/detailproduct/:asdfg" component={DetailProduct}/>
                 <Route path="/shoppingcart" component={ShoppingCart}/>
+                <Route path="/admin/login" component={LoginAdmin}/>
+                <Route path="/admin/dashboard" component={DashboardAdmin}/>
             </div>
         </BrowserRouter>
             

@@ -23,14 +23,14 @@ class Header extends Component {
                                         <li className="nav-item m-2 ml-auto">
 
                                         </li>
-                                        <li className="nav-item mt-2 mx-auto mx-lg-0 m-lg-2">
-                                            <Link className="nav-link" to="/">All Product</Link>
+                                        <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
+                                            <Link className="nav-link" to="/"><i class="fas fa-user fa-2x text-light"></i></Link>
                                         </li>
                                         <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
-                                            <Link className="nav-a" to="/register"><button className="btn btn-outline-light">Register</button></Link>
+                                            <Link className="nav-a" to="/"><i class="fas fa-heart fa-2x text-light"></i></Link>
                                         </li>
                                         <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
-                                            <Link className="nav-a" to="/login"><button className="btn btn-outline-light">Login</button></Link>
+                                            <Link className="nav-a" to="/ShoppingCart"><i class="fas fa-shopping-cart fa-2x text-light"></i></Link>
                                         </li>
                                     </ul>
                                 </div>
@@ -61,7 +61,7 @@ class Header extends Component {
                                             <Link to="/asd" className="nav-link dropdown-toggle" data-toggle="dropdown">Hallo {username}</Link>
                                             <div className="dropdown-menu">
                                                 <Link to="/manageproduct" className="dropdown-item">Manage Product</Link>
-                                                <Link to="/shoppingcart" className="dropdown-item">Your Shopping Cart</Link>
+                                                <Link to="/shoppingcart" className="dropdown-item"><i class="far fa-shopping-cart"></i></Link>
                                                 <button onClick={this.props.onLogoutUsers} className="dropdown-item">Logout</button>
                                             </div>
                                         </li>

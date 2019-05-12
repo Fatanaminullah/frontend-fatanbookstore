@@ -82,9 +82,6 @@ class ShoppingCart extends Component {
                     <p className="card-text text-right">
                         Rp. {subtotal}
                     </p>
-                    {/* <p className="card-text text-right">
-                        Rp. {total}
-                    </p> */}
                 </div>
             )
         }
@@ -108,11 +105,11 @@ class ShoppingCart extends Component {
                 <div className="card-body">
                 {this.renderListCheckout()}
                   <p className="card-text">Subtotal</p>
-                  <p className="card-text text-right">Rp. {total}</p>
+                  <p className="card-text text-right">Rp. {total.toLocaleString()}</p>
                   <p className="card-text">Pengiriman</p>
-                  <p className="card-text text-right">Rp. {pengiriman}</p>
+                  <p className="card-text text-right">Rp. {pengiriman.toLocaleString()}</p>
                   <p className="card-text">Total</p>
-                  <p className="card-text text-right">Rp. {total + pengiriman}</p>
+                  <p className="card-text text-right">Rp. {(total + pengiriman).toLocaleString()}</p>
                 </div>
               </div>
             </div>
