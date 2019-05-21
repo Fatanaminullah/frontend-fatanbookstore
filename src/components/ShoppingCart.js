@@ -89,6 +89,7 @@ class ShoppingCart extends Component {
   }
   render() {
     if (this.props.user.username !== "") {
+      
         var total = 0
         var pengiriman = 9000
         this.state.cartItem.forEach(items => { total += (items.qty * items.price)} )

@@ -1,7 +1,36 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
+
+import {onLoginAdmin} from '../actions'
+import {afterTwoSeconds} from '../actions'
 
 class LoginAdmin extends Component {
+    onSubmitClick = () => {
+        const user = this.username.value
+        const pass = this.password.value
+        this.props.onLoginAdmin(user, pass) 
+    }
+    onErrorLogin = () => {
+        if (this.props.error !== '') {
+            return (
+                <div>
+                    <div className="alert alert-danger mt-4 text-center">
+                        {this.props.error}
+                    </div>
+                </div>
+            )
+        }else if(this.props.empty !== ''){
+            return (
+                <div className="alert alert-danger mt-4 text-center">
+                    {this.props.empty}
+                </div>
+            )
+        } else {
+            return null
+        }
+        
+    }
     render(){
         return(
             <div>
@@ -24,6 +53,8 @@ class LoginAdmin extends Component {
                         </form>
                         <button className="btn btn-dark btn-block mt-5" 
                             onClick={this.onSubmitClick}>Login</button>
+                            {this.onErrorLogin()}
+                            {this.props.afterTwoSeconds()}
                     </div>
                 </div>
             </div>
@@ -32,4 +63,8 @@ class LoginAdmin extends Component {
     }
 }
 
-export default LoginAdmin
+const mapStateToProps = state => {
+    return {error : state.auth.error, empty: state.auth.empty}
+}
+
+export default connect(mapStateToProps,{onLoginAdmin,afterTwoSeconds})(LoginAdmin)

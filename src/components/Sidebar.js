@@ -6,12 +6,15 @@ export default props => {
   return (
     // Pass on our props
     <Menu {...props}>
-      <Link className="menu-item" to="/ManageUser">
+      <Link className="menu-item" to="/manageuser">
         Manage User
       </Link>
-      <a className="menu-item" href="/ManageProduct">
+      <Link className="menu-item" to="/manageproduct">
         Manage Product
-      </a>
+      </Link>
+      <Link className="menu-item" to="/managegenre">
+        Manage Genre
+      </Link>
       <a className="menu-item" href="/">
         Manage Payment History
       </a>

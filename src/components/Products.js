@@ -3,7 +3,7 @@ import axios from "axios";
 
 import ProductItems from "./ProductItems";
 
-class Home extends Component {
+class Products extends Component {
     state = {
         products: [],
         productSearch: [],
@@ -159,4 +159,4 @@ class Home extends Component {
     }
 }
 
-export default Home;
+export default Products;

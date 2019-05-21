@@ -10,9 +10,7 @@ class Login extends Component {
     onSubmitClick = () => {
         const user = this.username.value
         const pass = this.password.value
-        this.props.onLoginClick(user, pass)
-        console.log("Username " + user)
-        console.log("Password " + pass) 
+        this.props.onLoginClick(user, pass) 
     }
     onErrorLogin = () => {
         if (this.props.error !== '') {

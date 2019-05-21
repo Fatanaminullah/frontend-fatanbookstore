@@ -7,9 +7,12 @@ import {keepLogin} from '../actions'
 
 import Home from './Home'
 import Header from './Header'
+import Products from './Products'
 import Login from './Login'
 import Register from './Register'
 import ManageProduct from './ManageProduct'
+import ManageUser from './ManageUser'
+import ManageGenre from './ManageGenre'
 import DetailProduct from './DetailProduct'
 import ShoppingCart from './ShoppingCart'
 import LoginAdmin from './LoginAdmin';
@@ -22,13 +25,12 @@ const cookie = new cookies()
 class App extends Component {
 
     componentDidMount(){
-        var userCookie = cookie.get('stillLogin')
-
-        if(userCookie !== undefined){
-            console.log("ada");
-            this.props.keepLogin(userCookie)
+        this.props.keepLogin(
+            cookie.get("stillLogin"),
+            cookie.get("idLogin"),
+            cookie.get("role")
+          );
         }
-    }
 
     render () {
         return (
@@ -38,9 +40,12 @@ class App extends Component {
                 {/* link === "/login" */}
                 <Header/>
                 <Route path="/" exact component={Home}/>
+                <Route path="/products" component={Products}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/register" component={Register}/>
                 <Route path="/manageproduct" component={ManageProduct}/>
+                <Route path="/manageuser" component={ManageUser}/>
+                <Route path="/managegenre" component={ManageGenre}/>
                 <Route path="/detailproduct/:asdfg" component={DetailProduct}/>
                 <Route path="/shoppingcart" component={ShoppingCart}/>
                 <Route path="/admin/login" component={LoginAdmin}/>

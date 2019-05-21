@@ -3,43 +3,64 @@ import cookies from "universal-cookie";
 
 const cookie = new cookies();
 
-export const onLoginClick = (user, pass) => {
-  return dispatch => {
-    axios
-      .get("/users", {
-        params: {
-          username: user,
-          password: pass
+export const onLoginClick = (username, password) => {
+  return async dispatch  => {
+    await axios.post("/users/login", { 
+      username, password 
+    })
+    .then(res => {
+      cookie.set("idLogin", res.data.id, { path: "/" });
+      cookie.set("stillLogin", res.data.username, { path: "/" });
+      cookie.set("role", res.data.role, { path: "/" });
+      
+      console.log(res);
+      
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: {
+          id: res.data.id,
+          username: res.data.username,
+          role: res.data.role
         }
+      })
+    },err => {
+        console.log(err);
+        dispatch({
+          type: "AUTH_ERROR",
+          payload: "Username or Password incorrect"
+        });
+      })
+    }
+  }
+  export const onLoginAdmin = (username, password) => {
+    return async dispatch  => {
+      await axios.post("/admin/login", { 
+        username, password 
       })
       .then(res => {
-        if (user === "" || pass === "") {
-          dispatch({
-            type: "AUTH_EMPTY",
-            payload: "please fill the form"
-          });
-        } else if (res.data.length > 0) {
-          console.log(res.data[0]);
-
-          const { id, username } = res.data[0];
-
-          dispatch({
-            type: "SUCCEED",
-            payload: { id: id, username: username }
-          });
-          cookie.set("stillLogin", username, { path: "/" });
-        } else {
+        cookie.set("idLogin", res.data.id, { path: "/admin/dashboard" });
+        cookie.set("stillLogin", res.data.username, { path: "/admin/dashboard" });
+        cookie.set("role", res.data.role, { path: "/admin/dashboard" });
+        
+        
+        dispatch({
+          type: "LOGIN_SUCCESS",
+          payload: {
+            id: res.data.id,
+            username: res.data.username,
+            role: res.data.role
+          }
+        })
+      },err => {
+          console.log(err);
           dispatch({
             type: "AUTH_ERROR",
-            payload: "Username or Password is incorrect"
+            payload: "Username or Password incorrect"
           });
-        }
-      })
-      .catch(err => {
-        console.log("System Error");
-      });
-  };
-};
+        })
+      }
+    }
+  
 export const onSignupClick = (username, email, password) => {
   return dispatch => {
     axios.get("/users", {
@@ -86,31 +107,37 @@ export const afterTwoSeconds = () => {
   return dispatch => {
     setTimeout(() => {
       dispatch(afterError());
-    }, 2000);
+    }, 3000);
   };
 };
-export const onLogoutUsers = () => {
+export const Logout = () => {
+  cookie.remove("idLogin");
   cookie.remove("stillLogin");
+  cookie.remove("role");
+  console.log("logout");
+  
   return {
     type: "LOGOUT_USER"
   };
 };
-export const keepLogin = user => {
-  return dispatch => {
-    axios
-      .get("/users", {
-        params: {
-          username: user
-        }
-      })
-      .then(res => {
-        if (res.data.length > 0) {
-          dispatch({
-            type: "SUCCEED",
-            payload: { username: user }
-          });
-        }
-      });
+export const keepLogin = (username, id,role) => {
+  if (username === undefined || id === undefined) {
+    return {
+      type: "KEEP_LOGIN",
+      payload: {
+        id: "",
+        username: "",
+        role:""
+      }
+    };
+  }
+  return {
+    type: "KEEP_LOGIN",
+    payload: {
+      id,
+      username,
+      role
+    }
   };
 };
 export const addProduct = (name, desc, price, pict) => {
