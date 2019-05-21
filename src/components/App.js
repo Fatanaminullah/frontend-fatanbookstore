@@ -36,8 +36,6 @@ class App extends Component {
         return (
         <BrowserRouter>
             <div>
-                {/* link.contains("/login")  */}
-                {/* link === "/login" */}
                 <Header/>
                 <Route path="/" exact component={Home}/>
                 <Route path="/products" component={Products}/>

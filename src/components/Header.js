@@ -36,8 +36,6 @@ class Header extends Component {
     }
   render() {
     const { role } = this.props.user;
-    console.log("role : "+role);
-    
     
     if (role === 1) {
       return (

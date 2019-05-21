@@ -25,9 +25,9 @@ class ManageProduct extends Component {
       const name = this.editName.value
       const stock = this.editStock.value
       const price = parseInt(this.editPrice.value)
-      const page = this.editPage.value
-      const author = this.editAuthor.value
-      const publisher = this.editPublisher.value
+      const page = parseInt(this.editPage.value)
+      const author = parseInt(this.editAuthor.value)
+      const publisher = parseInt(this.editPublisher.value)
       const image = this.editImage.value
       axios.patch(`http://localhost:2000/products/edit/${id}`, {
           product_name:name,stock,price,page,author,publisher,image

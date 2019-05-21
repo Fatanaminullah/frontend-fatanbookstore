@@ -20,65 +20,6 @@ class Home extends Component {
         });
     };
 
-    searchProduct = () => {
-        const search = this.inputSearch.value;
-        const min = parseInt(this.minPrice.value);
-        const max = parseInt(this.maxPrice.value); 
-
-        var arrSearch = this.state.products.filter(item => {
-            if (isNaN(min) && isNaN(max)) {
-                // search hanya dengan name , min dan max kosong
-                return item.name.toLowerCase().includes(search);
-            } else if (isNaN(min)) {
-                return (
-                    item.name.toLowerCase().includes(search.toLowerCase()) &&
-                    item.price <= max
-                );
-            } else if (isNaN(max)) {
-                return (
-                    item.name.toLowerCase().includes(search.toLowerCase()) &&
-                    item.price >= min
-                );
-            } else {
-                return (
-                    item.name.toLowerCase().includes(search.toLowerCase()) &&
-                    item.price <= max &&
-                    item.price >= min
-                );
-            }
-        });
-
-        this.setState({ productSearch: arrSearch });
-    };
-    sortProduct = () => {
-        const sort = this.sorting.value
-        const namaAsc = this.namaAsc.value;
-        const namaDesc = this.namaDesc.value;
-        const priceAsc = this.priceAsc.value;
-        const priceDesc = this.priceDesc.value;
-        var arrSearch = this.state.products.sort((a, b) => {
-            switch (sort) {
-                case namaAsc:
-                    return a.name.toLowerCase() > b.name.toLowerCase()
-                case namaDesc:
-                    return a.name.toLowerCase() < b.name.toLowerCase()
-                case priceAsc:
-                    return a.price - b.price
-                case priceDesc:
-                    return b.price - a.price
-
-
-                default:
-                    break;
-            }
-        })
-        this.setState({ productSearch: arrSearch })
-        this.searchProduct()
-
-    }
-    addToCart = () =>{
-
-    }
 
     renderList = () => {
         return this.state.productSearch.map(items => {
@@ -88,21 +29,6 @@ class Home extends Component {
     render() {
         return (
             <div className="container">
-                <div className="row">
-                    <div className="col-9"></div>
-                    <div className="col-3">
-                        <p>
-                            Sort by <select ref={input => this.sorting = input}>
-                                <option ref={input => this.namaAsc = input} value="namaAsc" className="text-center" onClick={this.sortProduct}>Name &uarr;</option>
-                                <option ref={input => this.namaDesc = input} value="namaDesc" className="text-center" onClick={this.sortProduct}>Name &darr;</option>
-                                <option ref={input => this.priceAsc = input} value="priceAsc" className="text-center" onClick={this.sortProduct}>Price &uarr;</option>
-                                <option ref={input => this.priceDesc = input} value="priceDesc" className="text-center" onClick={this.sortProduct}>Price &darr;</option>
-                                <option ref={input => this.bestSeller = input} value="sale" className="text-center" onClick={this.sortProduct}>Best Seller</option>
-                            </select>
-                        </p>
-                    </div>
-
-                </div>
                 <div className="row">
                     <div className="col-sm-4 col-lg-2">
                         <h4 className="display-4 text-center">Filter</h4>

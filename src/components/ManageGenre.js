@@ -9,46 +9,74 @@ import "./style.css";
 class ManageGenre extends Component {
   state = {
     genre: [],
+    genreSearch: [],
     genreProduct: [],
+    genreProductSearch: [],
     genreUser: [],
-    selectedID: 0
+    genreUserSearch: [],
+    products: [],
+    selectedGenre: 0,
+    selectedProduct: 0
   };
 
   componentDidMount() {
+    this.getProduct()
     this.getGenre()
     this.getGenreproduct();
     this.getGenreusers();
   }
-
+  getProduct = () => {
+    axios.get("http://localhost:2000/products").then(res => {
+      this.setState({ products: res.data});
+    });
+  };
   getGenre = () => {
     axios.get("http://localhost:2000/genre").then(res => {
-      this.setState({ genre: res.data, selectedID: 0 });
+      this.setState({ genre: res.data, genreSearch:res.data, selectedGenre: 0 });
     });
   };
   getGenreproduct = () => {
     axios.get("http://localhost:2000/genre/products").then(res => {
-      this.setState({ genreProduct: res.data, selectedID: 0 });
+      this.setState({ genreProduct: res.data, genreProductSearch:res.data, selectedProduct: 0 });
     });
   };
   getGenreusers = () => {
     axios.get("http://localhost:2000/genre/users").then(res => {
-      this.setState({ genreUser: res.data, selectedID: 0 });
+      this.setState({ genreUser: res.data, genreUserSearch:res.data, selectedUser: 0 });
     });
-    console.log(this.state.genreUser);
-    
   };
-  saveEdit = id => {
-    const name = this.editName.value;
+  saveGenre = id => {
+    const name = this.editGenreName.value;
+    
     axios
-      .patch(`http://localhost:2000/products/edit/${id}`, {
+      .patch(`http://localhost:2000/genre/edit/${id}`, {
         name
       })
       .then(() => {
         this.getGenre();
+        this.getGenreproduct();
+        this.getGenreusers();
       });
   };
-  editProduct = id => {
-    this.setState({ selectedID: id });
+  saveGenPro = id => {
+    const productId = parseInt(this.selectProductId.value);
+    const genreId = parseInt(this.selectGenreId.value);
+    console.log(productId);
+    console.log(genreId);
+    axios
+      .patch(`http://localhost:2000/genreproducts/edit/${id}`, {
+        product_id:productId,
+        genre_id:genreId
+      })
+      .then(() => {
+        this.getGenreproduct();
+      });
+  };
+  editGenre = id => {
+    this.setState({ selectedGenre: id });
+  };
+  editGenreProduct = id => {
+    this.setState({ selectedProduct: id });
   };
   onAddProduct = () => {
     const name = this.name.value;
@@ -71,9 +99,58 @@ class ManageGenre extends Component {
       });
   };
 
-  renderGenre = () => {
+  selectGenre = () => {
     return this.state.genre.map(item => {
-      if (item.id !== this.state.selectedID) {
+      return (
+        <option key={item.id} value={item.id}>{item.name}</option>
+      )
+    })
+  }
+  selectProduct = () => {
+    return this.state.products.map(item => {
+      return (
+        <option key ={item.id} value={item.id}>{item.product_name}</option>
+      )
+    })
+  }
+
+  filterGenre = () => {
+    const search = this.searchGenre.value
+
+    console.log(search);
+    
+
+    var arrSearch = this.state.genre.filter(item => {
+      
+      return item.name.toLowerCase().includes(search.toLowerCase());
+
+    })
+    this.setState({genreSearch:arrSearch})
+  }
+  filterGenreProduct = () => {
+    const search = this.searchGenreProduct.value
+
+    var arrSearch = this.state.genreProduct.filter(item => {
+      
+      return item.name.toLowerCase().includes(search) 
+      
+    })
+    this.setState({genreProductSearch:arrSearch})
+  }
+  filterGenreUser = () => {
+    const search = this.searchGenreUser.value
+    
+    var arrSearch = this.state.genreUser.filter(item => {
+      
+      return item.name.toLowerCase().includes(search.toLowerCase()) || item.username.toLowerCase().includes(search.toLowerCase());
+
+    })
+    this.setState({genreUserSearch:arrSearch})
+  }
+
+  renderGenre = () => {
+    return this.state.genreSearch.map(item => {
+      if (item.id !== this.state.selectedGenre) {
         return (
           <tr key={item.id}>
             <td>{item.id}</td>
@@ -82,7 +159,7 @@ class ManageGenre extends Component {
               <button
                 className="btn btn-primary mr-2"
                 onClick={() => {
-                  this.editProduct(item.id);
+                  this.editGenre(item.id);
                 }}
               >
                 Edit
@@ -98,7 +175,7 @@ class ManageGenre extends Component {
               <input
                 className="form-control"
                 ref={input => {
-                  this.editName = input;
+                  this.editGenreName = input;
                 }}
                 type="text"
                 defaultValue={item.name}
@@ -107,7 +184,7 @@ class ManageGenre extends Component {
             <td>
               <button
                 onClick={() => {
-                  this.saveEdit(item.id);
+                  this.saveGenre(item.id);
                 }}
                 className="btn btn-success mb-2"
               >
@@ -115,7 +192,7 @@ class ManageGenre extends Component {
               </button>
               <button
                 onClick={() => {
-                  this.setState({ selectedID: 0 });
+                  this.setState({ selectedGenre: 0 });
                 }}
                 className="btn btn-danger"
               >
@@ -128,8 +205,8 @@ class ManageGenre extends Component {
     });
   };
   renderGenreProduct = () => {
-    return this.state.genreProduct.map(item => {
-      if (item.id !== this.state.selectedID) {
+    return this.state.genreProductSearch.map(item => {
+      if (item.id !== this.state.selectedProduct) {
         return (
           <tr key={item.id}>
             <td>{item.id}</td>
@@ -139,7 +216,7 @@ class ManageGenre extends Component {
               <button
                 className="btn btn-primary mr-2"
                 onClick={() => {
-                  this.editProduct(item.id);
+                  this.editGenreProduct(item.id);
                 }}
               >
                 Edit
@@ -152,29 +229,29 @@ class ManageGenre extends Component {
           <tr key={item.id}>
             <td>{item.id}</td>
             <td>
-              <input
+              <select
                 className="form-control"
                 ref={input => {
-                  this.editProductName = input;
+                  this.selectProductId = input;
                 }}
-                type="text"
-                defaultValue={item.product_name}
-              />
+              >
+                {this.selectProduct()}
+              </select>
             </td>
             <td>
-              <input
+              <select
                 className="form-control"
                 ref={input => {
-                  this.editName = input;
+                  this.selectGenreId = input;
                 }}
-                type="text"
-                defaultValue={item.name}
-              />
+              >
+                {this.selectGenre()}
+              </select>
             </td>
             <td>
               <button
                 onClick={() => {
-                  this.saveEdit(item.id);
+                  this.saveGenPro(item.id);
                 }}
                 className="btn btn-success mb-2"
               >
@@ -182,7 +259,7 @@ class ManageGenre extends Component {
               </button>
               <button
                 onClick={() => {
-                  this.setState({ selectedID: 0 });
+                  this.setState({ selectedProduct: 0 });
                 }}
                 className="btn btn-danger"
               >
@@ -195,70 +272,14 @@ class ManageGenre extends Component {
     });
   };
   renderGenreUser = () => {
-    return this.state.genreUser.map(item => {
-      if (item.id !== this.state.selectedID) {
+    return this.state.genreUserSearch.map(item => {
         return (
           <tr key={item.id}>
             <td>{item.id}</td>
             <td>{item.username}</td>
-            <td>{item.name}</td>
-            <td>
-              <button
-                className="btn btn-primary mr-2"
-                onClick={() => {
-                  this.editProduct(item.id);
-                }}
-              >
-                Edit
-              </button>
-            </td>
+            <td>{item.name}</td> 
           </tr>
         );
-      } else {
-        return (
-          <tr key={item.id}>
-            <td>{item.id}</td>
-            <td>
-              <input
-                className="form-control"
-                ref={input => {
-                  this.editProductName = input;
-                }}
-                type="text"
-                defaultValue={item.product_name}
-              />
-            </td>
-            <td>
-              <input
-                className="form-control"
-                ref={input => {
-                  this.editName = input;
-                }}
-                type="text"
-                defaultValue={item.name}
-              />
-            </td>
-            <td>
-              <button
-                onClick={() => {
-                  this.saveEdit(item.id);
-                }}
-                className="btn btn-success mb-2"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => {
-                  this.setState({ selectedID: 0 });
-                }}
-                className="btn btn-danger"
-              >
-                Cancel
-              </button>
-            </td>
-          </tr>
-        );
-      }
     });
   };
 
@@ -273,7 +294,19 @@ class ManageGenre extends Component {
             <div className="container">
               <div className="row">
                 <div className="col-4">
-                  <h1 className="display-4 text-center">Genre</h1>
+                  <h4 className="text-center">Genre</h4>
+                  <div className="input-group search-box">
+                    <input
+                      type="text"
+                      ref={input => (this.searchGenre = input)}
+                      className="form-control"
+                      placeholder="Search Genre here..."
+                      onKeyUp={this.filterGenre}
+                    />
+                    <span className="input-group-addon">
+                      <i className="fas fa-search" />
+                    </span>
+                  </div>
                   <table className="table table-hover mb-5">
                     <thead>
                       <tr>
@@ -315,7 +348,19 @@ class ManageGenre extends Component {
                   </table>
                 </div>
                 <div className="col-4">
-                  <h3 className="display-4 text-center">Product Genre</h3>
+                  <h4 className="text-center">Product Genre</h4>
+                  <div className="input-group search-box">
+                    <input
+                      type="text"
+                      ref={input => (this.searchGenreProduct = input)}
+                      className="form-control"
+                      placeholder="Search Product Genre here..."
+                      onKeyUp={this.filterGenreProduct}
+                    />
+                    <span className="input-group-addon">
+                      <i className="fas fa-search" />
+                    </span>
+                  </div>
                   <table className="table table-hover mb-5">
                     <thead>
                       <tr>
@@ -327,7 +372,9 @@ class ManageGenre extends Component {
                     </thead>
                     <tbody>{this.renderGenreProduct()}</tbody>
                   </table>
-                  <h3 className="display-4 text-center">Input Product Genre</h3>
+                  <h3 className="display-4 text-center">
+                    Input Product Genre
+                  </h3>
                   <table className="table text-center">
                     <thead>
                       <tr>
@@ -367,55 +414,28 @@ class ManageGenre extends Component {
                   </table>
                 </div>
                 <div className="col-4">
-                  <h3 className="display-4 text-center">User Genre</h3>
+                  <h4 className="text-center">User Genre</h4>
+                  <div className="input-group search-box">
+                    <input
+                      type="text"
+                      ref={input => (this.searchGenreUser = input)}
+                      className="form-control"
+                      placeholder="Search User Genre here..."
+                      onKeyUp={this.filterGenreUser}
+                    />
+                    <span className="input-group-addon">
+                      <i className="fas fa-search" />
+                    </span>
+                  </div>
                   <table className="table table-hover mb-5">
                     <thead>
                       <tr>
                         <th scope="col">ID</th>
                         <th scope="col">USER</th>
                         <th scope="col">GENRE</th>
-                        <th scope="col">ACTION</th>
                       </tr>
                     </thead>
                     <tbody>{this.renderGenreUser()}</tbody>
-                  </table>
-                  <h1 className="display-4 text-center">Input Product Genre</h1>
-                  <table className="table text-center">
-                    <thead>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">USER</th>
-                        <th scope="col">GENRE</th>
-                        <th scope="col">ACTION</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">
-                          <input
-                            ref={input => (this.productName = input)}
-                            className="form-control"
-                            type="text"
-                          />
-                        </th>
-                        <th scope="col">
-                          <input
-                            ref={input => (this.name = input)}
-                            className="form-control"
-                            type="text"
-                          />
-                        </th>
-                        <th scope="col">
-                          <button
-                            className="btn btn-outline-warning"
-                            onClick={this.onAddProduct}
-                          >
-                            Add
-                          </button>
-                        </th>
-                      </tr>
-                    </tbody>
                   </table>
                 </div>
               </div>
