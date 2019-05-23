@@ -214,9 +214,12 @@ class DashboardAdmin extends Component {
                           type="file"
                           id="myfile"
                           ref={input => (this.gambar = input)}
+                          className="custom-file-input"
                         />
+                        <label className="custom-file-label" for="myfile">choose your file here . . . . . . . . . . . . . . .</label>
                       </div>
-                      <div class="d-flex justify-content-between">
+                      <div class="d-flex justify-content-between py-2">
+                        <p></p>
                         <button className="btn btn-primary" onClick={() => this.uploadAvatar(this.props.user.id)}>
                           Upload
                         </button>

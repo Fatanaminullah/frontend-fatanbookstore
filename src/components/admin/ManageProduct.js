@@ -51,17 +51,28 @@ class ManageProduct extends Component {
     })
     this.setState({productSearch:arrSearch})
   }
-  saveEdit = (id) => {
+  saveEdit = async (id) => {
+      const formData = new FormData();
+      const image = this.editImage.files[0];
       const name = this.editName.value
       const stock = this.editStock.value
       const price = parseInt(this.editPrice.value)
       const page = parseInt(this.editPage.value)
       const author = this.selectAuthorId.value
       const publisher = this.selectPublisherId.value
-      const image = this.editImage.value
-      axios.patch(`http://localhost:2000/products/edit/${id}`, {
-          product_name:name,stock,price,page,author,publisher,image
-      }).then(() => {
+
+      formData.append("images", image);
+      formData.append("product_name", name);
+      formData.append("stock", stock);
+      formData.append("price", price);
+      formData.append("page", page);
+      formData.append("author", author);
+      formData.append("publisher", publisher);
+      await axios.patch(`http://localhost:2000/products/edit/${id}`, formData,{
+      headers:{
+        "Content-Type": "multipart/form-data"
+      }
+    }).then(() => {
           this.getProduct()
       })
   }
@@ -186,33 +197,39 @@ class ManageProduct extends Component {
             </td>
             <td>
             <select
-                className="form-control"
+                className="custom-select"
                 ref={input => {
                   this.selectAuthorId = input;
                 }}
+                defaultChecked={item.author}
               >
+                <option selected hidden>choose here</option>
                 {this.selectAuthor()}
               </select>
             </td>
             <td>
             <select
-                className="form-control"
+                className="custom-select"
                 ref={input => {
                   this.selectPublisherId = input;
                 }}
               >
+                <option selected hidden>choose here</option>
                 {this.selectPublisher()}
               </select>
             </td>
             <td>
+              <div className="custom-file">
               <input
-                className="form-control"
+                className="custom-file-input"
                 ref={input => {
                   this.editImage = input;
                 }}
-                type="text"
-                defaultValue={item.pict}
+                type="file"
+                id="customFile"
               />
+              <label class="custom-file-label" for="customFile"></label>
+              </div>
             </td>
             <td>
               <button
@@ -240,6 +257,8 @@ class ManageProduct extends Component {
 
   render() {
     var userCookie = cookie.get("stillLogin");
+    console.log(userCookie);
+    
 
     if (userCookie === undefined ) {
       return (
@@ -328,7 +347,7 @@ class ManageProduct extends Component {
                     </th>
                     <th>
             <select
-                className="form-control"
+                className="select-custom"
                 ref={input => {
                   this.selectAuthorId = input;
                 }}
@@ -338,7 +357,7 @@ class ManageProduct extends Component {
             </th>
             <th>
             <select
-                className="form-control"
+                className="select-custom"
                 ref={input => {
                   this.selectPublisherId = input;
                 }}
@@ -347,12 +366,15 @@ class ManageProduct extends Component {
               </select>
             </th>
                     <th scope="col">
+                      <div className="custom-file">
                       <input
                         type="file"
                         id="myfile"
                         ref={input => (this.image = input)}
-                        className="form-control"
+                        className="custom-file-input"
                       />
+                      <label className="custom-file-label"></label>
+                      </div>
                     </th>
                     <th scope="col">
                       <button
