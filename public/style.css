@@ -37,6 +37,9 @@ img.card-img-top{
 .fa-user:hover{
     color: white !important
 }
+.fa-home:hover{
+    color: white !important
+}
 .search-box {
     position: relative;
 }	

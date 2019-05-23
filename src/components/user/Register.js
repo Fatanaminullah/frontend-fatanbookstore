@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { onSignupClick } from '../actions'
-import { afterTwoSeconds } from '../actions'
+import { onSignupClick } from '../../actions'
+import { afterTwoSeconds } from '../../actions'
 
 class Register extends Component {
 

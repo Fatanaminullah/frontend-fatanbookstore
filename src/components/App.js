@@ -5,19 +5,19 @@ import {connect} from 'react-redux'
 
 import {keepLogin} from '../actions'
 
-import Home from './Home'
-import Header from './Header'
-import Products from './Products'
-import Login from './Login'
-import Register from './Register'
-import ManageProduct from './ManageProduct'
-import ManageUser from './ManageUser'
-import ManageGenre from './ManageGenre'
-import DetailProduct from './DetailProduct'
-import ShoppingCart from './ShoppingCart'
-import LoginAdmin from './LoginAdmin';
-import DashboardAdmin from './DashboardAdmin';
-// import ProductItems from './ProductItems'
+import Home from './user/Home'
+import Header from './user/Header'
+import Products from './user/Products'
+import Login from './user/Login'
+import Register from './user/Register'
+import ManageProduct from './admin/ManageProduct'
+import ManageUser from './admin/ManageUser'
+import ManageGenre from './admin/ManageGenre'
+import ManageAuthorPublisher from './admin/ManageAuthorPublisher'
+import DetailProduct from './user/DetailProduct'
+import ShoppingCart from './user/ShoppingCart'
+import LoginAdmin from './admin/LoginAdmin';
+import DashboardAdmin from './admin/DashboardAdmin';
 
 const cookie = new cookies()
 
@@ -25,12 +25,19 @@ const cookie = new cookies()
 class App extends Component {
 
     componentDidMount(){
-        this.props.keepLogin(
-            cookie.get("stillLogin"),
-            cookie.get("idLogin"),
-            cookie.get("role")
-          );
+        var userCookie = cookie.get("stillLogin");
+        var idCookie = parseInt(cookie.get("idLogin"));
+        var roleCookie = parseInt(cookie.get("role"));
+
+        console.log(idCookie);
+        
+
+        if (userCookie !== undefined || idCookie !== NaN || roleCookie !== NaN) {
+            
+            this.props.keepLogin(userCookie, idCookie,roleCookie);
+        
         }
+}
 
     render () {
         return (
@@ -44,6 +51,7 @@ class App extends Component {
                 <Route path="/manageproduct" component={ManageProduct}/>
                 <Route path="/manageuser" component={ManageUser}/>
                 <Route path="/managegenre" component={ManageGenre}/>
+                <Route path="/manageauthorpublisher" component={ManageAuthorPublisher}/>
                 <Route path="/detailproduct/:asdfg" component={DetailProduct}/>
                 <Route path="/shoppingcart" component={ShoppingCart}/>
                 <Route path="/admin/login" component={LoginAdmin}/>

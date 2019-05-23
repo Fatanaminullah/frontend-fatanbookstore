@@ -2,9 +2,12 @@ import React, { Component } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
+import cookies from "universal-cookie";
 
 import Sidebar from "./Sidebar";
-import "./style.css";
+import "../style.css";
+
+const cookie = new cookies();
 
 class ManageGenre extends Component {
   state = {
@@ -20,34 +23,46 @@ class ManageGenre extends Component {
   };
 
   componentDidMount() {
-    this.getProduct()
-    this.getGenre()
+    this.getProduct();
+    this.getGenre();
     this.getGenreproduct();
     this.getGenreusers();
   }
   getProduct = () => {
     axios.get("http://localhost:2000/products").then(res => {
-      this.setState({ products: res.data});
+      this.setState({ products: res.data });
     });
   };
   getGenre = () => {
     axios.get("http://localhost:2000/genre").then(res => {
-      this.setState({ genre: res.data, genreSearch:res.data, selectedGenre: 0 });
+      this.setState({
+        genre: res.data,
+        genreSearch: res.data,
+        selectedGenre: 0
+      });
     });
   };
   getGenreproduct = () => {
     axios.get("http://localhost:2000/genre/products").then(res => {
-      this.setState({ genreProduct: res.data, genreProductSearch:res.data, selectedProduct: 0 });
+      this.setState({
+        genreProduct: res.data,
+        genreProductSearch: res.data,
+        selectedProduct: 0
+      });
     });
   };
   getGenreusers = () => {
     axios.get("http://localhost:2000/genre/users").then(res => {
-      this.setState({ genreUser: res.data, genreUserSearch:res.data, selectedUser: 0 });
+      this.setState({
+        genreUser: res.data,
+        genreUserSearch: res.data,
+        selectedUser: 0
+      });
     });
   };
   saveGenre = id => {
     const name = this.editGenreName.value;
-    
+
     axios
       .patch(`http://localhost:2000/genre/edit/${id}`, {
         name
@@ -65,8 +80,8 @@ class ManageGenre extends Component {
     console.log(genreId);
     axios
       .patch(`http://localhost:2000/genreproducts/edit/${id}`, {
-        product_id:productId,
-        genre_id:genreId
+        product_id: productId,
+        genre_id: genreId
       })
       .then(() => {
         this.getGenreproduct();
@@ -78,75 +93,86 @@ class ManageGenre extends Component {
   editGenreProduct = id => {
     this.setState({ selectedProduct: id });
   };
-  onAddProduct = () => {
-    const name = this.name.value;
-    this.addProduct(name);
-  };
-  addProduct = (name, stock, price, page, author, publisher, image) => {
+  addGenre = name => {
     axios
-      .post("http://localhost:2000/products/add", {
-        product_name: name,
-        stock,
-        price,
-        page,
-        author,
-        publisher,
-        image
+      .post("http://localhost:2000/genre/add", {
+        name
       })
       .then(res => {
         console.log(res);
         this.getGenre();
       });
   };
+  addGenreProduct = (product_id,genre_id) => {
+    axios
+      .post(`http://localhost:2000/product/addgenre`, {
+        product_id ,genre_id
+      })
+      .then(res => {
+        console.log(res);
+        this.getGenreproduct();
+      });
+  };
+  onAddGenre = () => {
+    const name = this.genre.value;
+
+    this.addGenre(name);
+  };
+  onAddGenreProduct = () => {
+    const genre_id = parseInt(this.GenreId.value);
+    const product_id = parseInt(this.ProductId.value);
+
+    this.addGenreProduct(product_id,genre_id);
+  };
 
   selectGenre = () => {
     return this.state.genre.map(item => {
       return (
-        <option key={item.id} value={item.id}>{item.name}</option>
-      )
-    })
-  }
+        <option key={item.id} value={item.id}>
+          {item.name}
+        </option>
+      );
+    });
+  };
   selectProduct = () => {
     return this.state.products.map(item => {
       return (
-        <option key ={item.id} value={item.id}>{item.product_name}</option>
-      )
-    })
-  }
+        <option key={item.id} value={item.id}>
+          {item.product_name}
+        </option>
+      );
+    });
+  };
 
   filterGenre = () => {
-    const search = this.searchGenre.value
+    const search = this.searchGenre.value;
 
     console.log(search);
-    
 
     var arrSearch = this.state.genre.filter(item => {
-      
       return item.name.toLowerCase().includes(search.toLowerCase());
-
-    })
-    this.setState({genreSearch:arrSearch})
-  }
+    });
+    this.setState({ genreSearch: arrSearch });
+  };
   filterGenreProduct = () => {
-    const search = this.searchGenreProduct.value
+    const search = this.searchGenreProduct.value;
 
     var arrSearch = this.state.genreProduct.filter(item => {
-      
-      return item.name.toLowerCase().includes(search) 
-      
-    })
-    this.setState({genreProductSearch:arrSearch})
-  }
+      return item.name.toLowerCase().includes(search.toLowerCase()) || item.product_name.toLowerCase().includes(search.toLowerCase())
+    });
+    this.setState({ genreProductSearch: arrSearch });
+  };
   filterGenreUser = () => {
-    const search = this.searchGenreUser.value
-    
-    var arrSearch = this.state.genreUser.filter(item => {
-      
-      return item.name.toLowerCase().includes(search.toLowerCase()) || item.username.toLowerCase().includes(search.toLowerCase());
+    const search = this.searchGenreUser.value;
 
-    })
-    this.setState({genreUserSearch:arrSearch})
-  }
+    var arrSearch = this.state.genreUser.filter(item => {
+      return (
+        item.name.toLowerCase().includes(search.toLowerCase()) ||
+        item.username.toLowerCase().includes(search.toLowerCase())
+      );
+    });
+    this.setState({ genreUserSearch: arrSearch });
+  };
 
   renderGenre = () => {
     return this.state.genreSearch.map(item => {
@@ -273,22 +299,25 @@ class ManageGenre extends Component {
   };
   renderGenreUser = () => {
     return this.state.genreUserSearch.map(item => {
-        return (
-          <tr key={item.id}>
-            <td>{item.id}</td>
-            <td>{item.username}</td>
-            <td>{item.name}</td> 
-          </tr>
-        );
+      return (
+        <tr key={item.id}>
+          <td>{item.id}</td>
+          <td>{item.username}</td>
+          <td>{item.name}</td>
+        </tr>
+      );
     });
   };
 
   render() {
-    const { role } = this.props.user;
+    var userCookie = cookie.get("stillLogin");
 
-    if (role !== "") {
+    if (userCookie === undefined) {
+      return <Redirect to="/admin/login" />;
+    } else {
       return (
         <div id="App">
+          <Redirect to="/managegenre" />
           <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
           <div id="page-wrap">
             <div className="container">
@@ -317,7 +346,7 @@ class ManageGenre extends Component {
                     </thead>
                     <tbody>{this.renderGenre()}</tbody>
                   </table>
-                  <h1 className="display-4 text-center">Input Genre</h1>
+                  <h3 className="text-center">Input Genre</h3>
                   <table className="table text-center">
                     <thead>
                       <tr>
@@ -330,7 +359,7 @@ class ManageGenre extends Component {
                         <th scope="col">ID</th>
                         <th scope="col">
                           <input
-                            ref={input => (this.name = input)}
+                            ref={input => (this.genre = input)}
                             className="form-control"
                             type="text"
                           />
@@ -338,7 +367,7 @@ class ManageGenre extends Component {
                         <th scope="col">
                           <button
                             className="btn btn-outline-warning"
-                            onClick={this.onAddProduct}
+                            onClick={this.onAddGenre}
                           >
                             Add
                           </button>
@@ -372,9 +401,7 @@ class ManageGenre extends Component {
                     </thead>
                     <tbody>{this.renderGenreProduct()}</tbody>
                   </table>
-                  <h3 className="display-4 text-center">
-                    Input Product Genre
-                  </h3>
+                  <h3 className="text-center">Input Product Genre</h3>
                   <table className="table text-center">
                     <thead>
                       <tr>
@@ -387,24 +414,30 @@ class ManageGenre extends Component {
                     <tbody>
                       <tr>
                         <th scope="col">ID</th>
-                        <th scope="col">
-                          <input
-                            ref={input => (this.productName = input)}
+                        <th>
+                          <select
                             className="form-control"
-                            type="text"
-                          />
+                            ref={input => {
+                              this.ProductId = input;
+                            }}
+                          >
+                            {this.selectProduct()}
+                          </select>
                         </th>
-                        <th scope="col">
-                          <input
-                            ref={input => (this.name = input)}
+                        <th>
+                          <select
                             className="form-control"
-                            type="text"
-                          />
+                            ref={input => {
+                              this.GenreId = input;
+                            }}
+                          >
+                            {this.selectGenre()}
+                          </select>
                         </th>
                         <th scope="col">
                           <button
                             className="btn btn-outline-warning"
-                            onClick={this.onAddProduct}
+                            onClick={this.onAddGenreProduct}
                           >
                             Add
                           </button>
@@ -443,8 +476,6 @@ class ManageGenre extends Component {
           </div>
         </div>
       );
-    } else {
-      return <Redirect to="/admin/login" />;
     }
   }
 }

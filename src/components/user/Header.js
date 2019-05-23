@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
-import { Logout } from "../actions";
+import { Logout } from "../../actions";
 
 
-import {onLoginClick} from '../actions'
-import {afterTwoSeconds} from '../actions'
+import {onLoginClick} from '../../actions'
+import {afterTwoSeconds} from '../../actions'
 
 class Header extends Component {
     onSubmitClick = () => {
@@ -35,12 +35,12 @@ class Header extends Component {
         this.props.Logout()
     }
   render() {
-    const { role } = this.props.user;
+    const { username,role } = this.props.user;
     
     if (role === 1) {
       return (
         <div>
-          <Redirect to="/admin/dashboard" />
+          {/* <Redirect to="/admin/dashboard" /> */}
           <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-3">
             <div className="container">
               <Link className="navbar-brand" to="/">
@@ -60,6 +60,15 @@ class Header extends Component {
               >
                 <ul className="navbar-nav col-12">
                   <li className="nav-item m-2 ml-auto">
+
+                  </li>
+                  <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
+                    <Link
+                      className="nav-link"
+                      to="/admin/dashboard"
+                    >
+                      <i className="fas fa-home fa-2x text-secondary" />
+                    </Link>
                     
                   </li>
                   <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
@@ -73,6 +82,7 @@ class Header extends Component {
                       <div className="dropdown-menu form-wrapper">
                       <div className="mx-auto card">
                         <div className="card-body">
+                          <p className="lead text-center">Halo admin {username} !</p>
                           <button
                             className="btn btn-secondary btn-block mt-5"
                             onClick={this.logout}

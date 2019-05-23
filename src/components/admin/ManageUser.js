@@ -2,9 +2,12 @@ import React, { Component } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
+import cookies from 'universal-cookie'
 
 import Sidebar from "./Sidebar";
-import "./style.css";
+import "../style.css";
+
+const cookie = new cookies()
 
 class ManageUser extends Component {
   state = {
@@ -115,10 +118,13 @@ class ManageUser extends Component {
   };
 
   render() {
-    const { role } = this.props.user;
-    console.log(role);
+    var userCookie = cookie.get("stillLogin");
 
-    if (role !== "") {
+    if (userCookie === undefined ) {
+      return (
+        <Redirect to="/admin/login" />
+      ) 
+    }else{
       return (
         <div id="App">
           <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
@@ -148,8 +154,6 @@ class ManageUser extends Component {
           </div>
         </div>
       );
-    } else {
-      return <Redirect to="/admin/login" />;
     }
   }
 }
