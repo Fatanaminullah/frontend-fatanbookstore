@@ -259,8 +259,8 @@ class Header extends Component {
                           >
                             Login
                           </button>
-                          {this.onErrorLogin()}
-                          {this.props.afterTwoSeconds()}
+                          {/* {this.onErrorLogin()}
+                          {this.props.afterTwoSeconds()} */}
 
                           <p className="lead text-center">
                             Don't have account ?

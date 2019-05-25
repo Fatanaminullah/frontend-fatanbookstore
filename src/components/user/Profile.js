@@ -20,7 +20,8 @@ class Profile extends Component {
   }
   state = {
     edit: true,
-    data: undefined
+    data: undefined,
+    kodepos:[]
   };
   saveProfile = async id => {
     const firstname = this.firstname.value;
@@ -79,6 +80,7 @@ class Profile extends Component {
       console.log(e);
     }
   };
+  
   profile = () => {
     const {username,firstname,lastname,age,id,email,address,birthday} = this.state.data.user;
     var birth = moment(birthday);

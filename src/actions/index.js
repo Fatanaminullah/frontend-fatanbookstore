@@ -75,7 +75,7 @@ export const onRegister = (firstname,lastname,username,email,password,birthday,a
     if (firstname === "" || lastname === "" || username === "" || password === "" || email === "") {
       dispatch({
         type: "AUTH_EMPTY",
-        payload: "please fill the form"
+        payload: "* this form cannot be empty"
       });
     }else{
       axios.post("/user/register", {

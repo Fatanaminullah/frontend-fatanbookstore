@@ -30,8 +30,6 @@ class App extends Component {
         var idCookie = parseInt(cookie.get("idLogin"));
         var roleCookie = parseInt(cookie.get("role"));
 
-        console.log(idCookie);
-        
 
         if (userCookie !== undefined || idCookie !== NaN || roleCookie !== NaN) {
             
