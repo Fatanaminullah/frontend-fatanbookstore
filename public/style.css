@@ -2,7 +2,7 @@ table img.list{
     width: 40px !important
 }
 img.card-img-top{
-    width : 150px !important
+    width : 100% !important
 }
 .card-body img.img-detail{
     width: 250px !important

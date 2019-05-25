@@ -70,46 +70,31 @@ export const onLoginAdmin = (username, password) => {
   };
 };
 
-export const onSignupClick = (username, email, password) => {
+export const onRegister = (firstname,lastname,username,email,password,birthday,address,kodepos) => {
   return dispatch => {
-    axios
-      .get("/users", {
-        params: {
-          username
-        }
-      })
-      .then(res => {
-        if (username === "" || email === "" || password === "") {
-          dispatch({
-            type: "AUTH_EMPTY",
-            payload: "please fill the form"
-          });
-        } else if (res.data.length === 0) {
-          axios
-            .post("/users", {
-              username,
-              email,
-              password
-            })
-            .then(res => {
-              console.log("Registrasi Berhasil");
-              dispatch({
-                type: "REGISTER_SUCCESS",
-                payload: `Register Success, please login to continue!`
-              });
-            });
-        } else {
-          console.log(res.data);
-
-          dispatch({
-            type: "AUTH_ERROR",
-            payload: "username has been taken"
-          });
-        }
-      })
-      .catch(e => {
-        console.log(e.response.data.replace("User validation failed: ", ""));
+    if (firstname === "" || lastname === "" || username === "" || password === "" || email === "") {
+      dispatch({
+        type: "AUTH_EMPTY",
+        payload: "please fill the form"
       });
+    }else{
+      axios.post("/user/register", {
+        firstname,lastname,username,email,password,birthday,address,kodepos
+        })
+        .then(res => {
+          console.log("Register Success");
+          dispatch({
+            type: "REGISTER_SUCCESS",
+            payload: `Register Success, please check your email to activate your account!`
+          });
+        },err => {
+          console.log(err);
+            dispatch({
+              type: "AUTH_ERROR",
+              payload:"REgister Failed"
+            });
+      })
+    }
   };
 };
 export const afterError = () => {

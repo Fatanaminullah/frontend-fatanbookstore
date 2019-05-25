@@ -13,7 +13,6 @@ class Header extends Component {
         const user = this.username.value
         const pass = this.password.value
         this.props.onLoginClick(user, pass)
-         
     }
     onErrorLogin = () => {
         if (this.props.error !== '') {
@@ -103,7 +102,6 @@ class Header extends Component {
     } else if(role === 2){
       return (
         <div>
-          <Redirect to="/" />
           <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-3">
             <div className="container">
               <Link className="navbar-brand" to="/">
@@ -138,21 +136,31 @@ class Header extends Component {
                     </form>
                   </li>
                   <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
-                    <Link
-                      className="nav-link"
-                      data-toggle="dropdown"
-                      to="/"
-                    >
-                      <i className="fas fa-user fa-2x text-secondary" />
-                    </Link>
-                      <div className="dropdown-menu form-wrapper">
-                      <div className="mx-auto card">
+                    <i className="fas fa-user fa-2x text-secondary" />
+                    <div className="dropdown-menu form-wrapper">
+                      <div className="card">
+                        <p className="card-title text-center text-bold" style={{fontSize:25}}>Hai {username}!</p>
                         <div className="card-body">
+                          <Link to="/profile">
+                            <p className="text-center text-dark">Profile</p>
+                          </Link>
+                          <Link to="/">
+                            <p className="text-center text-dark">Your Address</p>
+                          </Link>
+                          <Link to="/">
+                            <p className="text-center text-dark">Orders</p>
+                          </Link>
+                          <Link to="/">
+                            <p className="text-center text-dark">History Orders</p>
+                          </Link>
+                          <Link to="/">
+                            <p className="text-center text-dark">Payment Confirmation</p>
+                          </Link>
                           <button
-                            className="btn btn-secondary btn-block mt-5"
+                            className="btn btn-light btn-block mt-5"
                             onClick={this.logout}
                           >
-                            Logout
+                            Logout <i className="fas fa-sign-out-alt text-secondary"></i>
                           </button>
                         </div>
                       </div>
@@ -205,24 +213,21 @@ class Header extends Component {
                           placeholder="Search here..."
                         />
                         <span className="input-group-addon">
-                          <i className="fas fa-search"></i>
+                          <i className="fas fa-search" />
                         </span>
                       </div>
                     </form>
                   </li>
                   <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
-                    <Link
-                      className="nav-link"
-                      data-toggle="dropdown"
-                      to="/login"
-                    >
-                      <i className="fas fa-user fa-2x text-secondary" />
-                    </Link>
+                    <i className="fas fa-user fa-2x text-secondary" />
+
                     <div className="dropdown-menu form-wrapper">
                       <div className="mx-auto card">
                         <div className="card-body">
                           <div className="border-bottom border-secondary card-title">
-                            <h1>Login</h1>
+                            <Link to="/login" className="text-dark">
+                              <h1 className="text-center">Login</h1>
+                            </Link>
                           </div>
                           <div className="card-title mt-1">
                             <h4>Username</h4>
@@ -255,12 +260,15 @@ class Header extends Component {
                             Login
                           </button>
                           {this.onErrorLogin()}
-                            {this.props.afterTwoSeconds()}
+                          {this.props.afterTwoSeconds()}
 
-                          <p className="lead">
-                            Don't have account ?{" "}
-                            <Link to="/register">Sign Up!</Link>
+                          <p className="lead text-center">
+                            Don't have account ?
                           </p>
+                            <Link to="/register"><p className="lead text-center">
+                              Sign Up!
+                              </p>
+                              </Link>
                         </div>
                       </div>
                     </div>
