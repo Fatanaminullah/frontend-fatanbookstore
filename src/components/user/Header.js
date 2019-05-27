@@ -1,14 +1,24 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import axios from "axios";
+import cookies from "universal-cookie";
 
 import { Logout } from "../../actions";
-
-
 import {onLoginClick} from '../../actions'
 import {afterTwoSeconds} from '../../actions'
+import image from '../../img/avatar2.jpg'
+
+const cookie = new cookies();
 
 class Header extends Component {
+  state = {
+    data: undefined
+  };
+  componentDidMount() {
+    const userid = cookie.get("idLogin");
+    this.getProfile(userid);
+  }
     onSubmitClick = () => {
         const user = this.username.value
         const pass = this.password.value
@@ -33,6 +43,40 @@ class Header extends Component {
         
         this.props.Logout()
     }
+    getProfile = async userid => {
+      try {
+        const res = await axios.get(
+          `http://localhost:2000/users/profile/${userid}`
+        );
+        
+  
+        this.setState({
+          data: res.data
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    profilePicture = () => {
+      if (this.state.data.user.avatar !== undefined) {
+        return (
+          <img
+            src={this.state.data.photo}
+            alt={this.state.data.user.username}
+            key={new Date()}
+            className="rounded-circle float-left"
+          />
+        );
+      }
+      return (
+        <img
+          src={image}
+          alt="avatar"
+          key={new Date()}
+          className="rounded-circle float-left"
+        />
+      );
+    };
   render() {
     const { username,role } = this.props.user;
     
@@ -100,6 +144,7 @@ class Header extends Component {
       );
       
     } else if(role === 2){
+      if(this.state.data !== undefined){
       return (
         <div>
           <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-3">
@@ -139,28 +184,47 @@ class Header extends Component {
                     <i className="fas fa-user fa-2x text-secondary" />
                     <div className="dropdown-menu form-wrapper">
                       <div className="card">
-                        <p className="card-title text-center text-bold" style={{fontSize:25}}>Hai {username}!</p>
+                        <div className="d-flex justify-content-between card-header">
+                          {this.profilePicture()}
+                          <p
+                            className="text-right font-weight-bold my-auto"
+                            style={{ fontSize: 14 }}
+                          >
+                            Hai {username}!
+                          </p>
+                        </div>
                         <div className="card-body">
                           <Link to="/profile">
-                            <p className="text-center text-dark">Profile</p>
+                            <p className="text-center text-dark">
+                              Profile
+                            </p>
                           </Link>
                           <Link to="/">
-                            <p className="text-center text-dark">Your Address</p>
+                            <p className="text-center text-dark">
+                              Your Address
+                            </p>
                           </Link>
                           <Link to="/">
-                            <p className="text-center text-dark">Orders</p>
+                            <p className="text-center text-dark">
+                              Orders
+                            </p>
                           </Link>
                           <Link to="/">
-                            <p className="text-center text-dark">History Orders</p>
+                            <p className="text-center text-dark">
+                              History Orders
+                            </p>
                           </Link>
                           <Link to="/">
-                            <p className="text-center text-dark">Payment Confirmation</p>
+                            <p className="text-center text-dark">
+                              Payment Confirmation
+                            </p>
                           </Link>
                           <button
                             className="btn btn-light btn-block mt-5"
                             onClick={this.logout}
                           >
-                            Logout <i className="fas fa-sign-out-alt text-secondary"></i>
+                            Logout{" "}
+                            <i className="fas fa-sign-out-alt text-secondary" />
                           </button>
                         </div>
                       </div>
@@ -182,6 +246,12 @@ class Header extends Component {
           </nav>
         </div>
       );
+      }else{
+        return(
+          <h1>Loading</h1>
+        )
+
+      }
     }else{
       return (
         <div>

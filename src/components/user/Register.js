@@ -100,40 +100,55 @@ class Register extends Component {
   filterAddress = () => {
       const id = this.kodepos.value
 
-      console.log(id);
+      if(id === ""){
+        this.setState({
+          address:[]
+        })
+      }
       axios
         .get(`http://localhost:2000/address/${id}` 
         )
         .then(res => {
+          console.log(res.data);
             
             this.setState({
                 address: res.data
             });
-        });
-        console.log(this.state.address);
-        this.detailAddress()
+            
+          });
+        
   }
   detailAddress = () => {
-      
-      if(this.state.address[0] !== undefined){
-          return(
-              <form className="input-group">
-                  <input className="form-control"
-                  type="text"
-                  defaultValue={this.state.address[0].provinsi}
-                  />
-              </form>
-          )
-        }else{
-              return(
-                  <form className="input-group">
-                      <input className="form-control"
-                      type="text"
-                      defaultValue="Input Your Postal Code"
-                      />
-                  </form>
-              )
-      }
+    if (this.state.address[0] !== undefined) {
+      const {
+        provinsi,
+        kabupaten,
+        kecamatan,
+        kelurahan
+      } = this.state.address[0];
+      var address = `${kelurahan}, ${kecamatan}, ${kabupaten}, ${provinsi}`;
+      return (
+        <form className="input-group">
+          <input
+            className="form-control"
+            type="text"
+            placeholder={address}
+            disabled
+          />
+        </form>
+      );
+    } else {
+      return (
+        <form className="input-group">
+          <input
+            className="form-control"
+            type="text"
+            placeholder="select your postal code"
+            disabled
+          />
+        </form>
+      );
+    }
   }
 
   render() {
@@ -259,6 +274,7 @@ class Register extends Component {
                 ref={input => {
                   this.kodepos = input;
                 }}
+                onClick={this.filterAddress}
               >
                 {this.selectKodepos()}
               </select>

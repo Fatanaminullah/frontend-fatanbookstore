@@ -10,18 +10,16 @@ import image from '../../img/avatar2.jpg'
 
 const cookie = new cookies();
 
-var moment = require('moment');
 
 
 
-class Profile extends Component {
+class AddressContact extends Component {
   cardheader = {
     backgroundColor: "#d3d3d3"
   }
   state = {
     edit: true,
-    data: undefined,
-    kodepos:[]
+    data: undefined 
   };
   saveProfile = async id => {
     const firstname = this.firstname.value;
@@ -42,60 +40,41 @@ class Profile extends Component {
     await this.getProfile(id);
     this.setState({ edit: !this.state.edit });
   };
-  uploadAvatar = async userid => {
-    const formData = new FormData();
-    var imagefile = this.gambar;
-
-    formData.append("avatar", imagefile.files[0]);
-    try {
-      await axios.post(
-        `http://localhost:2000/avatar/uploads/${userid}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        }
-      );
-      this.getProfile(userid);
-    } catch (e) {
-      console.log("upload gagal" + e);
-    }
-  };
-
+  
   componentDidMount() {
     const userid = cookie.get("idLogin");
-    this.getProfile(userid);
+    this.getAddress(userid);
   }
-  getProfile = async userid => {
+  getAddress = async userid => {
     try {
       const res = await axios.get(
-        `http://localhost:2000/users/profile/${userid}`
+        `http://localhost:2000/user/info/${userid}`
       );
 
       this.setState({
         data: res.data
       });
+      
     } catch (e) {
       console.log(e);
     }
   };
   
-  profile = () => {
-    const {username,firstname,lastname,age,id,email,address,birthday} = this.state.data.user;
-    var birth = moment(birthday);
-    var date = birth.utc().format("YYYY-MM-DD");
+  address = () => {
+    const {address,kecamatan,kelurahan,kabupaten,provinsi,kodepos,notelp} = this.state.data[0];
+    console.log(this.state.data);
 
     if (this.state.edit) {
       return (
         <div>
           <div className="card-body">
-            <li className="list-group-item pl-0">{`Firstname: ${firstname}`}</li>
-            <li className="list-group-item pl-0">{`Lastname: ${lastname}`}</li>
-            <li className="list-group-item pl-0">{`Username: ${username}`}</li>
-            <li className="list-group-item pl-0">{`Age: ${age}`}</li>
-            <li className="list-group-item pl-0">{`Address: ${address}`}</li>
-            <li className="list-group-item pl-0">{`Email: ${email}`}</li>
+            <li className="list-group-item pl-1"><p className="font-weight-bold">Address : </p><p className="lead ">{address}</p></li>
+            <li className="list-group-item pl-1"><p className="font-weight-bold">Kodepos : </p><p className="lead ">{kodepos}</p></li>
+            <li className="list-group-item pl-1"><p className="font-weight-bold">Provinsi : </p><p className="lead ">{provinsi}</p></li>
+            <li className="list-group-item pl-1"><p className="font-weight-bold">Kabupaten/Kota : </p><p className="lead ">{kabupaten}</p></li>
+            <li className="list-group-item pl-1"><p className="font-weight-bold">Kecamatan : </p><p className="lead ">{kecamatan}</p></li>
+            <li className="list-group-item pl-1"><p className="font-weight-bold">Kelurahan : </p><p className="lead ">{kelurahan}</p></li>
+            <li className="list-group-item pl-1"><p className="font-weight-bold">Phone Number : </p><p className="lead ">{notelp}</p></li>
           </div>
           <div className="card-footer">
             <div className="d-flex justify-content-between">
@@ -121,7 +100,7 @@ class Profile extends Component {
             ref={input => {
               this.firstname = input;
             }}
-            defaultValue={firstname}
+            // defaultValue={firstname}
           />
         </li>
         <li className="list-group-item pl-0">
@@ -131,7 +110,7 @@ class Profile extends Component {
             ref={input => {
               this.lastname = input;
             }}
-            defaultValue={lastname}
+            // defaultValue={lastname}
           />
         </li>
         <li className="list-group-item pl-0">
@@ -141,7 +120,7 @@ class Profile extends Component {
             ref={input => {
               this.username = input;
             }}
-            defaultValue={username}
+            // defaultValue={username}
           />
         </li>
         <li className="list-group-item pl-0">
@@ -151,7 +130,7 @@ class Profile extends Component {
             ref={input => {
               this.birthday = input;
             }}
-            defaultValue={date}
+            // defaultValue={date}
           />
         </li>
         <li className="list-group-item pl-0">
@@ -161,7 +140,7 @@ class Profile extends Component {
             ref={input => {
               this.address = input;
             }}
-            defaultValue={address}
+            // defaultValue={address}
           />
         </li>
         <li className="list-group-item pl-0">
@@ -171,14 +150,14 @@ class Profile extends Component {
             ref={input => {
               this.email = input;
             }}
-            defaultValue={email}
+            // defaultValue={email}
           />
         </li>
         <li className="list-group-item px-0">
           <div className="d-flex justify-content-center">
             <button
               onClick={() => {
-                this.saveProfile(id);
+                // this.saveProfile(id);
               }}
               className="btn btn-outline-primary"
             >
@@ -201,45 +180,28 @@ class Profile extends Component {
       </div>
     );
   };
-  profilePicture = () => {
-    if (this.state.data.user.avatar !== null) {
-      return (
-        <img
-          src={this.state.data.photo}
-          alt={this.state.data.user.username}
-          key={new Date()}
-          className="card-img-top"
-        />
-      );
-    }
-    return (
-      <img
-        src={image}
-        alt="avatar"
-        key={new Date()}
-        className="card-img-top"
-      />
-    );
-  };
 
   render() {
     if (cookie.get("stillLogin")) {
-      if (this.state.data !== undefined) {
-          
+        if (this.state.data !== undefined) {
         return (
           <div className="container">
             <div className="row">
               <div className="col-3">
                 <div className="card p-0">
-                  <h3 className="text-center card-title p-3">Your Account</h3>
-                  <div className="card-header" style={this.cardheader}>
+                  <h3 className="text-center card-title p-3">
+                    Your Account
+                  </h3>
+                  <div className="card-header">
                     <Link to="/profile" className="text-dark">
                       <p className="lead text-center">Profile</p>
                     </Link>
                   </div>
-                  <div className="card-header">
+                  <div className="card-header" style={this.cardheader}>
                     <Link to="/addresscontact" className="text-dark">
-                      <p className="lead text-center">Address & Contact Info</p>
+                      <p className="lead text-center">
+                        Address & Contact Info
+                      </p>
                     </Link>
                   </div>
                   <div className="card-header">
@@ -249,59 +211,27 @@ class Profile extends Component {
                     <p className="lead text-center">Order History</p>
                   </div>
                   <div className="card-header">
-                    <p className="lead text-center">Payment Confirmation</p>
+                    <p className="lead text-center">
+                      Payment Confirmation
+                    </p>
                   </div>
                   <div className="card-body" />
                 </div>
               </div>
               <div className="col-9">
-                <div className="card p-0">
-                  <div className="row">
-                    <div className="col-8">
-                      <ul className="list-group list-group-flush">
-                        <div className="card-header">
-                          <p className="lead text-center">User's Information</p>
-                        </div>
-                        {this.profile()}
-                      </ul>
-                    </div>
-                    <div className="col-4">
-                      <div className="card-header">
-                        <p className="lead text-center">Profile Picture</p>
-                      </div>
-                      <div className="card-body">
-                      {this.profilePicture()}
-                        <div className="custom-file">
-                          <input
-                            type="file"
-                            id="myfile"
-                            ref={input => (this.gambar = input)}
-                            className="custom-file-input"
-                          />
-                          <label className="custom-file-label" for="myfile">
-                            choose image
-                          </label>
-                        </div>
-                        <div className="d-flex justify-content-between py-2">
-                          <p />
-                          <button
-                            className="btn btn-primary"
-                            onClick={() =>
-                              this.uploadAvatar(this.props.user.id)
-                            }
-                          >
-                            Upload
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                <div className="card">
+                <ul className="list-group list-group-flush">
+                  <div className="card-header">
+                    <h3>Address & Contact Info</h3>
                   </div>
+                  {this.address()}
+                    </ul>
                 </div>
               </div>
             </div>
           </div>
         );
-      } else {
+    } else {
         return <h1>Loading</h1>;
       }
     } else {
@@ -317,4 +247,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   {onEdit}
-)(Profile);
+)(AddressContact);

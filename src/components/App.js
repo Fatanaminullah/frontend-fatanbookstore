@@ -19,6 +19,7 @@ import ShoppingCart from './user/ShoppingCart'
 import LoginAdmin from './admin/LoginAdmin';
 import DashboardAdmin from './admin/DashboardAdmin';
 import Profile from './user/Profile';
+import AddressContact from './user/AddressContact';
 
 const cookie = new cookies()
 
@@ -48,6 +49,7 @@ class App extends Component {
                 <Route path="/login" component={Login}/>
                 <Route path="/register" component={Register}/>
                 <Route path="/profile" component={Profile}/>
+                <Route path="/addresscontact" component={AddressContact}/>
                 <Route path="/manageproduct" component={ManageProduct}/>
                 <Route path="/manageuser" component={ManageUser}/>
                 <Route path="/managegenre" component={ManageGenre}/>
