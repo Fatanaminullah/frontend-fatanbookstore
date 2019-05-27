@@ -199,9 +199,9 @@ class Header extends Component {
                               Profile
                             </p>
                           </Link>
-                          <Link to="/">
+                          <Link to="/addresscontact">
                             <p className="text-center text-dark">
-                              Your Address
+                              My Address
                             </p>
                           </Link>
                           <Link to="/">
