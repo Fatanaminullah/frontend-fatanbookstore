@@ -4,6 +4,9 @@ table img.list{
 img.card-img-top{
     width : 100% !important
 }
+img.card-img-top.genre{
+    width : 150px !important
+}
 img.rounded-circle{
     width: 50px !important;
 }

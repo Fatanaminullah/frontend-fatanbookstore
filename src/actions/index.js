@@ -16,8 +16,6 @@ export const onLoginClick = (username, password) => {
           cookie.set("stillLogin", res.data.username, { path: "/" });
           cookie.set("role", res.data.role, { path: "/" });
 
-          console.log(res);
-
           dispatch({
             type: "LOGIN_SUCCESS",
             payload: {

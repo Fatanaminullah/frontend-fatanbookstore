@@ -40,6 +40,8 @@ class ManageGenre extends Component {
         genreSearch: res.data,
         selectedGenre: 0
       });
+      console.log(this.state.genre);
+      
     });
   };
   getGenreproduct = () => {
@@ -60,18 +62,31 @@ class ManageGenre extends Component {
       });
     });
   };
-  saveGenre = id => {
+  saveGenre = async id => {
     const name = this.editGenreName.value;
+    const formData = new FormData()
+    const genre_image = this.editImage.files[0]
 
-    axios
-      .patch(`http://localhost:2000/genre/edit/${id}`, {
-        name
-      })
-      .then(() => {
-        this.getGenre();
-        this.getGenreproduct();
-        this.getGenreusers();
-      });
+    formData.append("genre_image", genre_image);
+    formData.append("name", name);
+
+    try{
+      await axios
+        .patch(`http://localhost:2000/genre/edit/${id}`, formData, {
+         headers : {
+          "Content-Type": "multipart/form-data"
+         }
+        })
+        .then(() => {
+          this.getGenre();
+          this.getGenreproduct();
+          this.getGenreusers();
+        });
+    }catch(err){
+      console.log(err);
+      
+    }
+      
   };
   saveGenPro = id => {
     const productId = parseInt(this.selectProductId.value);
@@ -180,6 +195,9 @@ class ManageGenre extends Component {
         return (
           <tr key={item.id}>
             <td>{item.id}</td>
+            <td>
+              <img className="list" src={item.genre_image} alt={item.name}/>
+            </td>
             <td>{item.name}</td>
             <td>
               <button
@@ -197,6 +215,19 @@ class ManageGenre extends Component {
         return (
           <tr key={item.id}>
             <td>{item.id}</td>
+            <td>
+            <div className="custom-file">
+              <input
+                className="w-100"
+                ref={input => {
+                  this.editImage = input;
+                }}
+                type="file"
+                id="customFile"
+              />
+              <label class="custom-file-label" for="customFile"></label>
+              </div>
+            </td>
             <td>
               <input
                 className="form-control"
@@ -340,6 +371,7 @@ class ManageGenre extends Component {
                     <thead>
                       <tr>
                         <th scope="col">ID</th>
+                        <th scope="col">IMAGE</th>
                         <th scope="col">NAME</th>
                         <th scope="col">ACTION</th>
                       </tr>

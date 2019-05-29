@@ -12,8 +12,6 @@ const cookie = new cookies();
 
 var moment = require('moment');
 
-
-
 class Profile extends Component {
   cardheader = {
     backgroundColor: "#d3d3d3"
@@ -21,7 +19,10 @@ class Profile extends Component {
   state = {
     edit: true,
     data: undefined,
-    kodepos:[]
+    kodepos:[],
+    genreUser : [],
+    genre : [],
+    editGenre:true
   };
   saveProfile = async id => {
     const firstname = this.firstname.value;
@@ -66,6 +67,8 @@ class Profile extends Component {
   componentDidMount() {
     const userid = cookie.get("idLogin");
     this.getProfile(userid);
+    this.getUserGenre(userid);
+    this.getGenre(userid)
   }
   getProfile = async userid => {
     try {
@@ -79,6 +82,29 @@ class Profile extends Component {
     } catch (e) {
       console.log(e);
     }
+  };
+  getUserGenre = async userid => {
+    try {
+      const res = await axios.get(
+        `http://localhost:2000/users/genre/${userid}`
+      );
+
+      this.setState({
+        genreUser: res.data
+      });
+      
+      
+      
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  getGenre = (userid) => {
+    axios.get(`http://localhost:2000/genre/${userid}`).then(res => {
+      this.setState({
+        genre: res.data
+      });
+    });
   };
   
   profile = () => {
@@ -221,6 +247,127 @@ class Profile extends Component {
       />
     );
   };
+  addGenreUser = async (userid,genreid) =>{
+    try {
+      await axios.post(
+        `http://localhost:2000/users/addgenre/${userid}/${genreid}`,{
+        }
+      );
+      console.log(`success`);
+      
+      this.getUserGenre(userid);
+      this.getGenre(userid)
+      
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  removeGenreUser = async (userid,genreid) => {
+    try {
+      await axios.delete(
+        `http://localhost:2000/users/deletegenre/${userid}/${genreid}`,{
+        }
+      );
+      this.getUserGenre(userid);
+      this.getGenre(userid)
+      
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  buttonGenre = () => {
+    if(this.state.editGenre){
+      return (
+            <button
+              className="btn btn-outline-warning"
+              onClick={() => {
+                this.setState({ editGenre: !this.state.editGenre });
+              }}
+            >
+              Add More Genre Here!
+            </button>
+      );
+  }else{
+    return(
+            <button
+              className="btn btn-outline-primary"
+              onClick={() => {
+                this.setState({
+                  editGenre: !this.state.editGenre
+                });
+              }}
+            >
+              Done
+            </button>
+    )
+
+  }
+  }
+  genre = () => {
+    const userid = cookie.get("idLogin");
+    if(this.state.genreUser.length === 0){
+      return(
+          <div className="card w-100">
+            <div className="card-body">
+              <div className="d-flex justify-content-center">
+              <h3 className="text-center">You havent choose your genre yet, please choose below!</h3>
+              <i className="fas fa-hand-point-down fa-2x"></i>
+              </div>
+            </div>
+          </div>
+      )
+    }
+      return this.state.genreUser.map(item => {
+        return (
+          <div className="card">
+            <div className="card-body">
+              <img
+                className="card-img-top genre"
+                src={item.genre_image}
+                alt={item.name}
+              />
+            </div>
+            <div className="card-footer d-flex flex-column">
+              <p className="text-center font-weight-bold">
+                {item.name}
+              </p>
+              <button className="btn btn-outline-success" onClick={() => {this.removeGenreUser(userid,item.id)}}>
+                Remove Genre
+              </button>
+            </div>
+          </div>
+        );
+      })
+  }
+  addGenre = () => {
+    const userid = cookie.get("idLogin");
+    if(this.state.editGenre){
+        return null
+    }else{
+      return this.state.genre.map(item => {
+            return (
+              <div className="card">
+               
+                <div className="card-body">
+                  <img
+                    className="card-img-top genre"
+                    src={item.genre_image}
+                    alt={item.name}
+                  />
+                </div>
+                <div className="card-footer d-flex flex-column">
+                  <p className="font-weight-bold text-center">
+                    {item.name}
+                  </p>
+                  <button className="btn btn-outline-success" onClick={() => {this.addGenreUser(userid,item.id)}}>
+                    Add Genre
+                  </button>
+                </div>
+              </div>
+            );
+        })
+    }
+  }
 
   render() {
     if (cookie.get("stillLogin")) {
@@ -231,7 +378,9 @@ class Profile extends Component {
             <div className="row">
               <div className="col-3">
                 <div className="card p-0">
-                  <h3 className="text-center card-title p-3">Your Account</h3>
+                  <h3 className="text-center card-title p-3">
+                    Your Account
+                  </h3>
                   <div className="card-header" style={this.cardheader}>
                     <Link to="/profile" className="text-dark">
                       <p className="lead text-center">Profile</p>
@@ -239,7 +388,9 @@ class Profile extends Component {
                   </div>
                   <div className="card-header">
                     <Link to="/addresscontact" className="text-dark">
-                      <p className="lead text-center">Address & Contact Info</p>
+                      <p className="lead text-center">
+                        Address & Contact Info
+                      </p>
                     </Link>
                   </div>
                   <div className="card-header">
@@ -249,28 +400,34 @@ class Profile extends Component {
                     <p className="lead text-center">Order History</p>
                   </div>
                   <div className="card-header">
-                    <p className="lead text-center">Payment Confirmation</p>
+                    <p className="lead text-center">
+                      Payment Confirmation
+                    </p>
                   </div>
                   <div className="card-body" />
                 </div>
               </div>
               <div className="col-9">
-                <div className="card p-0">
+                <div className="card py-1">
                   <div className="row">
                     <div className="col-8">
                       <ul className="list-group list-group-flush">
                         <div className="card-header">
-                          <p className="lead text-center">User's Information</p>
+                          <p className="lead text-center">
+                            User's Information
+                          </p>
                         </div>
                         {this.profile()}
                       </ul>
                     </div>
                     <div className="col-4">
                       <div className="card-header">
-                        <p className="lead text-center">Profile Picture</p>
+                        <p className="lead text-center">
+                          Profile Picture
+                        </p>
                       </div>
                       <div className="card-body">
-                      {this.profilePicture()}
+                        {this.profilePicture()}
                         <div className="custom-file">
                           <input
                             type="file"
@@ -278,7 +435,10 @@ class Profile extends Component {
                             ref={input => (this.gambar = input)}
                             className="custom-file-input"
                           />
-                          <label className="custom-file-label" for="myfile">
+                          <label
+                            className="custom-file-label"
+                            for="myfile"
+                          >
                             choose image
                           </label>
                         </div>
@@ -294,6 +454,26 @@ class Profile extends Component {
                           </button>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="card my-2">
+                  <div className="row">
+                    <div className="col-12">
+                      <ul className="list-group list-group-flush">
+                        <div className="card-header d-flex justify-content-between">
+                          <p className="lead text-center font-weight-bold">
+                            Your Genre
+                          </p>
+                        </div>
+                        <div className="card-body d-flex flex-wrap justify-content-between">
+                          {this.genre()}
+                          {this.buttonGenre()}
+                        </div>
+                        <div className="card-body d-flex flex-wrap justify-content-between">
+                          {this.addGenre()}
+                        </div>
+                      </ul>
                     </div>
                   </div>
                 </div>

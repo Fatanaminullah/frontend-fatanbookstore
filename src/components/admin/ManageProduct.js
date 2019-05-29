@@ -30,6 +30,7 @@ class ManageProduct extends Component {
       this.setState({ product: res.data, productSearch:res.data,selectedID: 0 });
     });
     
+    
   };
   getAuthor = () => {
     axios.get("http://localhost:2000/author").then(res => {
@@ -56,25 +57,30 @@ class ManageProduct extends Component {
       const image = this.editImage.files[0];
       const name = this.editName.value
       const stock = this.editStock.value
-      const price = parseInt(this.editPrice.value)
-      const page = parseInt(this.editPage.value)
+      const price = this.editPrice.value
+      const page = this.editPage.value
       const author = this.selectAuthorId.value
       const publisher = this.selectPublisherId.value
 
-      formData.append("images", image);
+          
+      formData.append("image", image);
       formData.append("product_name", name);
       formData.append("stock", stock);
       formData.append("price", price);
       formData.append("page", page);
       formData.append("author", author);
       formData.append("publisher", publisher);
-      await axios.patch(`http://localhost:2000/products/edit/${id}`, formData,{
-      headers:{
-        "Content-Type": "multipart/form-data"
-      }
-    }).then(() => {
-          this.getProduct()
+      
+      try{
+        await axios.patch(`http://localhost:2000/products/edit/${id}`, formData,{
+        headers:{
+          "Content-Type": "multipart/form-data"
+        }
       })
+      this.getProduct()
+      }catch (e){
+        console.log(e);
+      }
   }
   editProduct = (id) => {
       this.setState({ selectedID: id })
@@ -171,8 +177,8 @@ class ManageProduct extends Component {
                 ref={input => {
                   this.editStock = input;
                 }}
-                type="text"
-                defaultValue={item.stock}
+                type="number"
+                defaultValue={item.stock || 0}
               />
             </td>
             <td>
@@ -181,8 +187,8 @@ class ManageProduct extends Component {
                 ref={input => {
                   this.editPrice = input;
                 }}
-                type="text"
-                defaultValue={item.price}
+                type="number"
+                defaultValue={item.price || 0}
               />
             </td>
             <td>
@@ -191,8 +197,8 @@ class ManageProduct extends Component {
                 ref={input => {
                   this.editPage = input;
                 }}
-                type="text"
-                defaultValue={item.page}
+                type="number"
+                defaultValue={item.page || 0}
               />
             </td>
             <td>
@@ -256,9 +262,7 @@ class ManageProduct extends Component {
   };
 
   render() {
-    var userCookie = cookie.get("stillLogin");
-    console.log(userCookie);
-    
+    var userCookie = cookie.get("stillLogin"); 
 
     if (userCookie === undefined ) {
       return (
