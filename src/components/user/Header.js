@@ -247,6 +247,7 @@ class Header extends Component {
         </div>
       );
       }else{
+        console.log(this.state.data);
         return(
           <h1>Loading</h1>
         )

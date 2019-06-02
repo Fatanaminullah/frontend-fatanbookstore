@@ -51,6 +51,14 @@ class AddressContact extends Component {
   };
   selectKodepos = () => {
     return this.state.filterKodepos.map(item => {
+      if(item.kodepos === this.state.data[0].kodepos){
+        
+        return(
+          <option key={item.id} value={item.id} selected>
+          {item.kodepos}
+        </option>
+        )
+      }
       return (
         <option key={item.id} value={item.id}>
           {item.kodepos}
@@ -161,7 +169,7 @@ class AddressContact extends Component {
 
   onEdit = async (id,kodepos,address,phone_number) => {
       try{
-        const res = await axios.patch(`http://localhost:2000/users/info/${id}`, {
+        const res = await axios.patch(`http://localhost:2000/users/${id}`, {
           kodepos,address,phone_number
         });
         console.log(res.data);
@@ -177,6 +185,7 @@ class AddressContact extends Component {
     this.getAddress(userid);
     this.getKodepos();
     this.getProvinsi()
+    
   }
   getAddress = async userid => {
     try {
@@ -241,7 +250,7 @@ class AddressContact extends Component {
             ref={input => {
               this.kodepos = input;
             }}
-            defaultValue={kodepos}
+            defaultChecked={kodepos}
           >
             {this.selectKodepos()}
           </select>

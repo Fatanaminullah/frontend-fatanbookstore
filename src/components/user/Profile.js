@@ -278,6 +278,7 @@ class Profile extends Component {
   buttonGenre = () => {
     if(this.state.editGenre){
       return (
+        <div className="text-center w-100 p-5">
             <button
               className="btn btn-outline-warning"
               onClick={() => {
@@ -286,9 +287,11 @@ class Profile extends Component {
             >
               Add More Genre Here!
             </button>
+        </div>
       );
   }else{
     return(
+      <div className="text-center w-100 p-5">
             <button
               className="btn btn-outline-primary"
               onClick={() => {
@@ -299,6 +302,7 @@ class Profile extends Component {
             >
               Done
             </button>
+      </div>
     )
 
   }
