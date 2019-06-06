@@ -54,7 +54,7 @@ class App extends Component {
                 <Route path="/manageuser" component={ManageUser}/>
                 <Route path="/managegenre" component={ManageGenre}/>
                 <Route path="/manageauthorpublisher" component={ManageAuthorPublisher}/>
-                <Route path="/detailproduct/:asdfg" component={DetailProduct}/>
+                <Route path="/detailproduct/:idproduct" component={DetailProduct}/>
                 <Route path="/shoppingcart" component={ShoppingCart}/>
                 <Route path="/admin/login" component={LoginAdmin}/>
                 <Route path="/admin/dashboard" component={DashboardAdmin}/>

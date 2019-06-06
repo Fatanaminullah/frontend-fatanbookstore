@@ -26,7 +26,8 @@ class ManageProduct extends Component {
     images:[],
     selectedID: 0,
     selectedPromo: 0,
-    switch: true
+    switch: true,
+    switchEdit: true
   };
 
   componentDidMount() {
@@ -45,6 +46,7 @@ class ManageProduct extends Component {
         images:res.data.photo,
         selectedPromo: 0
       });  
+      
     });
   };
   addPromo = async () => {
@@ -76,7 +78,7 @@ class ManageProduct extends Component {
     }
   };
   editPromo = id => {
-    this.setState({ selectedPromo: id });
+    this.setState({ selectedPromo: id });    
   };
   getProduct = async () => {
     await axios.get("http://localhost:2000/products").then(res => {
@@ -112,9 +114,10 @@ class ManageProduct extends Component {
     const stock = this.editStock.value;
     const price = this.editPrice.value;
     const page = this.editPage.value;
-    const author = this.selectAuthorId.value;
-    const publisher = this.selectPublisherId.value;
-
+    const author = this.selectedAuthorId.value;
+    const publisher = this.selectedPublisherId.value;
+    console.log(author);
+    
     formData.append("image", image);
     formData.append("product_name", name);
     formData.append("stock", stock);
@@ -132,6 +135,42 @@ class ManageProduct extends Component {
       this.getProduct();
     } catch (e) {
       console.log(e);
+    }
+  };
+  savePromo = async (id,index) => {
+    const formData = new FormData();
+    var image = this.imageEdit.files[0];
+    
+    if(image === undefined){
+      var img = this.state.images[index]
+      image = img.slice(35, 57);
+    }
+    
+    var promo_status = Number;
+    
+    if (this.state.switchEdit === true) {
+      promo_status = 1;
+    } else {
+      promo_status = 0;
+    }
+    
+    console.log(promo_status);
+    
+    formData.append("image", image);
+    formData.append("promo_status", promo_status);
+    try {
+      const res = await axios.patch(
+        `http://localhost:2000/promo/edit/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+      );
+      this.getPromo();
+    } catch (e) {
+      console.log("upload gagal" + e);
     }
   };
   editProduct = id => {
@@ -190,12 +229,7 @@ class ManageProduct extends Component {
   };
 
   renderPromo = () => {
-    return this.state.promo.map(item => {
-      if(item.promo_status === 1){
-        item.promo_status = 'ACTIVE'
-      }else{
-        item.promo_status = 'NOT ACTIVE'
-      }
+    return this.state.promo.map((item,index) => {
       if (item.id !== this.state.selectedPromo) {
         return (
           <tr key={item.id}>
@@ -225,7 +259,7 @@ class ManageProduct extends Component {
                 <input
                   type="file"
                   id="myfile"
-                  ref={input => (this.imagePromo = input)}
+                  ref={input => (this.imageEdit = input)}
                   className="custom-file-input"
                 />
                 <label className="custom-file-label" />
@@ -240,14 +274,14 @@ class ManageProduct extends Component {
                 offstyle="success"
                 style="w-100 mx-3"
                 onChange={() => {
-                  this.setState({ switch: !this.state.switch });
+                  this.setState({ switchEdit: !this.state.switchEdit });
                 }}
               />
             </td>
             <td className="d-flex flex-column">
               <button
                 onClick={() => {
-                  this.saveEdit(item.id);
+                  this.savePromo(item.id,index);
                 }}
                 className="btn btn-success mb-2"
               >
@@ -343,9 +377,8 @@ class ManageProduct extends Component {
               <select
                 className="custom-select"
                 ref={input => {
-                  this.selectAuthorId = input;
+                  this.selectedAuthorId = input;
                 }}
-                defaultChecked={item.author}
               >
                 <option selected hidden>
                   choose here
@@ -357,7 +390,7 @@ class ManageProduct extends Component {
               <select
                 className="custom-select"
                 ref={input => {
-                  this.selectPublisherId = input;
+                  this.selectedPublisherId = input;
                 }}
               >
                 <option selected hidden>
@@ -403,24 +436,6 @@ class ManageProduct extends Component {
     });
   };
 
-  imageCarousel = () => {
-    return this.state.images.map(item =>{
-      return(  
-    <div className="carousel-item">
-      <img className="d-block w-100" src={item} alt="Second slide" />
-    </div>
-      )
-    })
-  }
-  indicatorCarousel = () => {
-    return this.state.images.map((item,index) =>{
-      return(  
-    <div>
-      <li data-target="#demo" data-slide-to={index+1} class="active" />
-    </div>
-      )
-    })
-  }
 
   render() {
     var userCookie = cookie.get("stillLogin");
@@ -432,36 +447,6 @@ class ManageProduct extends Component {
           <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
           <div id="page-wrap">
             <div className="container">
-              <div
-                id="demo"
-                className="w-80 carousel slide"
-                data-ride="carousel"
-              >
-                <ul className="carousel-indicators">
-                <li data-target="#demo" data-slide-to="0" className="active" />
-                  {this.indicatorCarousel()}
-                  </ul>
-                <div className="carousel-inner">
-                  <div class="carousel-item active">
-                    <img className="d-block w-100" src="http://localhost:2000/promo/images/1559460577002image.jpg?v=1559482346965" alt="Los Angeles" />
-                  </div>
-                  {this.imageCarousel()}
-                </div>
-                <a
-                  className="carousel-control-prev"
-                  href="#demo"
-                  data-slide="prev"
-                >
-                  <span className="carousel-control-prev-icon" />
-                </a>
-                <a
-                  className="carousel-control-next"
-                  href="#demo"
-                  data-slide="next"
-                >
-                  <span className="carousel-control-next-icon" />
-                </a>
-              </div>
               <h1 className="display-4 text-center">Product Promo</h1>
               <table className="table table-hover">
                 <thead>

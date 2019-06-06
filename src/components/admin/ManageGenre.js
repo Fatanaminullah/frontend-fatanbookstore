@@ -28,13 +28,13 @@ class ManageGenre extends Component {
     this.getGenreproduct();
     this.getGenreusers();
   }
-  getProduct = () => {
-    axios.get("http://localhost:2000/products").then(res => {
+  getProduct = async () => {
+    await axios.get("http://localhost:2000/products").then(res => {
       this.setState({ products: res.data });
     });
   };
-  getGenre = () => {
-    axios.get("http://localhost:2000/genre").then(res => {
+  getGenre = async () => {
+    await axios.get("http://localhost:2000/genre").then(res => {
       this.setState({
         genre: res.data,
         genreSearch: res.data,
@@ -44,17 +44,19 @@ class ManageGenre extends Component {
       
     });
   };
-  getGenreproduct = () => {
-    axios.get("http://localhost:2000/genre/products").then(res => {
+  getGenreproduct = async () => {
+    await axios.get("http://localhost:2000/genreproducts").then(res => {
       this.setState({
         genreProduct: res.data,
         genreProductSearch: res.data,
         selectedProduct: 0
       });
+      console.log(res.data);
+      
     });
   };
-  getGenreusers = () => {
-    axios.get("http://localhost:2000/genre/users").then(res => {
+  getGenreusers = async () => {
+    await axios.get("http://localhost:2000/genreusers").then(res => {
       this.setState({
         genreUser: res.data,
         genreUserSearch: res.data,

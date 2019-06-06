@@ -4,34 +4,78 @@ import axios from 'axios';
 
 class DetailProduct extends Component {
     state = {
-        product : {}
+        products : [],
+        genre : []
     }
 
     componentDidMount() {
-        const idproduct = parseInt(this.props.match.params.asdfg)
-        axios.get('http://localhost:1996/product/' + idproduct)
-            .then(res => {
-                this.setState({product: res.data})
-            })
+        const idproduct = parseInt(this.props.match.params.idproduct)
+        
+        axios.get(`http://localhost:2000/product/genre/${idproduct}`)
+        .then(res => {
+            this.setState({products: res.data.product, genre: res.data.result2})
+        })
     }
 
     render() {
-        const {product} = this.state
+        const {products} = this.state
+        const {genre}  = this.state
+
+        console.log(genre);
+        
+
+          
         return (
-            <div className="card text-center" key={product.id}>
-                <div className="card-header">
-                    {product.name}
+          <div className="container">
+            <div className="card">
+              <div className="card-header bg-warning">
+                <p className="lead text-center">Book's Detail</p>
+              </div>
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-md-8 col-sm-12">
+                    <ul className="list-group mt-3">
+                      <li className="list-group-item pl-3">{`Title: ${
+                        products.product_name
+                      }`}</li>
+                      <li className="list-group-item pl-3">{`Author: ${
+                        products.author_name
+                      }`}</li>
+                      <li className="list-group-item pl-3">{`Publisher: ${
+                        products.publisher_name
+                      }`}</li>
+                      <li className="list-group-item pl-3">{`Page: ${
+                        products.page
+                      }`}</li>
+                      <li className="list-group-item pl-3">{`Price: Rp ${
+                        products.price
+                      }`}</li>
+                      <li className="list-group-item pl-3">{`Genre: ${this.state.genre.map(item => {return item.name})}`}
+                      </li>
+                      <li className="list-group-item pl-3">{`Synopsis: ${
+                        products.synopsis
+                      }`}</li>
+                    </ul>
+                  </div>
+                  <div className="col-md-4 col-sm-12">
+                    <img
+                      src={products.image}
+                      alt={products.product_name}
+                      key={new Date()}
+                      className="card-img-top img-thumbnail"
+                    />
+                    <button className="btn btn-outline-warning btn-block">
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
-                <div className="card-body">
-                    <img className="img-detail" src={product.pict} alt={product.name} />
-                    <h3 className="card-title">Product: {product.name}</h3>
-                    <p className="card-text">Description: {product.desc}</p>
-                    <p className="card-text">Price: Rp.{product.price}</p>
-                    <a href="/" className="btn btn-primary">Add to Cart</a>
-                </div>
+              </div>
             </div>
-        )
+          </div>
+        );
     }
 }
+
+
 
 export default DetailProduct;
