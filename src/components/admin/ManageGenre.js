@@ -51,7 +51,6 @@ class ManageGenre extends Component {
         genreProductSearch: res.data,
         selectedProduct: 0
       });
-      console.log(res.data);
       
     });
   };

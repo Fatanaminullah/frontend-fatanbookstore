@@ -14,29 +14,54 @@ const cookie = new cookies();
 class Home extends Component {
   state = {
     products: [],
+    comics:[],
     promo: [],
-    images: []
+    images: [],
+    new: [],
+    thriller: [],
+    quantity : 1
   };
 
   componentDidMount() {
     this.getProductRecommended();
+    this.getComicsRecommended();
+    this.getThrillerRecommended();
+    this.getProductNew();
     this.getPromo();
-
-    // const script = document.createElement("script");
-
-    // script.src = "../src/components/carousel.js";
-    // script.async = true;
-
-    // document.body.appendChild(script);
+    
   }
-
   getProductRecommended = async () => {
     await axios
       .get(`/product/recommended/${cookie.get("idLogin")}`)
       .then(res => {
         this.setState({ products: res.data });
+        
       });
-  };
+    };
+  getProductNew = async () => {
+    await axios
+      .get(`/products/new`)
+      .then(res => {
+        this.setState({ new: res.data });
+        
+      });
+    };
+    getComicsRecommended = async () => {
+      await axios
+        .get(`/products/Comics`)
+        .then(res => {
+          this.setState({ comics: res.data });
+        });
+
+  }
+    getThrillerRecommended = async () => {
+      await axios
+        .get(`/products/Fantasy`)
+        .then(res => {
+          this.setState({ thriller: res.data });
+        });
+
+  }
   getPromo = async () => {
     await axios.get("/promo").then(res => {
       this.setState({
@@ -45,19 +70,7 @@ class Home extends Component {
       });
     });
   };
-  recommendCarousel = () => {
-    if (cookie.get("idLogin")) {
-      return this.state.products.map(item => {
-        return (
-          <div className="carousel-item items col-md-3">
-            <img className="w-100 d-block img-fluid" src={item.image} />
-          </div>
-        );
-      });
-    } else {
-      return null;
-    }
-  };
+  
   imageCarousel = () => {
     return this.state.images.map(item => {
       return (
@@ -76,15 +89,6 @@ class Home extends Component {
             data-slide-to={index + 1}
             className="active"
           />
-        </div>
-      );
-    });
-  };
-  indicatorCarousel2 = () => {
-    return this.state.products.map((item, index) => {
-      return (
-        <div>
-          <li data-target="#demo2" data-slide-to={index + 1} class="active" />
         </div>
       );
     });
@@ -132,7 +136,7 @@ class Home extends Component {
               {this.indicatorCarousel()}
             </ul>
             <div className="carousel-inner">
-              <div class="carousel-item active">
+              <div className="carousel-item active">
                 <img
                   className="d-block w-100"
                   src="http://localhost:2000/promo/images/1559460577002image.jpg?v=1559482346965"
@@ -170,22 +174,66 @@ class Home extends Component {
         </div>
           <Slider {...settings}>
           {this.state.products.map((item,index) => {
-            return(
+            return (
               <div className="card a">
-                <img className="card-img-top" src={item.image}  alt={`image`+index} />
+                <img
+                  className="card-img-top"
+                  src={item.image}
+                  alt={`image` + index}
+                />
                 <div className="card-body">
-                  <p className="card-title font-weight-bold">{item.product_name}</p>
-                  <p className="card-text text-secondary">{item.author_name}</p>
-                  <p className="card-text font-weight-bold text-danger">{`Rp. `+item.price.toLocaleString()}</p>
+                  <p className="card-title font-weight-bold">
+                    {item.product_name}
+                  </p>
+                  <p className="card-text text-secondary">
+                    {item.author_name}
+                  </p>
+                  <p className="card-text font-weight-bold text-danger">
+                    {`Rp. ` + item.price.toLocaleString()}
+                  </p>
                 </div>
                 <div className="card-footer">
-                  <button className="btn btn-outline-secondary btn-block">Add to Cart</button>
-                  <Link to={`/detailproduct/${item.product_id}`}><button className="btn btn-outline-dark btn-block">Detail Product</button></Link>
-
+                  <div className="row p-1">
+                  <button
+                    className="btn col-4"
+                    onClick={() => {
+                        this.quantity.value -= 1
+                      }}>
+                    <i
+                      className="fas fa-minus my-auto"
+                      
+                    />
+                    </button>
+                    <input
+                      className="form-control col-4 text-center"
+                      ref={input => {
+                        this.quantity = input;
+                      }}
+                      value='1'
+                    />
+                    <button
+                    className="btn col-4"
+                    onClick={() => {
+                      this.quantity.value += 1;
+                      }}>
+                    <i
+                      className="fas fa-plus my-auto"
+                      
+                    />
+                    </button>
+                  </div>
+                  <button className="btn btn-outline-secondary btn-block">
+                    Add to Cart
+                  </button>
+                  <Link to={`/detailproduct/${item.product_id}`}>
+                    <button className="btn btn-outline-dark btn-block">
+                      Detail Product
+                    </button>
+                  </Link>
                 </div>
               </div>
-            )
-          })}
+            );
+})}
           </Slider>
 
         </div>
@@ -197,27 +245,71 @@ class Home extends Component {
               textAlign:"center"
             }}
           >
-            Recommended For You
+            Feels bored to read novel? here our best comics!
           </h3>
         </div>
           <Slider {...settings}>
-          {this.state.products.map((item,index) => {
-            return(
+          {this.state.comics.map((item,index) => {
+            return (
               <div className="card a">
-                <img className="card-img-top" src={item.image}  alt={`image`+index} />
+                <img
+                  className="card-img-top"
+                  src={item.image}
+                  alt={`image` + index}
+                />
                 <div className="card-body">
-                  <p className="card-title font-weight-bold">{item.product_name}</p>
-                  <p className="card-text text-secondary">{item.author_name}</p>
-                  <p className="card-text font-weight-bold text-danger">{`Rp. `+item.price.toLocaleString()}</p>
+                  <p className="card-title font-weight-bold">
+                    {item.product_name}
+                  </p>
+                  <p className="card-text text-secondary">
+                    {item.author_name}
+                  </p>
+                  <p className="card-text font-weight-bold text-danger">
+                    {`Rp. ` + item.price.toLocaleString()}
+                  </p>
                 </div>
                 <div className="card-footer">
-                  <button className="btn btn-outline-secondary btn-block">Add to Cart</button>
-                  <Link to={`/detailproduct/${item.product_id}`}><button className="btn btn-outline-dark btn-block">Detail Product</button></Link>
-
+                <div className="row p-1">
+                  <button
+                    className="btn col-4"
+                    onClick={() => {
+                        this.setState({ quantity : this.state.quantity - 1 });
+                      }}>
+                    <i
+                      className="fas fa-minus my-auto"
+                      
+                    />
+                    </button>
+                    <input
+                      className="form-control col-4 text-center"
+                      ref={input => {
+                        this.quantity = input;
+                      }}
+                      value={this.state.quantity}
+                    />
+                    <button
+                    className="btn col-4"
+                    onClick={() => {
+                        this.setState({ quantity : this.state.quantity + 1 });
+                      }}>
+                    <i
+                      className="fas fa-plus my-auto"
+                      
+                    />
+                    </button>
+                  </div>
+                  <button className="btn btn-outline-secondary btn-block">
+                    Add to Cart
+                  </button>
+                  <Link to={`/detailproduct/${item.id}`}>
+                    <button className="btn btn-outline-dark btn-block">
+                      Detail Product
+                    </button>
+                  </Link>
                 </div>
               </div>
-            )
-          })}
+            );
+})}
           </Slider>
 
         </div>
@@ -229,11 +321,11 @@ class Home extends Component {
               textAlign:"center"
             }}
           >
-            Recommended For You
+            New Arrival
           </h3>
         </div>
           <Slider {...settings}>
-          {this.state.products.map((item,index) => {
+          {this.state.new.map((item,index) => {
             return(
               <div className="card a">
                 <img className="card-img-top" src={item.image}  alt={`image`+index} />
@@ -243,13 +335,104 @@ class Home extends Component {
                   <p className="card-text font-weight-bold text-danger">{`Rp. `+item.price.toLocaleString()}</p>
                 </div>
                 <div className="card-footer">
+                <div className="row p-1">
+                  <button
+                    className="btn col-4"
+                    onClick={() => {
+                        this.setState({ quantity : this.state.quantity - 1 });
+                      }}>
+                    <i
+                      className="fas fa-minus my-auto"
+                      
+                    />
+                    </button>
+                    <input
+                      className="form-control col-4 text-center"
+                      ref={input => {
+                        this.quantity = input;
+                      }}
+                      value={this.state.quantity}
+                    />
+                    <button
+                    className="btn col-4"
+                    onClick={() => {
+                        this.setState({ quantity : this.state.quantity + 1 });
+                      }}>
+                    <i
+                      className="fas fa-plus my-auto"
+                      
+                    />
+                    </button>
+                  </div>
                   <button className="btn btn-outline-secondary btn-block">Add to Cart</button>
-                  <Link to={`/detailproduct/${item.product_id}`}><button className="btn btn-outline-dark btn-block">Detail Product</button></Link>
+                  <Link to={`/detailproduct/${item.id}`}><button className="btn btn-outline-dark btn-block">Detail Product</button></Link>
 
                 </div>
               </div>
             )
-          })}
+})}
+          </Slider>
+
+        </div>
+        <div className="row text-center py-5">
+          <div className="text-center mx-auto pb-2" style={{width:'80%'}}>
+          <h3
+            style={{
+              fontFamily: "Verdana, Geneva, sans-serif",
+              textAlign:"center"
+            }}
+          >
+            You May Like It
+          </h3>
+        </div>
+          <Slider {...settings}>
+          {this.state.thriller.map((item,index) => {
+            
+            return(
+              <div className="card a">
+                <img className="card-img-top" src={item.image}  alt={`image`+index} />
+                <div className="card-body">
+                  <p className="card-title font-weight-bold">{item.product_name}</p>
+                  <p className="card-text text-secondary">{item.author_name}</p>
+                  <p className="card-text font-weight-bold text-danger">{`Rp. `+item.price.toLocaleString()}</p>
+                </div>
+                <div className="card-footer">
+                <div className="row p-1">
+                  <button
+                    className="btn col-4"
+                    onClick={() => {
+                        this.setState({ quantity : this.state.quantity - 1 });
+                      }}>
+                    <i
+                      className="fas fa-minus my-auto"
+                      
+                    />
+                    </button>
+                    <input
+                      className="form-control col-4 text-center"
+                      ref={input => {
+                        this.quantity = input;
+                      }}
+                      value={this.state.quantity}
+                    />
+                    <button
+                    className="btn col-4"
+                    onClick={() => {
+                        this.setState({ quantity : this.state.quantity + 1 });
+                      }}>
+                    <i
+                      className="fas fa-plus my-auto"
+                      
+                    />
+                    </button>
+                  </div>
+                  <button className="btn btn-outline-secondary btn-block">Add to Cart</button>
+                  <Link to={`/detailproduct/${item.id}`}><button className="btn btn-outline-dark btn-block">Detail Product</button></Link>
+
+                </div>
+              </div>
+            )
+})}
           </Slider>
 
         </div>

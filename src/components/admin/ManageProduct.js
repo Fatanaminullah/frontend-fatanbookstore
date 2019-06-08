@@ -116,7 +116,6 @@ class ManageProduct extends Component {
     const page = this.editPage.value;
     const author = this.selectedAuthorId.value;
     const publisher = this.selectedPublisherId.value;
-    console.log(author);
     
     formData.append("image", image);
     formData.append("product_name", name);
