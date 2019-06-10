@@ -193,21 +193,21 @@ class ManageProduct extends Component {
     formData.append("author", author);
     formData.append("publisher", publisher);
     try {
-      const res = await axios.post(
-        `http://localhost:2000/products/add`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data"
+        const res = await axios.post(
+          `http://localhost:2000/products/add`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
           }
-        }
-      );
+        );
 
-      this.getProduct();
-    } catch (e) {
-      console.log("upload gagal" + e);
-    }
-  };
+        this.getProduct();
+      } catch (e) {
+        console.log("upload gagal" + e);
+      }
+    };
   selectAuthor = () => {
     return this.state.author.map(item => {
       return (

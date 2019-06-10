@@ -21,7 +21,6 @@ class DetailProduct extends Component {
         const {products} = this.state
         const {genre}  = this.state
 
-        console.log(genre);
         
 
           
