@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
 import axios from "../../config/axios";
 import cookies from "universal-cookie";
 import Slider from 'react-slick';
@@ -7,8 +8,8 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Swal from 'sweetalert2'
 
+import {addToCart} from '../../actions'
 import "../slick.css";
-import ProductItems from "./ProductItems";
 
 const cookie = new cookies();
 
@@ -93,20 +94,6 @@ class Home extends Component {
       );
     });
   };
-
-  addToCart = async (productId,userId) => {
-
-    try{
-      const res = await axios.post(`/cart/add`,{
-        user_id:userId,
-        product_id:productId
-      });
-      Swal.fire('Success','This is item is succesfully added to your cart','success')
-    } catch (e) {
-      console.log("upload gagal" + e);
-    }
-    }
-
 
   render() {
     const settings = {
@@ -210,7 +197,7 @@ if(cookie.get('idLogin')){
               </div>
              </Link>
               <div className="card-footer">
-                <button className="btn btn-outline-secondary btn-block" onClick={() => {this.addToCart(item.product_id,cookie.get('idLogin'))}}>
+                <button className="btn btn-outline-secondary btn-block" onClick={() => {this.props.addToCart(item.product_id,cookie.get('idLogin'))}}>
                   Add to Cart
                 </button>
                   <button className="btn btn-outline-dark btn-block">
@@ -254,7 +241,7 @@ if(cookie.get('idLogin')){
                 </p>
               </div>
               <div className="card-footer">
-                <button className="btn btn-outline-secondary btn-block" onClick={() => {this.addToCart(item.id,cookie.get('idLogin'))}}>
+                <button className="btn btn-outline-secondary btn-block" onClick={() => {this.props.addToCart(item.id,cookie.get('idLogin'))}}>
                   Add to Cart
                 </button>
                   <button className="btn btn-outline-dark btn-block">
@@ -289,7 +276,7 @@ if(cookie.get('idLogin')){
                 <p className="card-text font-weight-bold text-danger">{`Rp. `+item.price.toLocaleString()}</p>
               </div>
               <div className="card-footer">
-                <button className="btn btn-outline-secondary btn-block" onClick={() => {this.addToCart(item.id,cookie.get('idLogin'))}}>Add to Cart</button>
+                <button className="btn btn-outline-secondary btn-block" onClick={() => {this.props.addToCart(item.id,cookie.get('idLogin'))}}>Add to Cart</button>
                 <button className="btn btn-outline-dark btn-block">Detail Product</button>
               </div>
             </div>
@@ -320,7 +307,7 @@ if(cookie.get('idLogin')){
                 <p className="card-text font-weight-bold text-danger">{`Rp. `+item.price.toLocaleString()}</p>
               </div>
               <div className="card-footer">
-                <button className="btn btn-outline-secondary btn-block" onClick={() => {this.addToCart(item.id,cookie.get('idLogin'))}}>Add to Cart</button>
+                <button className="btn btn-outline-secondary btn-block" onClick={() => {this.props.addToCart(item.id,cookie.get('idLogin'))}}>Add to Cart</button>
                 <button className="btn btn-outline-dark btn-block">Detail Product</button>
               </div>
             </div>
@@ -509,4 +496,6 @@ if(cookie.get('idLogin')){
   }
 }
 
-export default Home;
+
+
+export default connect(null,{addToCart})(Home);

@@ -78,8 +78,7 @@ class ShoppingCart extends Component {
     this.setState({ data });
 };
   renderList = () => { 
-      return this.state.cartItem.map((product,index) => {
-        
+      return this.state.cartItem.map((product,index) => {        
         return (
           <div className="card m-2 col-12" key={product.id}>
             <div className="card-body">
@@ -92,9 +91,11 @@ class ShoppingCart extends Component {
                   />
                 </div>
                 <div className="col-8">
+                          <Link to={`/detailproduct/${product.id}`}>
                   <p className="card-text font-weight-bold">
                     {product.product_name}
                   </p>
+                    </Link>
                   <p className="card-text text-secondary">
                     {product.author_name}
                   </p>
@@ -111,17 +112,17 @@ class ShoppingCart extends Component {
                       </button>
                     </span>
                     <input
-                      type="text"
+                      type="number"
                       className="form-control input-number"
-                      value={this.state.cartItem[index].quantity}
+                      value={product.quantity}
                       min="1"
-                      max="100"
-                    />
+                      max={product.stock}
+                      />
                     <span className="input-group-btn">
                       <button
                         className="btn btn-success btn-number"
                         onClick={() => {this.addQty(index)}}
-                      >
+                        >
                         <i className="fas fa-plus"></i>
                       </button>
                     </span>

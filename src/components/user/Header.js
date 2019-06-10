@@ -9,6 +9,8 @@ import {onLoginClick} from '../../actions'
 import {afterTwoSeconds} from '../../actions'
 import image from '../../img/avatar2.jpg'
 
+import "../cartIcon.css"
+
 const cookie = new cookies();
 
 class Header extends Component {
@@ -17,7 +19,9 @@ class Header extends Component {
   };
   componentDidMount() {
     const userid = cookie.get("idLogin");
-    this.getProfile(userid);
+    console.log(userid);
+    
+    // this.getProfile(userid);
   }
     onSubmitClick = () => {
         const user = this.username.value
@@ -43,26 +47,26 @@ class Header extends Component {
         
         this.props.Logout()
     }
-    getProfile = async userid => {
-      try {
-        const res = await axios.get(
-          `http://localhost:2000/users/profile/${userid}`
-        );
+    // getProfile = async userid => {
+    //   try {
+    //     const res = await axios.get(
+    //       `http://localhost:2000/users/profile/${userid}`
+    //     );
         
   
-        this.setState({
-          data: res.data
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    };
+    //     this.setState({
+    //       data: res.data
+    //     });
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // };
     profilePicture = () => {
-      if (this.state.data.user.avatar !== undefined) {
+      if (cookie.get('avatar') !== null) {
         return (
           <img
-            src={this.state.data.photo}
-            alt={this.state.data.user.username}
+            src={cookie.get('avatar')}
+            alt={this.props.user.username}
             key={new Date()}
             className="rounded-circle float-left"
           />
@@ -79,6 +83,7 @@ class Header extends Component {
     };
   render() {
     const { username,role } = this.props.user;
+    
     
     if (role === 1) {
       return (
@@ -144,7 +149,6 @@ class Header extends Component {
       );
       
     } else if(role === 2){
-      if(this.state.data !== undefined){
       return (
         <div>
           <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-3">
@@ -238,6 +242,7 @@ class Header extends Component {
                   <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
                     <Link className="nav-a" to="/ShoppingCart">
                       <i className="fas fa-shopping-cart fa-2x text-secondary" />
+                      <span className='badge badge-warning' id='lblCartCount'>{cookie.get('cartqty')}</span>
                     </Link>
                   </li>
                 </ul>
@@ -246,13 +251,6 @@ class Header extends Component {
           </nav>
         </div>
       );
-      }else{
-        console.log(this.state.data);
-        return(
-          <h1>Loading</h1>
-        )
-
-      }
     }else{
       return (
         <div>
@@ -365,7 +363,7 @@ class Header extends Component {
 }
 
 const mapStateToProps = state => {
-  return { user: state.auth,error : state.auth.error, empty: state.auth.empty };
+  return { user: state.auth,error : state.auth.error, empty: state.auth.empty, quantity:state.auth.quantity };
 };
 
 export default connect(

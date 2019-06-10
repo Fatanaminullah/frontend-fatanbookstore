@@ -6,7 +6,8 @@ const init = {
     error: '',
     success: '',
     empty: '',
-    role:''
+    role:'',
+    quantity:0
 }
 
 const AuthReducer = (state=init, action) => {
@@ -29,7 +30,8 @@ const AuthReducer = (state=init, action) => {
         return {...state,id: action.payload.id,username: action.payload.username,role:action.payload.role};
       case "EDIT_SUCCESS":
           return {...state,id: action.payload.id,username: action.payload.username,role: action.payload.role};
-
+      case "ADD_CART":
+          return{...state,quantity:action.payload.quantity}
       default:
         return state;
     }

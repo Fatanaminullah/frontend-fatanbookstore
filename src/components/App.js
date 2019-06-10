@@ -30,11 +30,12 @@ class App extends Component {
         var userCookie = cookie.get("stillLogin");
         var idCookie = parseInt(cookie.get("idLogin"));
         var roleCookie = parseInt(cookie.get("role"));
+        var cartCookie = parseInt(cookie.get("cartqty"));
+        
 
-
-        if (userCookie !== undefined || idCookie !== NaN || roleCookie !== NaN) {
+        if (userCookie !== undefined || idCookie !== NaN || roleCookie !== NaN || cartCookie !== NaN) {
             
-            this.props.keepLogin(userCookie, idCookie,roleCookie);
+            this.props.keepLogin(userCookie, idCookie,roleCookie,cartCookie);
         
         }
 }
