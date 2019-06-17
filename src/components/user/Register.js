@@ -290,9 +290,9 @@ class Register extends Component {
             >
               Sign Up
             </button>
-            {/* {this.onErrorRegister()}
+            {this.onErrorRegister()}
             {this.onRegSuccess()}
-            {this.props.afterTwoSeconds()} */}
+            {this.props.afterTwoSeconds()}
             <p className="lead">
               Do you have an account ? <Link to="/login">Login</Link>
             </p>

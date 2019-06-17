@@ -2,6 +2,7 @@ import axios from "../config/axios";
 import cookies from "universal-cookie";
 import Swal from 'sweetalert2'
 
+
 const cookie = new cookies();
 
 export const onLoginClick = (username, password) => {
@@ -189,4 +190,46 @@ export const addToCart = (productId,userId) => {
     }
     }
   }
+
+
+export const deleteCart = (productId,userId) => {
+  return async dispatch => {
+    Swal.fire({
+      text: 'Are you sure want to delete this item?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.value) {
+        axios.delete(`/cart/delete/${productId}/${userId}`)
+        .then(res => {
+          cookie.set("cartqty", res.data[0].cart, { path: "/" });
+        dispatch({
+          type: "ADD_CART",
+          payload: {
+            quantity: res.data[0].cart
+          }
+        });
+            },
+            err => {
+              console.log(err);
+            }
+          );
+          Swal.fire(
+            'Deleted!',
+            'Your imaginary file has been deleted.',
+            'success'
+          )
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire(
+          'Cancelled',
+          'Your imaginary file is safe :)',
+          'error'
+        )
+      }
+    })
+  }
+    
+  };
 

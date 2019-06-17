@@ -18,3 +18,19 @@
       vertical-align: top;
       margin-left: -10px; 
   }
+
+.dropdown-toggle,
+.dropdown-menu {
+    border-radius: 0px !important;
+}
+.dropdown-item:hover {
+    color: white;
+    background-color: #dc3545;
+}
+
+.dropdown:hover>.dropdown-menu {
+    display: block;
+}
+.dropdown-menu.form-wrapper{
+    width: 250px;
+}

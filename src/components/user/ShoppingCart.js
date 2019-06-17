@@ -4,8 +4,10 @@ import { connect } from "react-redux";
 import { Redirect, Link } from "react-router-dom";
 import cookies from "universal-cookie";
 import Swal from 'sweetalert2'
+import {deleteCart} from '../../actions'
 
-
+var RajaOngkir = require('rajaongkir-nodejs').Starter('3ff51db00cb996364b49206f71d895a3');
+ 
 
 const cookie = new cookies();
 
@@ -16,6 +18,15 @@ class ShoppingCart extends Component {
   };
   componentDidMount() {
     this.getCart();
+    RajaOngkir.getProvinces().then(function (result){
+      // Aksi ketika data Provinsi berhasil ditampilkan
+      console.log(result);
+      
+  }).catch(function (error){
+      // Aksi ketika error terjadi
+      console.log(error);
+      
+  });
   }
 
   getCart = async () => {
@@ -23,60 +34,94 @@ class ShoppingCart extends Component {
       this.setState({ cartItem: res.data });
     });
   };
-  deleteCart = (productId,userId) => {
+  onDeleteCart = (productId,userId) => {
+    
+    this.props.deleteCart(productId,userId)
+  };
+  placeOrder = (userid) => {
+    
     Swal.fire({
-      text: 'Are you sure want to delete this item?',
+      text: 'Check again your order! if you have confirm your order,please choose confirm',
       type: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No'
+      confirmButtonText: 'Confirm',
+      cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.value) {
-        axios.delete(`http://localhost:2000/cart/delete/${productId}/${userId}`)
+        axios.post(`/orders/${userid}`)
         .then(res => {
-              this.getCart();
+          console.log(res);
+          var orderItem = []
+          this.state.cartItem.map(item => {
+            orderItem.push([item.id,item.price,item.quantity,res.data.orderid])
+          })
+          console.log(orderItem);
+          axios.post('/orderitem',[
+            orderItem
+          ])
+          .then(res => {
+            console.log(res);
+            
+          },err => {
+            console.log(err +'orderitem');
+            
+          })
             },
             err => {
-              console.log(err);
+              console.log(err + 'order');
             }
           );
           Swal.fire(
-            'Deleted!',
-            'Your imaginary file has been deleted.',
+            'Success!',
+            'Your item has been ordered!',
             'success'
           )
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire(
-          'Cancelled',
-          'Your imaginary file is safe :)',
-          'error'
-        )
-      }
-    })
-    
-  };
-
-  addQty = (qty,index) => {
-    qty += 1
-
-    this.state.cartItem[index].quantity = qty
-
-    this.renderList()
-
-    // console.log(this.state.cartItem[index].quantity);
+      // } else if (result.dismiss === Swal.DismissReason.cancel) {
+      //   Swal.fire(
+      //     'Cancelled',
+      //     '',
+      //     'info'
+      //   )
+      // }
+    }})
   }
-  addQty = (index) => {
+  addQty = async(index,userid,productid) => {
     const data = [...this.state.cartItem];
     data[index].quantity += 1;
+    var quantity = data[index].quantity
     
     this.setState({ data });
+
+    try {
+      const res = await axios.patch(`/cart/update/${userid}/${productid}`,{
+        quantity
+    })
+      console.log(res);
+      
+    } catch (error) {
+      console.log(error);
+    }
 };
-  reduceQty = (index) => {
+  reduceQty = async(index,userid,productid) => {
     const data = [...this.state.cartItem];
     data[index].quantity -= 1;
+    var quantity = data[index].quantity
     
     this.setState({ data });
+
+    try {
+      const res = await axios.patch(`/cart/update/${userid}/${productid}`,{
+        quantity
+      })
+      console.log(res);
+      
+    } catch (error) {
+      console.log(error);
+      
+      
+    }
 };
+
   renderList = () => { 
       return this.state.cartItem.map((product,index) => {        
         return (
@@ -106,7 +151,7 @@ class ShoppingCart extends Component {
                     <span className="input-group-btn">
                       <button
                         className="btn btn-danger btn-number"
-                        onClick={() => {this.reduceQty(index)}}
+                        onClick={() => {this.reduceQty(index,cookie.get('idLogin'),product.id)}}
                       >
                         <i className="fas fa-minus"></i>
                       </button>
@@ -121,7 +166,7 @@ class ShoppingCart extends Component {
                     <span className="input-group-btn">
                       <button
                         className="btn btn-success btn-number"
-                        onClick={() => {this.addQty(index)}}
+                        onClick={() => {this.addQty(index,cookie.get('idLogin'),product.id)}}
                         >
                         <i className="fas fa-plus"></i>
                       </button>
@@ -133,7 +178,7 @@ class ShoppingCart extends Component {
                 <button
                   className="btn btn-outline-secondary btn-circle ml-auto"
                   onClick={() => {
-                    this.deleteCart(product.id, cookie.get("idLogin"));
+                    this.onDeleteCart(product.id, cookie.get("idLogin"));
                   }}
                 >
                   &times;
@@ -164,10 +209,14 @@ class ShoppingCart extends Component {
         }
     })
   }
+  chooseShipment = () => {
+
+  }
   render() {
+
     if (cookie.get('idLogin')) {
       if(this.state.cartItem.length !== 0){
-
+        if(parseInt(cookie.get('cartqty')) !== this.state.cartItem.length) this.getCart()
         var total = 0
         this.state.cartItem.forEach(items => { total += (items.quantity * items.price)} )
       return (
@@ -176,9 +225,19 @@ class ShoppingCart extends Component {
             <h1 className="mx-auto display-4">Your Shopping Cart</h1>
           </div>
           <div className="row">
-            <div className="col-8">{this.renderList()}</div>
+            <div className="col-8">
+              <div className="card">
+                <div className="card-header d-flex justify-content-between">
+                  <p className="lead text-dark">SHOPPING CART :  {cookie.get('cartqty')} ITEMS</p>
+                  <p className="lead text-dark">Estimated shipping cost : </p>
+                </div>
+                <div className="card-body">
+            {this.renderList()}
+                </div>
+              </div>
+            </div>
             <div className="col-4">
-              <div className="card m-2 fixed">
+              <div className="card m-2 fixed" id="cekout">
                 <div className="card-header">Tagihan</div>
                 <div className="card-body">
                 {this.renderListCheckout()}
@@ -186,7 +245,7 @@ class ShoppingCart extends Component {
                   <p className="card-text text-right">Rp. {total.toLocaleString()}</p>
                 </div>
                 <div className="card-footer">
-                <button className="btn btn-outline-secondary btn-block">Continue to Payment</button>
+                <button className="btn btn-outline-secondary btn-block" onClick={() => {this.placeOrder(cookie.get('idLogin'))}}>Continue to Payment</button>
                 </div>
               </div>
             </div>
@@ -222,4 +281,4 @@ const mapStateToProps = state => {
   return { user: state.auth };
 };
 
-export default connect(mapStateToProps)(ShoppingCart);
+export default connect(mapStateToProps,{deleteCart})(ShoppingCart);

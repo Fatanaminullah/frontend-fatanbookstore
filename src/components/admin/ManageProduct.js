@@ -5,13 +5,11 @@ import { Redirect } from "react-router-dom";
 import cookies from "universal-cookie";
 import { MDBDataTable } from "mdbreact";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
-import Carousel from 'react-image-carousel';
 
 import Sidebar from "./Sidebar";
 import "../style.css";
 import "../styleSwitch.css";
 
-require("../../../node_modules/react-image-carousel/lib/css/main.min.css");
 
 const cookie = new cookies();
 

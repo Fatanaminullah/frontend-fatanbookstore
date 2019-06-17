@@ -4,7 +4,6 @@ import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
-import registerServiceWorker from './registerServiceWorker';
 
 import App from './components/App.js'
 import reducers from './reducers'
@@ -17,5 +16,3 @@ ReactDOM.render(
         <App/>
     </Provider>
     ,document.querySelector('#root'))
-
-    registerServiceWorker();

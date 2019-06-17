@@ -9,6 +9,8 @@ import {onLoginClick} from '../../actions'
 import {afterTwoSeconds} from '../../actions'
 import image from '../../img/avatar2.jpg'
 
+import Sidebar from "../admin/Sidebar";
+
 import "../cartIcon.css"
 
 const cookie = new cookies();
@@ -19,9 +21,7 @@ class Header extends Component {
   };
   componentDidMount() {
     const userid = cookie.get("idLogin");
-    console.log(userid);
     
-    // this.getProfile(userid);
   }
     onSubmitClick = () => {
         const user = this.username.value
@@ -47,20 +47,6 @@ class Header extends Component {
         
         this.props.Logout()
     }
-    // getProfile = async userid => {
-    //   try {
-    //     const res = await axios.get(
-    //       `http://localhost:2000/users/profile/${userid}`
-    //     );
-        
-  
-    //     this.setState({
-    //       data: res.data
-    //     });
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // };
     profilePicture = () => {
       if (cookie.get('avatar') !== null) {
         return (
@@ -89,6 +75,7 @@ class Header extends Component {
       return (
         <div>
           {/* <Redirect to="/admin/dashboard" /> */}
+            {/* <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} /> */}
           <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-3">
             <div className="container">
               <Link className="navbar-brand" to="/">
@@ -151,7 +138,7 @@ class Header extends Component {
     } else if(role === 2){
       return (
         <div>
-          <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-3">
+          <nav className="navbar navbar-expand-md navbar-dark bg-dark">
             <div className="container">
               <Link className="navbar-brand" to="/">
                 FATANONLINEBOOKSTORE
