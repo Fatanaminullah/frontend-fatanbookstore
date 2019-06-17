@@ -28,20 +28,20 @@ class Products extends Component {
         var arrSearch = this.state.products.filter(item => {
             if (isNaN(min) && isNaN(max)) {
                 // search hanya dengan name , min dan max kosong
-                return item.name.toLowerCase().includes(search);
+                return item.product_name.toLowerCase().includes(search);
             } else if (isNaN(min)) {
                 return (
-                    item.name.toLowerCase().includes(search.toLowerCase()) &&
+                    item.product_name.toLowerCase().includes(search.toLowerCase()) &&
                     item.price <= max
                 );
             } else if (isNaN(max)) {
                 return (
-                    item.name.toLowerCase().includes(search.toLowerCase()) &&
+                    item.product_name.toLowerCase().includes(search.toLowerCase()) &&
                     item.price >= min
                 );
             } else {
                 return (
-                    item.name.toLowerCase().includes(search.toLowerCase()) &&
+                    item.product_name.toLowerCase().includes(search.toLowerCase()) &&
                     item.price <= max &&
                     item.price >= min
                 );
@@ -59,9 +59,9 @@ class Products extends Component {
         var arrSearch = this.state.products.sort((a, b) => {
             switch (sort) {
                 case namaAsc:
-                    return a.name.toLowerCase() > b.name.toLowerCase()
+                    return a.product_name.toLowerCase() > b.product_name.toLowerCase()
                 case namaDesc:
-                    return a.name.toLowerCase() < b.name.toLowerCase()
+                    return a.product_name.toLowerCase() < b.product_name.toLowerCase()
                 case priceAsc:
                     return a.price - b.price
                 case priceDesc:
@@ -104,7 +104,7 @@ class Products extends Component {
 
                 </div>
                 <div className="row">
-                    <div className="col-sm-4 col-lg-2">
+                    <div className="col-sm-4 col-lg-3">
                         <h4 className="display-4 text-center">Filter</h4>
                         <div className="card p-1">
                             <div className="card-header text-center">Search by Product</div>
@@ -152,7 +152,7 @@ class Products extends Component {
 
                         </div>
                     </div>
-                    <div className="row col-sm-8 col-lg-10">{this.renderList()}</div>
+                    <div className="row col-sm-8 col-lg-9">{this.renderList()}</div>
                 </div>
             </div>
         );

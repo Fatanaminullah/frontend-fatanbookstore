@@ -147,7 +147,7 @@ if(cookie.get('idLogin')){
           <div className="navbar-nav row w-100">
               <div className="col">
                 <li className="nav-item">
-            <Link className="ml-5" to="/planeticket">
+            <Link className="ml-5" to="/products">
               <span>
               <i class="far fa-list-alt" />
               </span>
