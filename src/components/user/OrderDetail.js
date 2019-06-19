@@ -14,23 +14,23 @@ class Order extends Component {
       }
     
     state = {
-        order : undefined
+        orderitem : undefined
     }
     
-    componentDidMount(){
-        const userid = cookie.get('idLogin')
-        this.getOrder(userid)
+    componentDidMount (){
+        const ordercode = parseInt(this.props.match.params.orderid)
 
+        this.getOrderItem(ordercode)
     }
 
-    getOrder = async userid => {
+    getOrderItem = async ordercode => {
         try {
             const res = await axios.get(
-              `/order/${userid}`
+              `/orderitem/${ordercode}`
             );
       
             this.setState({
-              order: res.data
+              orderitem: res.data
             });
             
           } catch (e) {
@@ -39,8 +39,9 @@ class Order extends Component {
 
     }
 
+
     renderOrder = () => {
-        if(this.state.order === undefined){
+        if(this.state.orderitem === undefined){
             return(
             <div className="card">
                 <div className="card-body">
@@ -49,24 +50,69 @@ class Order extends Component {
             </div>
             )
         }
-        return this.state.order.map(item => {
-            
+        return this.state.orderitem.map((product,index) => {
             return(
-                <div className="card m-4">
-                    <div className="card-header">
-                        <p className="lead font-weight-bold"> Order Code : {item.order_code} </p>
-                    </div>
-                    <div className="card-body">
-                        <p className="lead">Order Date : {item.order_date} </p>
-                        <p className="lead">Order Status : {item.order_status_description} </p>
-                        <p className="lead"> Items : {item.quantity} </p>
-                    </div>
-                    <div className="card-footer text-right">
-                        <Link to={`/orderitem/${item.order_code}`}>
-                        <p className="lead"> See Order Detail <i class="fas fa-arrow-right"></i></p>
-                        </Link>
-                    </div>
+                <div className="card m-2 col-12" key={product.id}>
+            <div className="card-body">
+              <div className="row">
+                <div className="col-4">
+                  <img
+                    className="img-detail-cart"
+                    src={product.image}
+                    alt={product.product_name}
+                  />
                 </div>
+                <div className="col-8">
+                          <Link to={`/detailproduct/${product.id}`}>
+                  <p className="card-text font-weight-bold">
+                    {product.product_name}
+                  </p>
+                    </Link>
+                  <p className="card-text text-secondary">
+                    {product.author_name}
+                  </p>
+                  <p className="card-text text-danger">
+                    Rp {product.price.toLocaleString()}
+                  </p>
+                  <div className="input-group">
+                    <span className="input-group-btn">
+                      <button
+                        className="btn btn-danger btn-number"
+                        onClick={() => {this.reduceQty(index,cookie.get('idLogin'),product.id)}}
+                      >
+                        <i className="fas fa-minus"></i>
+                      </button>
+                    </span>
+                    <input
+                      type="number"
+                      className="form-control input-number"
+                      value={product.quantity}
+                      min="1"
+                      max={product.stock}
+                      />
+                    <span className="input-group-btn">
+                      <button
+                        className="btn btn-success btn-number"
+                        onClick={() => {this.addQty(index,cookie.get('idLogin'),product.id)}}
+                        >
+                        <i className="fas fa-plus"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <button
+                  className="btn btn-outline-secondary btn-circle ml-auto"
+                  onClick={() => {
+                    this.onDeleteCart(product.id, cookie.get("idLogin"));
+                  }}
+                >
+                  &times;
+                </button>
+              </div>
+            </div>
+          </div>
             )
         })
 
@@ -75,7 +121,7 @@ class Order extends Component {
     render() {
         
         if (cookie.get("stillLogin")) {
-            if (this.state.order !== undefined) {
+            if (this.state.orderitem !== undefined) {
             return (
               <div className="container">
                 <div className="row mt-5">
@@ -117,7 +163,7 @@ class Order extends Component {
                       <ul className="list-group list-group-flush">
                         <div className="card-header">
                           <div className="text-center">
-                          <h3>Your Order</h3>
+                          <h3>Order Items</h3>
                           </div>
                         </div>
                         {this.renderOrder()}
