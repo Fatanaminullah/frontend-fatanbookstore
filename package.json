@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@sweetalert/with-react": "^0.1.1",
     "@trendmicro/react-sidenav": "^0.4.5",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
@@ -25,6 +26,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "slick-carousel": "^1.8.1",
+    "sweetalert": "^2.1.2",
     "sweetalert2": "^8.12.1",
     "universal-cookie": "^3.0.7"
   },

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import axios from "axios";
+import axios from "../../config/axios";
 import cookies from "universal-cookie";
 
 import { Logout } from "../../actions";
@@ -9,7 +9,6 @@ import {onLoginClick} from '../../actions'
 import {afterTwoSeconds} from '../../actions'
 import image from '../../img/avatar2.jpg'
 
-import Sidebar from "../admin/Sidebar";
 
 import "../cartIcon.css"
 
@@ -17,11 +16,24 @@ const cookie = new cookies();
 
 class Header extends Component {
   state = {
-    data: undefined
+    products:[]
+
   };
   componentDidMount() {
-    const userid = cookie.get("idLogin");
-    
+    this.getProduct();
+  }
+
+  getProduct = () => {
+    axios.get("/products").then(res => {
+        this.setState({ products: res.data});
+    });
+};
+
+  handleKeyDown = (event) => {
+    if(event.key == 'Enter'){
+      event.preventDefault();
+      console.log(event.key);
+    }
   }
     onSubmitClick = () => {
         const user = this.username.value
@@ -69,8 +81,6 @@ class Header extends Component {
     };
   render() {
     const { username,role } = this.props.user;
-    
-    
     if (role === 1) {
       return (
         <div>
@@ -156,22 +166,30 @@ class Header extends Component {
                 id="navbarNav2"
               >
                 <ul className="navbar-nav col-12">
-                  <li className="nav-item m-2 ml-auto">
+                  <li className="nav-item mx-2 my-auto w-100">
                     <form className="navbar-form form-inline">
-                      <div className="input-group search-box">
+                      <div className="input-group search-box p-2 w-100">
                         <input
                           type="text"
                           id="search"
                           className="form-control"
                           placeholder="Search here..."
+                          onKeyPress={this.handleKeyDown}
+                          list="product"
                         />
                         <span className="input-group-addon">
                           <i className="fas fa-search" />
                         </span>
+                      <datalist id="product" className="form-control d-none">
+                        <option>a</option>
+                        <option>a</option>
+                        <option>a</option>
+                        <option>a</option>
+                      </datalist>
                       </div>
                     </form>
                   </li>
-                  <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
+                  <li className="nav-item dropdown mx-auto mx-lg-0 my-auto">
                     <i className="fas fa-user fa-2x text-secondary" />
                     <div className="dropdown-menu form-wrapper">
                       <div className="card">
@@ -221,12 +239,12 @@ class Header extends Component {
                       </div>
                     </div>
                   </li>
-                  <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
+                  <li className="nav-item m-1 mx-auto mx-md-2 my-auto">
                     <Link className="nav-a" to="/">
                       <i className="fas fa-heart fa-2x text-secondary" />
                     </Link>
                   </li>
-                  <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
+                  <li className="nav-item m-1 mx-auto  mx-md-2">
                     <Link className="nav-a" to="/ShoppingCart">
                       <i className="fas fa-shopping-cart fa-2x text-secondary" />
                       <span className='badge badge-warning' id='lblCartCount'>{cookie.get('cartqty')}</span>

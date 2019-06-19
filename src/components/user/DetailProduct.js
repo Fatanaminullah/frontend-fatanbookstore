@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
 import axios from 'axios';
+import {addToCart} from '../../actions'
+import cookies from "universal-cookie";
+
+const cookie = new cookies();
 
 
 class DetailProduct extends Component {
@@ -19,11 +23,7 @@ class DetailProduct extends Component {
 
     render() {
         const {products} = this.state
-        const {genre}  = this.state
-
         
-
-          
         return (
           <div className="container">
             <div className="card">
@@ -63,7 +63,15 @@ class DetailProduct extends Component {
                       key={new Date()}
                       className="card-img-top img-thumbnail"
                     />
-                    <button className="btn btn-outline-warning btn-block">
+                   <button
+                      className="btn btn-outline-secondary btn-block"
+                      onClick={() => {
+                        this.props.addToCart(
+                          products.id,
+                          cookie.get("idLogin")
+                        );
+                      }}
+                    >
                       Add to Cart
                     </button>
                   </div>

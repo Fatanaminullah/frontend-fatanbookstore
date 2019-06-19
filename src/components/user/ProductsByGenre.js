@@ -5,7 +5,7 @@ import axios from "../../config/axios";
 
 import ProductItems from "./ProductItems";
 
-class Products extends Component {
+class ProductsByGenre extends Component {
     state = {
         products: [],
         productSearch: [],
@@ -14,15 +14,26 @@ class Products extends Component {
     };
 
     componentDidMount() {
-        this.getProduct();
+        const genre = this.props.match.params.genre
+        
+        axios.get(`/products/${genre}`)
+        .then(res => {
+            this.setState({products: res.data, productSearch: res.data})
+        })
         this.getGenre()
     }
 
-    getProduct = () => {
-        axios.get("/products").then(res => {
-            this.setState({ products: res.data, productSearch: res.data });
-        });
-    };
+    componentDidUpdate(prevProps) {
+        console.log(this.props.match.params.genre);
+        if (this.props.match.params.genre !== prevProps.match.params.genre) {
+            axios.get(`/products/${this.props.match.params.genre}`)
+            .then(res => {
+                this.setState({products: res.data, productSearch: res.data})
+            })
+            this.getGenre()
+        }
+      }
+
     getGenre = async () => {
         
         await axios
@@ -32,6 +43,7 @@ class Products extends Component {
             
           });
       }
+
     searchProduct = () => {
         const search = this.inputSearch.value;
         const min = parseInt(this.minPrice.value);
@@ -91,7 +103,7 @@ class Products extends Component {
     
 
     renderList = () => {
-        return this.state.productSearch.map(items => {
+        return this.state.productSearch.map(items =>{
             return <ProductItems item={items} />;
         });
     };
@@ -103,6 +115,7 @@ class Products extends Component {
         })
     }
     render() {
+        
         return (
             <div className="container">
                 <div className="row mt-3">
@@ -164,8 +177,6 @@ class Products extends Component {
                                     </tbody>
                                 </table>
                             </div>
-
-
                         </div>
                     </div>
                     <div className="row col-sm-8 col-lg-9">{this.renderList()}</div>
@@ -175,4 +186,4 @@ class Products extends Component {
     }
 }
 
-export default Products;
+export default ProductsByGenre;

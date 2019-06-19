@@ -8,6 +8,7 @@ import {keepLogin} from '../actions'
 import Home from './user/Home'
 import Header from './user/Header'
 import Products from './user/Products'
+import ProductsByGenre from './user/ProductsByGenre'
 import Login from './user/Login'
 import Register from './user/Register'
 import ManageProduct from './admin/ManageProduct'
@@ -47,6 +48,7 @@ class App extends Component {
                 <Header/>
                 <Route path="/" exact component={Home}/>
                 <Route path="/products" component={Products}/>
+                <Route path="/product/:genre" component={ProductsByGenre}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/register" component={Register}/>
                 <Route path="/profile" component={Profile}/>

@@ -3,8 +3,8 @@ import axios from "../../config/axios";
 import { connect } from "react-redux";
 import { Redirect, Link } from "react-router-dom";
 import cookies from "universal-cookie";
-import Swal from 'sweetalert2'
 import {deleteCart} from '../../actions'
+import Swal from '@sweetalert/with-react';
 
 var RajaOngkir = require('rajaongkir-nodejs').Starter('3ff51db00cb996364b49206f71d895a3');
  
@@ -39,52 +39,59 @@ class ShoppingCart extends Component {
     this.props.deleteCart(productId,userId)
   };
   placeOrder = (userid) => {
-    
-    Swal.fire({
-      text: 'Check again your order! if you have confirm your order,please choose confirm',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Confirm',
-      cancelButtonText: 'Cancel'
-    }).then((result) => {
-      if (result.value) {
-        axios.post(`/orders/${userid}`)
-        .then(res => {
-          console.log(res);
-          var orderItem = []
-          this.state.cartItem.map(item => {
-            orderItem.push([item.id,item.price,item.quantity,res.data.orderid])
-          })
-          console.log(orderItem);
-          axios.post('/orderitem',[
-            orderItem
-          ])
-          .then(res => {
+    var total = 0
+    this.state.cartItem.forEach(items => { total += (items.quantity * items.price)} )
+    Swal({
+      text:
+        "Check again your order! if you have confirm your order,please choose confirm",
+      content: (
+        <div className="card m-2 fixed" id="cekout">
+          <div className="card-header">Tagihan</div>
+          <div className="card-body">
+            {this.renderListCheckout()}
+            <p className="card-text">Total</p>
+            <p className="card-text text-right">
+              Rp. {total.toLocaleString()}
+            </p>
+          </div>
+        </div>
+      ),
+      icon: "warning",
+      buttons: ["Cancel","Order"],
+      dangerMode:true
+    }).then(result => {
+      if (result) {
+        axios.post(`/orders/${userid}`).then(
+          res => {
             console.log(res);
-            
-          },err => {
-            console.log(err +'orderitem');
-            
-          })
-            },
-            err => {
-              console.log(err + 'order');
-            }
-          );
-          Swal.fire(
-            'Success!',
-            'Your item has been ordered!',
-            'success'
-          )
-      // } else if (result.dismiss === Swal.DismissReason.cancel) {
-      //   Swal.fire(
-      //     'Cancelled',
-      //     '',
-      //     'info'
-      //   )
-      // }
-    }})
-  }
+            var orderItem = [];
+            this.state.cartItem.map(item => {
+              orderItem.push([
+                item.id,
+                item.price,
+                item.quantity,
+                res.data.orderid
+              ]);
+            });
+            console.log(orderItem);
+            axios.post("/orderitem", [orderItem]).then(
+              res => {
+                console.log(res);
+              },
+              err => {
+                console.log(err + "orderitem");
+              }
+            );
+          },
+          err => {
+            console.log(err + "order");
+          }
+        );
+        Swal("Success!", "Your item has been ordered!", "success");
+      } else {
+        Swal("Cancelled", "", "info");
+      }
+    });}
   addQty = async(index,userid,productid) => {
     const data = [...this.state.cartItem];
     data[index].quantity += 1;
@@ -225,7 +232,7 @@ class ShoppingCart extends Component {
             <h1 className="mx-auto display-4">Your Shopping Cart</h1>
           </div>
           <div className="row">
-            <div className="col-8">
+            <div className="col-md-8 col-sm-12 order-sm-2">
               <div className="card">
                 <div className="card-header d-flex justify-content-between">
                   <p className="lead text-dark">SHOPPING CART :  {cookie.get('cartqty')} ITEMS</p>
@@ -236,7 +243,7 @@ class ShoppingCart extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-4">
+            <div className="col-md-4 col-sm-12 order-sm-1">
               <div className="card m-2 fixed" id="cekout">
                 <div className="card-header">Tagihan</div>
                 <div className="card-body">
@@ -267,7 +274,7 @@ class ShoppingCart extends Component {
         )
       }
     } else {
-      Swal.fire(
+      Swal(
         `Error`,
         'Please login to continue',
         'error'

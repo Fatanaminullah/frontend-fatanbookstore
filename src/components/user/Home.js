@@ -100,8 +100,8 @@ class Home extends Component {
   listCategory = () => {
     return this.state.genre.map(item => {
       return(
-<Link className="p-2 list-category" to="/">
-  <span className="align-content-center text-dark">{item.name}</span>
+<Link className="p-2 list-category" to={`/product/${item.name}`}>
+  <span className="align-content-center text-dark lead">{item.name}</span>
 </Link>
       )
     })
@@ -109,13 +109,15 @@ class Home extends Component {
 
   renderListCategory = () => {
     if(this.state.list){
-        return(
-  <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <div className="navbar-nav d-flex flex-wrap">
-              {this.listCategory()}
+        return (
+          <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <div className="container">
+              <div className="navbar-nav d-flex flex-wrap">
+                {this.listCategory()}
+              </div>
             </div>
           </nav>
-        )
+        );
     }else{
       return null
     }

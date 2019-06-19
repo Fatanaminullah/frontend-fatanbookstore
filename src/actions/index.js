@@ -1,6 +1,6 @@
 import axios from "../config/axios";
 import cookies from "universal-cookie";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert'
 
 
 const cookie = new cookies();
@@ -176,6 +176,8 @@ export const addToCart = (productId,userId) => {
         user_id:userId,
         product_id:productId
       });
+      console.log(userId,productId);
+      
       cookie.set("cartqty", res.data.length, { path: "/" });
       dispatch({
         type: "ADD_CART",
@@ -183,10 +185,10 @@ export const addToCart = (productId,userId) => {
           quantity:res.data.length
         }
       });
-      Swal.fire('Success','This item is succesfully added to your cart!','success')
+      Swal('Success','This item is succesfully added to your cart!','success')
     } catch (e) {
       console.log("upload gagal" + e)
-      Swal.fire('','This item is already added to your cart!','error')
+      Swal('','This item is already added to your cart!','error')
     }
     }
   }
@@ -194,14 +196,13 @@ export const addToCart = (productId,userId) => {
 
 export const deleteCart = (productId,userId) => {
   return async dispatch => {
-    Swal.fire({
+    Swal({
       text: 'Are you sure want to delete this item?',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No'
+      icon: 'warning',
+      buttons: true,
+      dangerMode: true
     }).then((result) => {
-      if (result.value) {
+      if (result) {
         axios.delete(`/cart/delete/${productId}/${userId}`)
         .then(res => {
           cookie.set("cartqty", res.data[0].cart, { path: "/" });
@@ -216,13 +217,13 @@ export const deleteCart = (productId,userId) => {
               console.log(err);
             }
           );
-          Swal.fire(
+          Swal(
             'Deleted!',
             'Your imaginary file has been deleted.',
             'success'
           )
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire(
+      } else {
+        Swal(
           'Cancelled',
           'Your imaginary file is safe :)',
           'error'
