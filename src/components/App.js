@@ -19,10 +19,12 @@ import DetailProduct from './user/DetailProduct'
 import ShoppingCart from './user/ShoppingCart'
 import LoginAdmin from './admin/LoginAdmin';
 import DashboardAdmin from './admin/DashboardAdmin';
+import ManageBank from './admin/ManageBank';
 import Profile from './user/Profile';
 import AddressContact from './user/AddressContact';
 import Order from './user/Order';
 import OrderDetail from './user/OrderDetail';
+import Payment from './user/Payment';
 
 const cookie = new cookies()
 
@@ -55,6 +57,7 @@ class App extends Component {
                 <Route path="/register" component={Register}/>
                 <Route path="/profile" component={Profile}/>
                 <Route path="/order" component={Order}/>
+                <Route path="/payment" component={Payment}/>
                 <Route path="/orderitem/:orderid" component={OrderDetail}/>
                 <Route path="/addresscontact" component={AddressContact}/>
                 <Route path="/manageproduct" component={ManageProduct}/>
@@ -65,6 +68,7 @@ class App extends Component {
                 <Route path="/shoppingcart" component={ShoppingCart}/>
                 <Route path="/admin/login" component={LoginAdmin}/>
                 <Route path="/admin/dashboard" component={DashboardAdmin}/>
+                <Route path="/managebank" component={ManageBank}/>
             </div>
         </BrowserRouter>
             

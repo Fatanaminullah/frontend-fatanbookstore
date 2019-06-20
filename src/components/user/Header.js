@@ -112,6 +112,15 @@ class Header extends Component {
                       className="nav-link"
                       to="/admin/dashboard"
                     >
+                      <i class="fas fa-bell fa-2x text-secondary"></i>
+                    </Link>
+                    
+                  </li>
+                  <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
+                    <Link
+                      className="nav-link"
+                      to="/admin/dashboard"
+                    >
                       <i className="fas fa-home fa-2x text-secondary" />
                     </Link>
                     
@@ -213,7 +222,7 @@ class Header extends Component {
                               My Address
                             </p>
                           </Link>
-                          <Link to="/">
+                          <Link to="/order">
                             <p className="text-center text-dark">
                               Orders
                             </p>
@@ -223,9 +232,9 @@ class Header extends Component {
                               History Orders
                             </p>
                           </Link>
-                          <Link to="/">
+                          <Link to="/payment">
                             <p className="text-center text-dark">
-                              Payment Confirmation
+                              Payment 
                             </p>
                           </Link>
                           <button

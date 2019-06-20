@@ -87,7 +87,8 @@ class ShoppingCart extends Component {
             console.log(err + "order");
           }
         );
-        Swal("Success!", "Your item has been ordered!", "success");
+        Swal("Success!", "Your item has been ordered! Please check your order page to continue to payment!", "success");
+        
       } else {
         Swal("Cancelled", "", "info");
       }
@@ -225,7 +226,8 @@ class ShoppingCart extends Component {
       if(this.state.cartItem.length !== 0){
         if(parseInt(cookie.get('cartqty')) !== this.state.cartItem.length) this.getCart()
         var total = 0
-        this.state.cartItem.forEach(items => { total += (items.quantity * items.price)} )
+        var delivfee = 0
+        this.state.cartItem.forEach(items => { total += (items.quantity * items.price) + delivfee} )
       return (
         <div className="container">
           <div className="row">
@@ -236,7 +238,6 @@ class ShoppingCart extends Component {
               <div className="card">
                 <div className="card-header d-flex justify-content-between">
                   <p className="lead text-dark">SHOPPING CART :  {cookie.get('cartqty')} ITEMS</p>
-                  <p className="lead text-dark">Estimated shipping cost : </p>
                 </div>
                 <div className="card-body">
             {this.renderList()}
@@ -248,6 +249,8 @@ class ShoppingCart extends Component {
                 <div className="card-header">Tagihan</div>
                 <div className="card-body">
                 {this.renderListCheckout()}
+                  <p className="card-text">Delivery Fee</p>
+                  <p className="card-text text-right"> FREE </p>
                   <p className="card-text">Total</p>
                   <p className="card-text text-right">Rp. {total.toLocaleString()}</p>
                 </div>

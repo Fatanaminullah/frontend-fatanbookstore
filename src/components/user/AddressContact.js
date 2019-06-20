@@ -376,11 +376,13 @@ class AddressContact extends Component {
                   <div className="card-header">
                     <p className="lead text-center">Order History</p>
                   </div>
+                  <Link to="/payment" className="text-dark">
                   <div className="card-header">
                     <p className="lead text-center">
-                      Payment Confirmation
+                      Payment 
                     </p>
                   </div>
+                  </Link>
                   <div className="card-body" />
                 </div>
               </div>

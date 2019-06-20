@@ -26,6 +26,7 @@ img.rounded-circle{
 .dropdown-item:hover {
     color: white;
     background-color: #dc3545;
+    
 }
 
 .dropdown:hover>.dropdown-menu {

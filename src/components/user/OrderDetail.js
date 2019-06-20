@@ -119,7 +119,7 @@ class Order extends Component {
     }
 
     render() {
-        
+        const ordercode = parseInt(this.props.match.params.orderid)
         if (cookie.get("stillLogin")) {
             if (this.state.orderitem !== undefined) {
             return (
@@ -152,7 +152,7 @@ class Order extends Component {
                       </div>
                       <div className="card-header">
                         <p className="lead text-center">
-                          Payment Confirmation
+                          Payment
                         </p>
                       </div>
                       <div className="card-body" />
@@ -163,7 +163,7 @@ class Order extends Component {
                       <ul className="list-group list-group-flush">
                         <div className="card-header">
                           <div className="text-center">
-                          <h3>Order Items</h3>
+                          <h3>Order {ordercode} </h3>
                           </div>
                         </div>
                         {this.renderOrder()}

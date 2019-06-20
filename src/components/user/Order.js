@@ -7,6 +7,8 @@ import {Link} from 'react-router-dom'
 
 const cookie = new cookies();
 
+var moment = require('moment');
+
 
 class Order extends Component {
     cardheader = {
@@ -50,20 +52,25 @@ class Order extends Component {
             )
         }
         return this.state.order.map(item => {
+          var date = moment(item.order_date)
+          var order_date = date.utc().format('DD-MM-YYYY')
             
             return(
                 <div className="card m-4">
-                    <div className="card-header">
+                    <div className="card-header d-flex justify-content-between text-secondary">
                         <p className="lead font-weight-bold"> Order Code : {item.order_code} </p>
+                        <Link to="payment" className="text-dark">
+                        <p className="lead font-weight-bold"> <i class="fas fa-money-check-alt"></i> Pay</p>
+                        </Link>
                     </div>
                     <div className="card-body">
-                        <p className="lead">Order Date : {item.order_date} </p>
+                        <p className="lead">Order Date : {order_date} </p>
                         <p className="lead">Order Status : {item.order_status_description} </p>
                         <p className="lead"> Items : {item.quantity} </p>
                     </div>
                     <div className="card-footer text-right">
-                        <Link to={`/orderitem/${item.order_code}`}>
-                        <p className="lead"> See Order Detail <i class="fas fa-arrow-right"></i></p>
+                        <Link to={`/orderitem/${item.order_code}`} className="text-dark">
+                        <p className="lead font-weight-bold"> See Order Detail <i class="fas fa-arrow-right"></i></p>
                         </Link>
                     </div>
                 </div>
@@ -104,11 +111,13 @@ class Order extends Component {
                       <div className="card-header">
                         <p className="lead text-center">Order History</p>
                       </div>
+                      <Link to="payment" className="text-dark">
                       <div className="card-header">
                         <p className="lead text-center">
-                          Payment Confirmation
+                          Payment
                         </p>
                       </div>
+                      </Link>
                       <div className="card-body" />
                     </div>
                   </div>

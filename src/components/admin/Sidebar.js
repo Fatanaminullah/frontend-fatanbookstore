@@ -18,6 +18,9 @@ export default props => {
       <Link className="menu-item" to="/manageauthorpublisher">
         Manage Author & Publisher
       </Link>
+      <Link className="menu-item" to="/managebank">
+        Manage Bank
+      </Link>
       <a className="menu-item" href="/">
         Manage Payment History
       </a>

@@ -374,6 +374,7 @@ class Profile extends Component {
   }
 
   render() {
+    
     if (cookie.get("stillLogin")) {
       if (this.state.data !== undefined) {
           
@@ -405,11 +406,13 @@ class Profile extends Component {
                   <div className="card-header">
                     <p className="lead text-center">Order History</p>
                   </div>
-                  <div className="card-header">
-                    <p className="lead text-center">
-                      Payment Confirmation
-                    </p>
-                  </div>
+                  <Link to="payment" className="text-dark">
+                      <div className="card-header">
+                        <p className="lead text-center">
+                          Payment
+                        </p>
+                      </div>
+                      </Link>
                   <div className="card-body" />
                 </div>
               </div>
