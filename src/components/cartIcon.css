@@ -34,3 +34,19 @@
 .dropdown-menu.form-wrapper{
     width: 250px;
 }
+.dropdown-menu.notification{
+    width: 450px;
+    left: -200px;
+    transition: all 2s 
+}
+.dropdown-menu.notification img:hover{
+    cursor: pointer;
+}
+.card-horizontal {
+    display: flex;
+    flex: 1 1 auto;
+    height: 110px;
+}
+.card-horizontal .card-body p{
+    font-size: 12px;
+}

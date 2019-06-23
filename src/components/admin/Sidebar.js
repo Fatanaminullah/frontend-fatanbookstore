@@ -7,7 +7,7 @@ export default props => {
     // Pass on our props
     <Menu {...props}>
       <Link className="menu-item" to="/manageuser">
-        Manage User
+        Manage User's Order
       </Link>
       <Link className="menu-item" to="/manageproduct">
         Manage Product
@@ -21,9 +21,6 @@ export default props => {
       <Link className="menu-item" to="/managebank">
         Manage Bank
       </Link>
-      <a className="menu-item" href="/">
-        Manage Payment History
-      </a>
     </Menu>
   );
 };

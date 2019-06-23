@@ -8,26 +8,101 @@ import { Logout } from "../../actions";
 import {onLoginClick} from '../../actions'
 import {afterTwoSeconds} from '../../actions'
 import image from '../../img/avatar2.jpg'
-
-
+import deliv from '../../img/delivery.png'
+import packing from '../../img/packaging.png'
+import payment from '../../img/payment_slip.png'
+import success from '../../img/success.png'
+import approved from '../../img/approved.png'
 import "../cartIcon.css"
+import swal from '@sweetalert/with-react'
 
 const cookie = new cookies();
 
 class Header extends Component {
   state = {
-    products:[]
+    products:[],
+    notification:[],
+    user_notif: []
 
   };
   componentDidMount() {
     this.getProduct();
+    this.getNotification(cookie.get('idLogin'))
+    setInterval(() => {
+    this.getNotification(cookie.get('idLogin'))
+    }, 5000);
   }
 
   getProduct = () => {
     axios.get("/products").then(res => {
         this.setState({ products: res.data});
     });
+    
 };
+
+  getNotification = async (userid) => {
+    await axios.get('/notification/order').then(res => {
+      this.setState({notification : res.data})
+    })
+    await axios.get(`/user/notification/${userid}`).then(res => {
+      this.setState({user_notif : res.data})
+    })
+    
+  }
+
+  confirmImage = (src,id) => {
+    swal({
+      title:'Confirm Payment',
+      content:
+      <div className="card mx-auto" style={{width:'300px'}}>
+          <img src={src} className="card-img-top" />
+          <div className="card-footer">
+            <button className="btn btn-success" onClick={() => {this.accPayment(id)}}>
+              Accept
+            </button>
+            <button className="btn btn-danger" onClick={() => {this.decPayment(id)}}>
+              Decline
+            </button>
+
+          </div>
+
+      </div>
+    }
+    )
+  }
+
+  accPayment = (id) => {
+    const order_status = 3
+
+    axios.patch(`/updateorder/${id}`,{
+      order_status
+    }).then(res => {
+      swal({
+        title:"Payment Confirmed",
+        icon:"success"
+      })
+      this.getNotification()
+    },err => {
+      console.log(err);
+      
+    })
+  }
+  decPayment = (id) => {
+    const order_status = 1
+
+    axios.patch(`/updateorder/${id}`,{
+      order_status
+    }).then(res => {
+      swal({
+        title:"Payment Declined",
+        icon:"success"
+      })
+      this.getNotification()
+    },err => {
+      console.log(err);
+      
+    })
+  }
 
   handleKeyDown = (event) => {
     if(event.key == 'Enter'){
@@ -79,6 +154,132 @@ class Header extends Component {
         />
       );
     };
+
+    notification = () => {
+      if(cookie.get('role') == 1){
+        return this.state.notification.map(item => {
+          return(
+            <div className="card w-80 my-1" style={{height:'110px'}}>
+              <div className="card-horizontal">
+                <img src={item.payment_confirm} className="img-thumbnail" style={{width:'25%'}} onClick={() => {this.confirmImage(item.payment_confirm,item.id)}} role="button" />
+                <div className="card-body p-0">
+                  <p className="ml-1 my-1"> {item.username} has finished payment confirmation! </p>
+                  <p className="ml-1 mb-1"> Order Code : {item.order_code} </p>
+                  <p className="ml-1 mb-1"> Order Date : {item.order_date.split('T')[0]} </p>
+                  <div className="d-flex justify-content-between">
+                  <p className="ml-1 mb-1"> Transfer to : {item.bank_name} </p>
+                  <Link to="/manageuser" >
+                  <i className="fas fa-external-link-alt mr-2 text-secondary"></i>
+                  </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        })
+      }else if(cookie.get('role') == 2){
+          return this.state.user_notif.map(item => {
+            if(item.order_status_description === 'Waiting For Payment'){
+              return(
+                <div className="card w-80 my-1" style={{height:'100px'}}>
+                  <div className="card-horizontal">
+                  <img src={payment} className="img-thumbnail" style={{width:'25%'}} />
+                  <div className="card-body p-0">
+                    <p className="ml-1 mb-1"> {item.username} , your payment was declined</p>
+                    <p className="ml-1 mb-1"> Order Code : {item.order_code} </p>
+                    <p className="ml-1 mb-1"> Order Date : {item.order_date.split('T')[0]} </p>
+                    <div className="d-flex justify-content-between">
+                    <p className="ml-1 mb-1"> Order Status : {item.order_status_description} </p>
+                  <Link to={`/orderitem/${item.order_code}`} >
+                  <i className="fas fa-external-link-alt mr-2 text-secondary"></i>
+                  </Link>
+                  </div>
+                  </div>
+                  </div>
+                </div>
+              )
+            }else if(item.order_status_description === 'On Packaging'){
+                return(
+                  <div className="card w-80 my-1" style={{height:'100px'}}>
+                    <div className="card-horizontal">
+                    <img src={packing} className="img-thumbnail" style={{width:'25%'}} />
+                    <div className="card-body p-0">
+                      <p className="ml-1 mb-1"> {item.username} , Your order is on packaging!</p>
+                      <p className="ml-1 mb-1"> Order Code : {item.order_code} </p>
+                      <p className="ml-1 mb-1"> Order Date : {item.order_date.split('T')[0]} </p>
+                      <div className="d-flex justify-content-between">
+                      <p className="ml-1 mb-1"> Order Status : {item.order_status_description} </p>
+                    <Link to={`/orderitem/${item.order_code}`} >
+                    <i className="fas fa-external-link-alt mr-2 text-secondary"></i>
+                    </Link>
+                    </div>
+                    </div>
+                    </div>
+                  </div>
+                )
+              }else if(item.order_status_description === 'On Delivery'){
+                  return(
+                    <div className="card w-80 my-1" style={{height:'100px'}}>
+                      <div className="card-horizontal">
+                      <img src={deliv} className="img-thumbnail" style={{width:'25%'}} />
+                      <div className="card-body p-0">
+                        <p className="ml-1 mb-1"> {item.username} , Your order is on Delivery!</p>
+                        <p className="ml-1 mb-1"> Order Code : {item.order_code} </p>
+                        <p className="ml-1 mb-1"> Order Date : {item.order_date.split('T')[0]} </p>
+                        <div className="d-flex justify-content-between">
+                        <p className="ml-1 mb-1"> Order Status : {item.order_status_description} </p>
+                      <Link to={`/orderitem/${item.order_code}`} >
+                      <i className="fas fa-external-link-alt mr-2 text-secondary"></i>
+                      </Link>
+                      </div>
+                      </div>
+                      </div>
+                    </div>
+                  )
+                }else if(item.order_status_description === 'Payment Done'){
+                  return(
+                    <div className="card w-80 my-1" style={{height:'100px'}}>
+                      <div className="card-horizontal">
+                      <img src={approved} className="img-thumbnail" style={{width:'25%'}} />
+                      <div className="card-body p-0">
+                        <p className="ml-1 mb-1"> {item.username} , Your payment is approved!</p>
+                        <p className="ml-1 mb-1"> your item will be on packaging soon</p>
+                        <p className="ml-1 mb-1"> Order Code : {item.order_code} </p>
+                        <p className="ml-1 mb-1"> Order Date : {item.order_date.split('T')[0]} </p>
+                        <div className="d-flex justify-content-between">
+                        <p className="ml-1 mb-1"> Order Status : {item.order_status_description} </p>
+                      <Link to={`/orderitem/${item.order_code}`} >
+                      <i className="fas fa-external-link-alt mr-2 text-secondary"></i>
+                      </Link>
+                      </div>
+                      </div>
+                      </div>
+                    </div>
+                  )
+                } else{
+                    return(
+                      <div className="card w-80 my-1" style={{height:'100px'}}>
+                        <div className="card-horizontal">
+                        <img src={success} className="img-thumbnail" style={{width:'25%'}} />
+                        <div className="card-body p-0">
+                          <p className="ml-1 mb-1"> Order {item.order_code} Success</p>
+                          <p className="ml-1 mb-1"> thank you for shopping, {item.username} !</p>
+                          <p className="ml-1 mb-1"> Order Date : {item.order_date.split('T')[0]} </p>
+                          <div className="d-flex justify-content-between">
+                          <p className="ml-1 mb-1"> Order Status : {item.order_status_description} </p>
+                        <Link to={`/orderitem/${item.order_code}`} >
+                        <i className="fas fa-external-link-alt mr-2 text-secondary"></i>
+                        </Link>
+                        </div>
+                        </div>
+                        </div>
+                      </div>
+                    )
+
+            }
+          })
+      }
+    }
   render() {
     const { username,role } = this.props.user;
     if (role === 1) {
@@ -107,13 +308,27 @@ class Header extends Component {
                   <li className="nav-item m-2 ml-auto">
 
                   </li>
-                  <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
+                  <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
                     <Link
                       className="nav-link"
                       to="/admin/dashboard"
+                      data-toggle="dropdown"
                     >
                       <i class="fas fa-bell fa-2x text-secondary"></i>
+                      <span className='badge badge-warning' id='lblCartCount'>{this.state.notification.length}</span>
                     </Link>
+                    <div className="dropdown-menu notification">
+                      <div className="mx-auto card" style={{width:'400px'}}>
+                        <div className="card-header text-center py-1">
+                          <div className="card-title text-dark font-weight-bold">
+                            <p>Notification</p>
+                          </div>
+                        </div>
+                        <div className="card-body">
+                          {this.notification()}
+                        </div>
+                      </div>
+                    </div>
                     
                   </li>
                   <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
@@ -175,7 +390,7 @@ class Header extends Component {
                 id="navbarNav2"
               >
                 <ul className="navbar-nav col-12">
-                  <li className="nav-item mx-2 my-auto w-100">
+                  <li className="nav-item mx-2 my-auto ml-auto">
                     <form className="navbar-form form-inline">
                       <div className="input-group search-box p-2 w-100">
                         <input
@@ -189,14 +404,31 @@ class Header extends Component {
                         <span className="input-group-addon">
                           <i className="fas fa-search" />
                         </span>
-                      <datalist id="product" className="form-control d-none">
-                        <option>a</option>
-                        <option>a</option>
-                        <option>a</option>
-                        <option>a</option>
-                      </datalist>
                       </div>
                     </form>
+                  </li>
+                  <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
+                    <Link
+                      className="nav-link"
+                      to="/admin/dashboard"
+                      data-toggle="dropdown"
+                    >
+                      <i class="fas fa-bell fa-2x text-secondary"></i>
+                      <span className='badge badge-warning' id='lblCartCount'>{this.state.user_notif.length}</span>
+                    </Link>
+                    <div className="dropdown-menu notification">
+                      <div className="mx-auto card" style={{width:'400px'}}>
+                        <div className="card-header text-center py-1">
+                          <div className="card-title text-dark font-weight-bold">
+                            <p>Notification</p>
+                          </div>
+                        </div>
+                        <div className="card-body">
+                          {this.notification()}
+                        </div>
+                      </div>
+                    </div>
+                    
                   </li>
                   <li className="nav-item dropdown mx-auto mx-lg-0 my-auto">
                     <i className="fas fa-user fa-2x text-secondary" />
@@ -253,7 +485,7 @@ class Header extends Component {
                       <i className="fas fa-heart fa-2x text-secondary" />
                     </Link>
                   </li>
-                  <li className="nav-item m-1 mx-auto  mx-md-2">
+                  <li className="nav-item m-1 mx-auto my-auto mx-md-2">
                     <Link className="nav-a" to="/ShoppingCart">
                       <i className="fas fa-shopping-cart fa-2x text-secondary" />
                       <span className='badge badge-warning' id='lblCartCount'>{cookie.get('cartqty')}</span>

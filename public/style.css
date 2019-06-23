@@ -31,6 +31,7 @@ img.rounded-circle{
 
 .dropdown:hover>.dropdown-menu {
     display: block;
+    
 }
 .dropdown-menu.form-wrapper{
     width: 250px;

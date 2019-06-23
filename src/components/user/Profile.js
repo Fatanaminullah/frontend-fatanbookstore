@@ -404,7 +404,9 @@ class Profile extends Component {
                     </Link>
                   </div>
                   <div className="card-header">
+                  <Link to="/orderhistory" className="text-dark">
                     <p className="lead text-center">Order History</p>
+                    </Link>
                   </div>
                   <Link to="payment" className="text-dark">
                       <div className="card-header">

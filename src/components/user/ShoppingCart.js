@@ -14,26 +14,171 @@ const cookie = new cookies();
 class ShoppingCart extends Component {
   state = {
     cartItem: [],
-    checkOut : []
+    checkOut : [],
+    address:[],
+    kodepos : [],
+    provinsi:[],
+    kabupaten: [],
+    kecamatan: [],
+    kelurahan: [],
+    filterKodepos: [],
+    destination : 'Choose Your Destination'
   };
   componentDidMount() {
     this.getCart();
-    RajaOngkir.getProvinces().then(function (result){
-      // Aksi ketika data Provinsi berhasil ditampilkan
-      console.log(result);
-      
-  }).catch(function (error){
-      // Aksi ketika error terjadi
-      console.log(error);
-      
-  });
+    this.getAddress(cookie.get('idLogin'))
+    this.getKodepos()
   }
+  
+  getKodepos = async () => {
+    try {
+      const res = await axios.get(`/kodepos`);
+      this.setState({
+        kodepos: res.data
+      });
+      
+    } catch (e) {
+      console.log(e);
+    }
+    try{
+      const res = await axios.get(`/province`);
+      this.setState({
+          provinsi: res.data
+        });
+        
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  selectKodepos = () => {
+    return this.state.filterKodepos.map(item => {
+      if(item.kodepos === this.state.address[0].kodepos){
+        return(
+          <option key={item.id} value={item.id} selected>
+          {item.kodepos}
+        </option>
+        )
+      }
+      return (
+        <option key={item.id} value={item.id}>
+          {item.kodepos}
+        </option>
+      );
+    });
+  };
+  selectProvinsi = () => {
+    return this.state.provinsi.map(item => {
+      return (
+        <option key={item.provinsi} value={item.provinsi}>
+          {item.provinsi}
+        </option>
+      );
+    });
+  };
+  selectKabupaten = () => {
+    console.log(this.state.kabupaten);
+    
+    return this.state.kabupaten.map(item => {
+      return (
+        <option key={item.kabupaten} value={item.kabupaten}>
+          {item.kabupaten}
+        </option>
+      );
+    });
+  };
+  selectKecamatan = () => {
+    return this.state.kecamatan.map(item => {
+      return (
+        <option key={item.kecamatan} value={item.kecamatan}>
+          {item.kecamatan}
+        </option>
+      );
+    });
+  };
+  selectKelurahan = () => {
+    return this.state.kelurahan.map(item => {
+      return (
+        <option key={item.kelurahan} value={item.kelurahan}>
+          {item.kelurahan}
+        </option>
+      );
+    });
+  };
+  filterKodepos = async () => {
+    const kelurahan = this.kelurahan.value;
+    
+    try {
+      const res = await axios.get(`/kodepos/${kelurahan}`);
+      this.setState({
+        filterKodepos: res.data
+      });
+      
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  filterKabupaten = async () => {
+    const provinsi = this.provinsi.value;
+
+    try {
+      const res = await axios.get(`/kabupaten/${provinsi}`);
+      this.setState({
+        kabupaten: res.data
+      });
+      
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  filterKecamatan = async () => {
+    const kabupaten = this.kabupaten.value;
+
+    try {
+      const res = await axios.get(`/kecamatan/${kabupaten}`);
+      this.setState({
+        kecamatan: res.data
+      });
+      
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  filterKelurahan = async () => {
+    const kecamatan = this.kecamatan.value;
+    
+    
+    try {
+      const res = await axios.get(`/kelurahan/${kecamatan}`);
+      console.log(res.data);
+      this.setState({
+        kelurahan: res.data
+      });
+      
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   getCart = async () => {
     await axios.get(`/cart/${cookie.get('idLogin')}`).then(res => {
       this.setState({ cartItem: res.data });
     });
   };
+  getAddress = async userid => {
+    try {
+      const res = await axios.get(
+        `/user/info/${userid}`
+      );
+      
+      
+      this.setState({
+        address: res.data
+      });
+      
+    } catch (e) {
+      console.log(e);
+    }
+  }
   onDeleteCart = (productId,userId) => {
     
     this.props.deleteCart(productId,userId)
@@ -49,10 +194,12 @@ class ShoppingCart extends Component {
           <div className="card-header">Tagihan</div>
           <div className="card-body">
             {this.renderListCheckout()}
-            <p className="card-text">Total</p>
+            <p className="card-text text-left">Total</p>
             <p className="card-text text-right">
               Rp. {total.toLocaleString()}
             </p>
+            <p className="card-text text-left">Shipping to</p>
+            <p className="card-text text-right"> {this.state.destination} </p>
           </div>
         </div>
       ),
@@ -61,7 +208,7 @@ class ShoppingCart extends Component {
       dangerMode:true
     }).then(result => {
       if (result) {
-        axios.post(`/orders/${userid}`).then(
+        axios.post(`/orders/${userid}`,{total}).then(
           res => {
             console.log(res);
             var orderItem = [];
@@ -87,12 +234,88 @@ class ShoppingCart extends Component {
             console.log(err + "order");
           }
         );
-        Swal("Success!", "Your item has been ordered! Please check your order page to continue to payment!", "success");
-        
+        Swal({
+          title:"Succes",
+          text:"Your item has been successfully ordered",
+          icon:"success"
+        })
       } else {
         Swal("Cancelled", "", "info");
       }
-    });}
+    })}
+
+    selectDestination = () => {
+      return(
+        <div className="list-group">
+        <li className="list-group-item pl-0">
+          <p>Kodepos</p>
+          <select
+            type="text"
+            className="form-control"
+            ref={input => {
+              this.kodepos = input;
+            }}
+          >
+            {this.selectKodepos()}
+          </select>
+        </li>
+        <li className="list-group-item pl-0">
+          <p>Provinsi</p>
+          <select
+            type="text"
+            className="form-control"
+            ref={input => {
+              this.provinsi = input;
+            }}
+            onChange={this.filterKabupaten}
+          >
+            {this.selectProvinsi()}
+          </select>
+        </li>
+        <li className="list-group-item pl-0">
+          <p>Kota/Kabupaten</p>
+          <select
+            type="text"
+            className="form-control"
+            ref={input => {
+              this.kabupaten = input;
+            }}
+            onChange={this.filterKecamatan}
+          >
+            {this.selectKabupaten()}
+          </select>
+        </li>
+        <li className="list-group-item pl-0">
+          <p>Kecamatan</p>
+          <select
+            type="text"
+            className="form-control"
+            ref={input => {
+              this.kecamatan = input;
+            }}
+            onChange={this.filterKelurahan}
+          >
+            {this.selectKecamatan()}
+          </select>
+        </li>
+        <li className="list-group-item pl-0">
+          <p>Kelurahan</p>
+          <select
+            type="text"
+            className="form-control"
+            ref={input => {
+              this.kelurahan = input;
+            }}
+            onChange={this.filterKodepos}
+          >
+            {this.selectKelurahan()}
+          </select>
+        </li>
+        
+        </div>
+      )
+      
+    }
   addQty = async(index,userid,productid) => {
     const data = [...this.state.cartItem];
     data[index].quantity += 1;
@@ -206,7 +429,7 @@ class ShoppingCart extends Component {
         if (cookie.get('idLogin')) {
             return (
                 <div>
-                    <p className="card-text">
+                    <p className="card-text text-left">
                     {quantity} x {productName} 
                     </p>
                     <p className="card-text text-right">
@@ -217,9 +440,7 @@ class ShoppingCart extends Component {
         }
     })
   }
-  chooseShipment = () => {
-
-  }
+  
   render() {
 
     if (cookie.get('idLogin')) {
@@ -244,7 +465,7 @@ class ShoppingCart extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-md-4 col-sm-12 order-sm-1">
+            <div className="d-flex flex-column col-md-4 col-sm-12 order-sm-1 ">
               <div className="card m-2 fixed" id="cekout">
                 <div className="card-header">Tagihan</div>
                 <div className="card-body">
@@ -255,10 +476,22 @@ class ShoppingCart extends Component {
                   <p className="card-text text-right">Rp. {total.toLocaleString()}</p>
                 </div>
                 <div className="card-footer">
-                <button className="btn btn-outline-secondary btn-block" onClick={() => {this.placeOrder(cookie.get('idLogin'))}}>Continue to Payment</button>
+                <button className="btn btn-outline-secondary btn-block" onClick={() => {this.placeOrder(cookie.get('idLogin'))}}>Checkout</button>
                 </div>
               </div>
+              <div className="card m-2 fixed">
+                <div className="card-header">Select Destination</div>
+                <div className="card-body">
+                {this.selectDestination()}
+                </div>
+                <div className="card-footer">
+                  <div className="d-flex flex-fill">
+          <button className="btn btn-success btn-block mx-1" >Set Address</button>
+          <button className="btn btn-primary btn-block mx-1">Use your Address</button>
+        </div>
+                </div>
             </div>
+              </div>
           </div>
         </div>
       );

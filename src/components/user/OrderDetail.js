@@ -148,7 +148,9 @@ class Order extends Component {
                     </Link>
                       </div>
                       <div className="card-header">
-                        <p className="lead text-center">Order History</p>
+                      <Link to="/orderhistory" className="text-dark">
+                    <p className="lead text-center">Order History</p>
+                    </Link>
                       </div>
                       <div className="card-header">
                         <p className="lead text-center">

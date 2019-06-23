@@ -22,7 +22,6 @@ class Order extends Component {
     componentDidMount(){
         const userid = cookie.get('idLogin')
         this.getOrder(userid)
-
     }
 
     getOrder = async userid => {
@@ -30,15 +29,12 @@ class Order extends Component {
             const res = await axios.get(
               `/order/${userid}`
             );
-      
             this.setState({
               order: res.data
-            });
-            
+            });  
           } catch (e) {
             console.log(e);
           }
-
     }
 
     renderOrder = () => {
@@ -59,9 +55,6 @@ class Order extends Component {
                 <div className="card m-4">
                     <div className="card-header d-flex justify-content-between text-secondary">
                         <p className="lead font-weight-bold"> Order Code : {item.order_code} </p>
-                        <Link to="payment" className="text-dark">
-                        <p className="lead font-weight-bold"> <i class="fas fa-money-check-alt"></i> Pay</p>
-                        </Link>
                     </div>
                     <div className="card-body">
                         <p className="lead">Order Date : {order_date} </p>
@@ -109,7 +102,9 @@ class Order extends Component {
                     </Link>
                       </div>
                       <div className="card-header">
-                        <p className="lead text-center">Order History</p>
+                      <Link to="/orderhistory" className="text-dark">
+                    <p className="lead text-center">Order History</p>
+                    </Link>
                       </div>
                       <Link to="payment" className="text-dark">
                       <div className="card-header">

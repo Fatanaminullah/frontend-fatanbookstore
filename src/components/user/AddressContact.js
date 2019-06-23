@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 import axios from "axios";
 import cookies from "universal-cookie";
 import {Link} from 'react-router-dom'
-import image from '../../img/avatar2.jpg'
 
 
 const cookie = new cookies();
@@ -374,7 +373,9 @@ class AddressContact extends Component {
                     </Link>
                   </div>
                   <div className="card-header">
+                    <Link to="/orderhistory" className="text-dark">
                     <p className="lead text-center">Order History</p>
+                    </Link>
                   </div>
                   <Link to="/payment" className="text-dark">
                   <div className="card-header">

@@ -24,6 +24,7 @@ import Profile from './user/Profile';
 import AddressContact from './user/AddressContact';
 import Order from './user/Order';
 import OrderDetail from './user/OrderDetail';
+import OrderHistory from './user/OrderHistory';
 import Payment from './user/Payment';
 
 const cookie = new cookies()
@@ -57,6 +58,7 @@ class App extends Component {
                 <Route path="/register" component={Register}/>
                 <Route path="/profile" component={Profile}/>
                 <Route path="/order" component={Order}/>
+                <Route path="/orderhistory" component={OrderHistory}/>
                 <Route path="/payment" component={Payment}/>
                 <Route path="/orderitem/:orderid" component={OrderDetail}/>
                 <Route path="/addresscontact" component={AddressContact}/>
