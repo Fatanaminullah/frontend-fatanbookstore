@@ -142,8 +142,8 @@ class ManageUser extends Component {
                 </li>
               </ul>
               <div className="tab-content profile-tab" id="myTabContent">
-                <div
-                  className="tab-pane fade show active"
+                <div 
+                className="tab-pane fade show active"
                   id="home"
                   role="tabpanel"
                   aria-labelledby="home-tab"

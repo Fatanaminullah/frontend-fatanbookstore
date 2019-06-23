@@ -7,6 +7,7 @@ import {keepLogin} from '../actions'
 
 import Home from './user/Home'
 import Header from './user/Header'
+import Footer from './user/Footer'
 import Products from './user/Products'
 import ProductsByGenre from './user/ProductsByGenre'
 import Login from './user/Login'
@@ -37,11 +38,12 @@ class App extends Component {
         var idCookie = parseInt(cookie.get("idLogin"));
         var roleCookie = parseInt(cookie.get("role"));
         var cartCookie = parseInt(cookie.get("cartqty"));
+        var notification = cookie.get("notification");
         
 
-        if (userCookie !== undefined || idCookie !== NaN || roleCookie !== NaN || cartCookie !== NaN) {
+        if (userCookie !== undefined || idCookie !== NaN || roleCookie !== NaN || cartCookie !== NaN || notification.length === 0) {
             
-            this.props.keepLogin(userCookie, idCookie,roleCookie,cartCookie);
+            this.props.keepLogin(userCookie, idCookie,roleCookie,cartCookie,notification);
         
         }
 }
@@ -71,6 +73,7 @@ class App extends Component {
                 <Route path="/admin/login" component={LoginAdmin}/>
                 <Route path="/admin/dashboard" component={DashboardAdmin}/>
                 <Route path="/managebank" component={ManageBank}/>
+                <Footer/>
             </div>
         </BrowserRouter>
             

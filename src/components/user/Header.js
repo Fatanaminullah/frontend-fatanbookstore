@@ -3,10 +3,7 @@ import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "../../config/axios";
 import cookies from "universal-cookie";
-
-import { Logout } from "../../actions";
-import {onLoginClick} from '../../actions'
-import {afterTwoSeconds} from '../../actions'
+import {onLoginClick,afterTwoSeconds,getNotif,Logout} from '../../actions'
 import image from '../../img/avatar2.jpg'
 import deliv from '../../img/delivery.png'
 import packing from '../../img/packaging.png'
@@ -21,16 +18,22 @@ const cookie = new cookies();
 class Header extends Component {
   state = {
     products:[],
-    notification:[],
-    user_notif: []
+    notification:[]
 
   };
   componentDidMount() {
     this.getProduct();
-    this.getNotification(cookie.get('idLogin'))
+    this.getNotification();
     setInterval(() => {
-    this.getNotification(cookie.get('idLogin'))
+      this.getNotification();
     }, 5000);
+    
+    if(cookie.get('idLogin')){
+      setInterval(() => {
+        this.props.getNotif(cookie.get('idLogin'));
+      }, 5000);
+    }
+
   }
 
   getProduct = () => {
@@ -40,12 +43,9 @@ class Header extends Component {
     
 };
 
-  getNotification = async (userid) => {
+  getNotification = async () => {
     await axios.get('/notification/order').then(res => {
       this.setState({notification : res.data})
-    })
-    await axios.get(`/user/notification/${userid}`).then(res => {
-      this.setState({user_notif : res.data})
     })
     
   }
@@ -141,7 +141,7 @@ class Header extends Component {
             src={cookie.get('avatar')}
             alt={this.props.user.username}
             key={new Date()}
-            className="rounded-circle float-left"
+            className="rounded-circle avatar float-left"
           />
         );
       }
@@ -178,7 +178,8 @@ class Header extends Component {
           )
         })
       }else if(cookie.get('role') == 2){
-          return this.state.user_notif.map(item => {
+        if(cookie.get('notification').length !== 0){
+          return cookie.get('notification').map(item => {
             if(item.order_status_description === 'Waiting For Payment'){
               return(
                 <div className="card w-80 my-1" style={{height:'100px'}}>
@@ -275,9 +276,11 @@ class Header extends Component {
                         </div>
                       </div>
                     )
-
             }
           })
+        }else{
+          return null
+        }
       }
     }
   render() {
@@ -370,133 +373,137 @@ class Header extends Component {
       );
       
     } else if(role === 2){
-      return (
-        <div>
-          <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-            <div className="container">
-              <Link className="navbar-brand" to="/">
-                FATANONLINEBOOKSTORE
-              </Link>
-              <button
-                className="navbar-toggler"
-                data-toggle="collapse"
-                data-target="#navbarNav2"
-              >
-                <span className="navbar-toggler-icon" />
-              </button>
-
-              <div
-                className="collapse navbar-collapse row"
-                id="navbarNav2"
-              >
-                <ul className="navbar-nav col-12">
-                  <li className="nav-item mx-2 my-auto ml-auto">
-                    <form className="navbar-form form-inline">
-                      <div className="input-group search-box p-2 w-100">
-                        <input
-                          type="text"
-                          id="search"
-                          className="form-control"
-                          placeholder="Search here..."
-                          onKeyPress={this.handleKeyDown}
-                          list="product"
-                        />
-                        <span className="input-group-addon">
-                          <i className="fas fa-search" />
-                        </span>
-                      </div>
-                    </form>
-                  </li>
-                  <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
-                    <Link
-                      className="nav-link"
-                      to="/admin/dashboard"
-                      data-toggle="dropdown"
-                    >
-                      <i class="fas fa-bell fa-2x text-secondary"></i>
-                      <span className='badge badge-warning' id='lblCartCount'>{this.state.user_notif.length}</span>
-                    </Link>
-                    <div className="dropdown-menu notification">
-                      <div className="mx-auto card" style={{width:'400px'}}>
-                        <div className="card-header text-center py-1">
-                          <div className="card-title text-dark font-weight-bold">
-                            <p>Notification</p>
+      // if(this.state.user_notif !== undefined){
+        return (
+          <div>
+            <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+              <div className="container">
+                <Link className="navbar-brand" to="/">
+                  FATANONLINEBOOKSTORE
+                </Link>
+                <button
+                  className="navbar-toggler"
+                  data-toggle="collapse"
+                  data-target="#navbarNav2"
+                >
+                  <span className="navbar-toggler-icon" />
+                </button>
+  
+                <div
+                  className="collapse navbar-collapse row"
+                  id="navbarNav2"
+                >
+                  <ul className="navbar-nav col-12">
+                    <li className="nav-item mx-2 my-auto ml-auto">
+                      <form className="navbar-form form-inline">
+                        <div className="input-group search-box p-2 w-100">
+                          <input
+                            type="text"
+                            id="search"
+                            className="form-control"
+                            placeholder="Search here..."
+                            onKeyPress={this.handleKeyDown}
+                            list="product"
+                          />
+                          <span className="input-group-addon">
+                            <i className="fas fa-search" />
+                          </span>
+                        </div>
+                      </form>
+                    </li>
+                    <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
+                      <Link
+                        className="nav-link"
+                        to="/admin/dashboard"
+                        data-toggle="dropdown"
+                      >
+                        <i class="fas fa-bell fa-2x text-secondary"></i>
+                        <span className='badge badge-warning' id='lblCartCount'>{cookie.get('notification').length}</span>
+                      </Link>
+                      <div className="dropdown-menu notification">
+                        <div className="mx-auto card" style={{width:'400px'}}>
+                          <div className="card-header text-center py-1">
+                            <div className="card-title text-dark font-weight-bold">
+                              <p>Notification</p>
+                            </div>
+                          </div>
+                          <div className="card-body">
+                            {this.notification()}
                           </div>
                         </div>
-                        <div className="card-body">
-                          {this.notification()}
+                      </div>
+                      
+                    </li>
+                    <li className="nav-item dropdown mx-auto mx-lg-0 my-auto">
+                      <i className="fas fa-user fa-2x text-secondary" />
+                      <div className="dropdown-menu form-wrapper">
+                        <div className="card">
+                          <div className="d-flex justify-content-between card-header">
+                            {this.profilePicture()}
+                            <p
+                              className="text-right font-weight-bold my-auto"
+                              style={{ fontSize: 14 }}
+                            >
+                              Hai {username}!
+                            </p>
+                          </div>
+                          <div className="card-body">
+                            <Link to="/profile">
+                              <p className="text-center text-dark">
+                                Profile
+                              </p>
+                            </Link>
+                            <Link to="/addresscontact">
+                              <p className="text-center text-dark">
+                                My Address
+                              </p>
+                            </Link>
+                            <Link to="/order">
+                              <p className="text-center text-dark">
+                                Orders
+                              </p>
+                            </Link>
+                            <Link to="/">
+                              <p className="text-center text-dark">
+                                History Orders
+                              </p>
+                            </Link>
+                            <Link to="/payment">
+                              <p className="text-center text-dark">
+                                Payment 
+                              </p>
+                            </Link>
+                            <button
+                              className="btn btn-light btn-block mt-5"
+                              onClick={this.logout}
+                            >
+                              Logout{" "}
+                              <i className="fas fa-sign-out-alt text-secondary" />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    
-                  </li>
-                  <li className="nav-item dropdown mx-auto mx-lg-0 my-auto">
-                    <i className="fas fa-user fa-2x text-secondary" />
-                    <div className="dropdown-menu form-wrapper">
-                      <div className="card">
-                        <div className="d-flex justify-content-between card-header">
-                          {this.profilePicture()}
-                          <p
-                            className="text-right font-weight-bold my-auto"
-                            style={{ fontSize: 14 }}
-                          >
-                            Hai {username}!
-                          </p>
-                        </div>
-                        <div className="card-body">
-                          <Link to="/profile">
-                            <p className="text-center text-dark">
-                              Profile
-                            </p>
-                          </Link>
-                          <Link to="/addresscontact">
-                            <p className="text-center text-dark">
-                              My Address
-                            </p>
-                          </Link>
-                          <Link to="/order">
-                            <p className="text-center text-dark">
-                              Orders
-                            </p>
-                          </Link>
-                          <Link to="/">
-                            <p className="text-center text-dark">
-                              History Orders
-                            </p>
-                          </Link>
-                          <Link to="/payment">
-                            <p className="text-center text-dark">
-                              Payment 
-                            </p>
-                          </Link>
-                          <button
-                            className="btn btn-light btn-block mt-5"
-                            onClick={this.logout}
-                          >
-                            Logout{" "}
-                            <i className="fas fa-sign-out-alt text-secondary" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nav-item m-1 mx-auto mx-md-2 my-auto">
-                    <Link className="nav-a" to="/">
-                      <i className="fas fa-heart fa-2x text-secondary" />
-                    </Link>
-                  </li>
-                  <li className="nav-item m-1 mx-auto my-auto mx-md-2">
-                    <Link className="nav-a" to="/ShoppingCart">
-                      <i className="fas fa-shopping-cart fa-2x text-secondary" />
-                      <span className='badge badge-warning' id='lblCartCount'>{cookie.get('cartqty')}</span>
-                    </Link>
-                  </li>
-                </ul>
+                    </li>
+                    <li className="nav-item m-1 mx-auto mx-md-2 my-auto">
+                      <Link className="nav-a" to="/">
+                        <i className="fas fa-heart fa-2x text-secondary" />
+                      </Link>
+                    </li>
+                    <li className="nav-item m-1 mx-auto my-auto mx-md-2">
+                      <Link className="nav-a" to="/ShoppingCart">
+                        <i className="fas fa-shopping-cart fa-2x text-secondary" />
+                        <span className='badge badge-warning' id='lblCartCount'>{cookie.get('cartqty')}</span>
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
-          </nav>
-        </div>
-      );
+            </nav>
+          </div>
+        );
+      // }else{
+      //   return null
+      // }
     }else{
       return (
         <div>
@@ -535,57 +542,13 @@ class Header extends Component {
                   </li>
                   <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
                     <i className="fas fa-user fa-2x text-secondary" />
-
                     <div className="dropdown-menu form-wrapper">
-                      <div className="mx-auto card">
-                        <div className="card-body">
-                          <div className="border-bottom border-secondary card-title">
-                            <Link to="/login" className="text-dark">
-                              <h1 className="text-center">Login</h1>
-                            </Link>
-                          </div>
-                          <div className="card-title mt-1">
-                            <h4>Username</h4>
-                          </div>
-                          <form className="input-group">
-                            <input
-                              ref={input => {
-                                this.username = input;
-                              }}
-                              className="form-control"
-                              type="text"
-                            />
-                          </form>
-                          <div className="card-title mt-1">
-                            <h4>Password</h4>
-                          </div>
-                          <form className="input-group">
-                            <input
-                              ref={input => {
-                                this.password = input;
-                              }}
-                              className="form-control"
-                              type="password"
-                            />
-                          </form>
-                          <button
-                            className="btn btn-secondary btn-block mt-5"
-                            onClick={this.onSubmitClick}
-                          >
-                            Login
-                          </button>
-                          {/* {this.onErrorLogin()}
-                          {this.props.afterTwoSeconds()} */}
-
-                          <p className="lead text-center">
-                            Don't have account ?
-                          </p>
-                            <Link to="/register"><p className="lead text-center">
-                              Sign Up!
-                              </p>
-                              </Link>
-                        </div>
-                      </div>
+                      <Link to="/login" className="text-center text-dark">
+                        <p className="font-weight-bold lead my-2">Login</p>
+                      </Link>
+                      <Link to="/register" className="text-center text-dark">
+                        <p className="font-weight-bold lead my-2">Register</p>
+                      </Link>
                     </div>
                   </li>
                   <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
@@ -609,10 +572,10 @@ class Header extends Component {
 }
 
 const mapStateToProps = state => {
-  return { user: state.auth,error : state.auth.error, empty: state.auth.empty, quantity:state.auth.quantity };
+  return { user: state.auth,error : state.auth.error, empty: state.auth.empty, quantity:state.auth.quantity, notification:state.auth.notification };
 };
 
 export default connect(
   mapStateToProps,
-  { Logout, onLoginClick, afterTwoSeconds }
+  { Logout, onLoginClick, afterTwoSeconds,getNotif }
 )(Header);

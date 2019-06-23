@@ -87,7 +87,6 @@ class Login extends Component {
             </div>
           );
         }else{
-            console.log(role);
           return <Redirect to="/" />;
         }
         

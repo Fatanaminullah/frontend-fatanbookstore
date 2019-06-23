@@ -352,7 +352,11 @@ class ManageGenre extends Component {
           <Redirect to="/managegenre" />
           <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
           <div id="page-wrap">
-            <div className="container">
+            <div className="container" style={{
+              overflowY: "scroll",
+              overflowX: "scroll",
+              height: "700px"
+            }}>
               <div className="row">
                 <div className="col-4">
                   <h4 className="text-center">Genre</h4>

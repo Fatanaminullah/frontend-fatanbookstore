@@ -10,18 +10,16 @@ import Sidebar from "./Sidebar";
 import "../style.css";
 import "../styleSwitch.css";
 
-
 const cookie = new cookies();
 
 class ManageProduct extends Component {
-  
   state = {
     product: [],
     promo: [],
     productSearch: [],
     publisher: [],
     author: [],
-    images:[],
+    images: [],
     selectedID: 0,
     selectedPromo: 0,
     switch: true,
@@ -29,22 +27,19 @@ class ManageProduct extends Component {
   };
 
   componentDidMount() {
-    
     this.getProduct();
     this.getPromo();
     this.getAuthor();
     this.getPublisher();
-    
   }
 
   getPromo = async () => {
     await axios.get("/promo").then(res => {
       this.setState({
         promo: res.data.result,
-        images:res.data.photo,
+        images: res.data.photo,
         selectedPromo: 0
-      });  
-      
+      });
     });
   };
   addPromo = async () => {
@@ -76,7 +71,7 @@ class ManageProduct extends Component {
     }
   };
   editPromo = id => {
-    this.setState({ selectedPromo: id });    
+    this.setState({ selectedPromo: id });
   };
   getProduct = async () => {
     await axios.get("http://localhost:2000/products").then(res => {
@@ -114,7 +109,7 @@ class ManageProduct extends Component {
     const page = this.editPage.value;
     const author = this.selectedAuthorId.value;
     const publisher = this.selectedPublisherId.value;
-    
+
     formData.append("image", image);
     formData.append("product_name", name);
     formData.append("stock", stock);
@@ -134,25 +129,25 @@ class ManageProduct extends Component {
       console.log(e);
     }
   };
-  savePromo = async (id,index) => {
+  savePromo = async (id, index) => {
     const formData = new FormData();
     var image = this.imageEdit.files[0];
-    
-    if(image === undefined){
-      var img = this.state.images[index]
+
+    if (image === undefined) {
+      var img = this.state.images[index];
       image = img.slice(35, 57);
     }
-    
+
     var promo_status = Number;
-    
+
     if (this.state.switchEdit === true) {
       promo_status = 1;
     } else {
       promo_status = 0;
     }
-    
+
     console.log(promo_status);
-    
+
     formData.append("image", image);
     formData.append("promo_status", promo_status);
     try {
@@ -182,6 +177,7 @@ class ManageProduct extends Component {
     const page = parseInt(this.page.value);
     const author = this.selectAuthorId.value;
     const publisher = this.selectPublisherId.value;
+    const synopsis = this.synopsis.value;
 
     formData.append("images", images);
     formData.append("product_name", name);
@@ -190,22 +186,23 @@ class ManageProduct extends Component {
     formData.append("page", page);
     formData.append("author", author);
     formData.append("publisher", publisher);
+    formData.append("synopsis", synopsis);
     try {
-        const res = await axios.post(
-          `http://localhost:2000/products/add`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data"
-            }
+      const res = await axios.post(
+        `http://localhost:2000/products/add`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
           }
-        );
+        }
+      );
 
-        this.getProduct();
-      } catch (e) {
-        console.log("upload gagal" + e);
-      }
-    };
+      this.getProduct();
+    } catch (e) {
+      console.log("upload gagal" + e);
+    }
+  };
   selectAuthor = () => {
     return this.state.author.map(item => {
       return (
@@ -226,7 +223,7 @@ class ManageProduct extends Component {
   };
 
   renderPromo = () => {
-    return this.state.promo.map((item,index) => {
+    return this.state.promo.map((item, index) => {
       if (item.id !== this.state.selectedPromo) {
         return (
           <tr key={item.id}>
@@ -278,7 +275,7 @@ class ManageProduct extends Component {
             <td className="d-flex flex-column">
               <button
                 onClick={() => {
-                  this.savePromo(item.id,index);
+                  this.savePromo(item.id, index);
                 }}
                 className="btn btn-success mb-2"
               >
@@ -433,7 +430,6 @@ class ManageProduct extends Component {
     });
   };
 
-
   render() {
     var userCookie = cookie.get("stillLogin");
     if (userCookie === undefined) {
@@ -442,180 +438,293 @@ class ManageProduct extends Component {
       return (
         <div id="App">
           <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
-          <div id="page-wrap">
-            <div className="container">
-              <h1 className="display-4 text-center">Product Promo</h1>
-              <table className="table table-hover">
-                <thead>
-                  <th scope="col">ID</th>
-                  <th scope="col">IMAGE</th>
-                  <th scope="col">STATUS PROMO</th>
-                  <th scope="col">ACTION</th>
-                </thead>
-                <tbody>{this.renderPromo()}</tbody>
-              </table>
-              <h1 className="display-4 text-center">Input Promo</h1>
-              <table className="table table-hover">
-                <thead>
-                  <th scope="col">ID</th>
-                  <th scope="col">IMAGE</th>
-                  <th scope="col">STATUS PROMO</th>
-                  <th scope="col">ACTION</th>
-                </thead>
-                <tbody>
-                  <th scope="col">ID</th>
-                  <th scope="col">
-                    <div className="custom-file">
-                      <input
-                        type="file"
-                        id="myfile"
-                        ref={input => (this.imagePromo = input)}
-                        className="custom-file-input"
-                      />
-                      <label className="custom-file-label" />
-                    </div>
-                  </th>
-                  <th scope="col">
-                    <BootstrapSwitchButton
-                      checked={false}
-                      onlabel="NOT ACTIVE"
-                      onstyle="danger"
-                      offlabel="ACTIVE"
-                      offstyle="success"
-                      style="w-100 mx-3"
-                      onChange={() => {
-                        this.setState({ switch: !this.state.switch });
-                      }}
+          <div
+            id="page-wrap"
+            
+          >
+            <div className="container" style={{
+              overflowY: "scroll",
+              overflowX: "auto",
+              height: "700px"
+            }}>
+              <ul className="nav nav-tabs" id="myTab" role="tablist">
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead active"
+                    id="home-tab"
+                    data-toggle="tab"
+                    href="#product"
+                    role="tab"
+                    aria-controls="home"
+                    aria-selected="true"
+                  >
+                    Product Table
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead"
+                    id="profile-tab"
+                    data-toggle="tab"
+                    href="#promo"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Promo
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead"
+                    id="profile-tab"
+                    data-toggle="tab"
+                    href="#inputpromo"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Input Promo
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead"
+                    id="profile-tab"
+                    data-toggle="tab"
+                    href="#inputproduct"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Input Product
+                  </a>
+                </li>
+              </ul>
+              <div className="tab-content profile-tab" id="myTabContent">
+                <div
+                  className="tab-pane fade show active"
+                  id="product"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                  <h1 className="display-4 text-center">Product Table</h1>
+                  <div className="input-group search-box">
+                    <input
+                      type="text"
+                      ref={input => (this.searchProduct = input)}
+                      className="form-control"
+                      placeholder="Search Product here..."
+                      onKeyUp={this.filterProduct}
                     />
-                  </th>
-                  <th scope="col">
-                    <button
-                      className="btn btn-outline-success"
-                      onClick={this.addPromo}
-                    >
-                      Add
-                    </button>
-                  </th>
-                </tbody>
-              </table>
-
-              <h1 className="display-4 text-center">Product Table</h1>
-              <div className="input-group search-box">
-                <input
-                  type="text"
-                  ref={input => (this.searchProduct = input)}
-                  className="form-control"
-                  placeholder="Search Product here..."
-                  onKeyUp={this.filterProduct}
-                />
-                <span className="input-group-addon">
-                  <i className="fas fa-search" />
-                </span>
-              </div>
-              <table className="table table-hover mb-5">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">NAME</th>
-                    <th scope="col">STOCK</th>
-                    <th scope="col">PRICE</th>
-                    <th scope="col">PAGE</th>
-                    <th scope="col">AUTHOR</th>
-                    <th scope="col">PUBLISHER</th>
-                    <th scope="col">IMAGE</th>
-                    <th scope="col">ACTION</th>
-                  </tr>
-                </thead>
-                <tbody>{this.renderList()}</tbody>
-              </table>
-              <h1 className="display-4 text-center">Input Product</h1>
-              <table className="table text-center">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">NAME</th>
-                    <th scope="col">STOCK</th>
-                    <th scope="col">PRICE</th>
-                    <th scope="col">PAGE</th>
-                    <th scope="col">AUTHOR</th>
-                    <th scope="col">PUBLISHER</th>
-                    <th scope="col">IMAGE</th>
-                    <th scope="col">ACTION</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">
-                      <input
-                        ref={input => (this.name = input)}
-                        className="form-control"
-                        type="text"
-                      />
-                    </th>
-                    <th scope="col">
-                      <input
-                        ref={input => (this.stock = input)}
-                        className="form-control"
-                        type="text"
-                      />
-                    </th>
-                    <th scope="col">
-                      <input
-                        ref={input => (this.price = input)}
-                        className="form-control"
-                        type="text"
-                      />
-                    </th>
-                    <th scope="col">
-                      <input
-                        ref={input => (this.page = input)}
-                        className="form-control"
-                        type="text"
-                      />
-                    </th>
-                    <th>
-                      <select
-                        className="select-custom"
-                        ref={input => {
-                          this.selectAuthorId = input;
-                        }}
-                      >
-                        {this.selectAuthor()}
-                      </select>
-                    </th>
-                    <th>
-                      <select
-                        className="select-custom"
-                        ref={input => {
-                          this.selectPublisherId = input;
-                        }}
-                      >
-                        {this.selectPublisher()}
-                      </select>
-                    </th>
-                    <th scope="col">
-                      <div className="custom-file">
-                        <input
-                          type="file"
-                          id="myfile"
-                          ref={input => (this.image = input)}
-                          className="custom-file-input"
+                    <span className="input-group-addon">
+                      <i className="fas fa-search" />
+                    </span>
+                  </div>
+                  <table className="table table-hover mb-5">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">NAME</th>
+                        <th scope="col">STOCK</th>
+                        <th scope="col">PRICE</th>
+                        <th scope="col">PAGE</th>
+                        <th scope="col">AUTHOR</th>
+                        <th scope="col">PUBLISHER</th>
+                        <th scope="col">IMAGE</th>
+                        <th scope="col">ACTION</th>
+                      </tr>
+                    </thead>
+                    <tbody>{this.renderList()}</tbody>
+                  </table>
+                </div>
+                <div
+                  className="tab-pane fade"
+                  id="promo"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                  <h1 className="display-4 text-center">Product Promo</h1>
+                  <table className="table table-hover">
+                    <thead>
+                      <th scope="col">ID</th>
+                      <th scope="col">IMAGE</th>
+                      <th scope="col">STATUS PROMO</th>
+                      <th scope="col">ACTION</th>
+                    </thead>
+                    <tbody>{this.renderPromo()}</tbody>
+                  </table>
+                </div>
+                <div
+                  className="tab-pane fade"
+                  id="inputpromo"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                  <h1 className="display-4 text-center">Input Promo</h1>
+                  <table className="table table-hover">
+                    <thead>
+                      <th scope="col">ID</th>
+                      <th scope="col">IMAGE</th>
+                      <th scope="col">STATUS PROMO</th>
+                      <th scope="col">ACTION</th>
+                    </thead>
+                    <tbody>
+                      <th scope="col">ID</th>
+                      <th scope="col">
+                        <div className="custom-file">
+                          <input
+                            type="file"
+                            id="myfile"
+                            ref={input => (this.imagePromo = input)}
+                            className="custom-file-input"
+                          />
+                          <label className="custom-file-label" />
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <BootstrapSwitchButton
+                          checked={false}
+                          onlabel="NOT ACTIVE"
+                          onstyle="danger"
+                          offlabel="ACTIVE"
+                          offstyle="success"
+                          style="w-100 mx-3"
+                          onChange={() => {
+                            this.setState({ switch: !this.state.switch });
+                          }}
                         />
-                        <label className="custom-file-label" />
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <button
-                        className="btn btn-outline-warning"
-                        onClick={this.onAddProduct}
-                      >
-                        Add
-                      </button>
-                    </th>
-                  </tr>
-                </tbody>
-              </table>
+                      </th>
+                      <th scope="col">
+                        <button
+                          className="btn btn-outline-success"
+                          onClick={this.addPromo}
+                        >
+                          Add
+                        </button>
+                      </th>
+                    </tbody>
+                  </table>
+                </div>
+                <div
+                  className="tab-pane fade"
+                  id="inputproduct"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                  <h1 className="display-4 text-center">Input Product</h1>
+                  <table className="table text-center">
+                    <thead>
+                      <tr>
+                        <th scope="col" />
+                        <th scope="col" />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="col">NAME</th>
+                        <th scope="col">
+                          <input
+                            ref={input => (this.name = input)}
+                            className="form-control"
+                            type="text"
+                          />
+                        </th>
+                      </tr>
+                      <tr>
+                        <th scope="col">STOCK</th>
+                        <th scope="col">
+                          <input
+                            ref={input => (this.stock = input)}
+                            className="form-control"
+                            type="text"
+                          />
+                        </th>
+                      </tr>
+                      <tr>
+                        <th scope="col">PRICE</th>
+                        <th scope="col">
+                          <input
+                            ref={input => (this.price = input)}
+                            className="form-control"
+                            type="text"
+                          />
+                        </th>
+                      </tr>
+                      <tr>
+                        <th scope="col">PAGE</th>
+                        <th scope="col">
+                          <input
+                            ref={input => (this.page = input)}
+                            className="form-control"
+                            type="text"
+                          />
+                        </th>
+                      </tr>
+                      <tr>
+                        <th scope="col">AUTHOR</th>
+                        <th>
+                          <select
+                            className="select-custom form-control"
+                            ref={input => {
+                              this.selectAuthorId = input;
+                            }}
+                          >
+                            {this.selectAuthor()}
+                          </select>
+                        </th>
+                      </tr>
+                      <tr>
+                        <th scope="col">PUBLISHER</th>
+                        <th>
+                          <select
+                            className="select-custom form-control"
+                            ref={input => {
+                              this.selectPublisherId = input;
+                            }}
+                          >
+                            {this.selectPublisher()}
+                          </select>
+                        </th>
+                      </tr>
+                      <tr>
+                        <th scope="col">IMAGE</th>
+                        <th scope="col">
+                          <div className="custom-file">
+                            <input
+                              type="file"
+                              id="myfile"
+                              ref={input => (this.image = input)}
+                              className="custom-file-input"
+                            />
+                            <label className="custom-file-label" />
+                          </div>
+                        </th>
+                      </tr>
+                      <tr>
+                        <th scope="col">SYNOPSIS</th>
+                        <textarea
+                          type="text"
+                          className="form-control"
+                          ref={input => {
+                            this.synopsis = input;
+                          }}
+                        />
+                      </tr>
+                      <tr>
+                        <th scope="col" colSpan="2">
+                          <button
+                            className="btn btn-outline-success btn-block"
+                            onClick={this.onAddProduct}
+                          >
+                            Add
+                          </button>
+                        </th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>

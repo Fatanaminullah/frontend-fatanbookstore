@@ -22,7 +22,7 @@ class ShoppingCart extends Component {
     kecamatan: [],
     kelurahan: [],
     filterKodepos: [],
-    destination : 'Choose Your Destination'
+    destination : ['Select Your Destination']
   };
   componentDidMount() {
     this.getCart();
@@ -76,7 +76,6 @@ class ShoppingCart extends Component {
     });
   };
   selectKabupaten = () => {
-    console.log(this.state.kabupaten);
     
     return this.state.kabupaten.map(item => {
       return (
@@ -179,6 +178,31 @@ class ShoppingCart extends Component {
       console.log(e);
     }
   }
+  useYourAddress = () => {
+    const {address,id} = this.state.address[0]
+    this.setState({destination:[`${address}`,`${id}`]})
+  }
+  btnUseAddress = () => {
+    if(this.state.address.length !== 0){
+      const {address} = this.state.address[0]
+      
+      if(address === ''){
+        return(
+          <button className="btn btn-primary btn-block mx-1">
+            <Link to="/addresscontact" className="text-white">
+              Use your Address
+          </Link>
+            </button>
+        )
+      }else{
+        return(
+          <button className="btn btn-primary btn-block mx-1" onClick={this.useYourAddress}>
+            Use your Address
+          </button> 
+        )
+      }
+    }
+  }
   onDeleteCart = (productId,userId) => {
     
     this.props.deleteCart(productId,userId)
@@ -186,6 +210,8 @@ class ShoppingCart extends Component {
   placeOrder = (userid) => {
     var total = 0
     this.state.cartItem.forEach(items => { total += (items.quantity * items.price)} )
+    const order_destination = this.state.destination[1]
+    const order_destination_address = this.state.destination[0]
     Swal({
       text:
         "Check again your order! if you have confirm your order,please choose confirm",
@@ -200,6 +226,7 @@ class ShoppingCart extends Component {
             </p>
             <p className="card-text text-left">Shipping to</p>
             <p className="card-text text-right"> {this.state.destination} </p>
+
           </div>
         </div>
       ),
@@ -208,9 +235,10 @@ class ShoppingCart extends Component {
       dangerMode:true
     }).then(result => {
       if (result) {
-        axios.post(`/orders/${userid}`,{total}).then(
+        axios.post(`/orders/${userid}`,{total,order_destination,order_destination_address}).then(
           res => {
-            console.log(res);
+            this.getCart()
+            cookie.set('cartqty',0,{path:"/"})
             var orderItem = [];
             this.state.cartItem.map(item => {
               orderItem.push([
@@ -220,7 +248,6 @@ class ShoppingCart extends Component {
                 res.data.orderid
               ]);
             });
-            console.log(orderItem);
             axios.post("/orderitem", [orderItem]).then(
               res => {
                 console.log(res);
@@ -245,75 +272,96 @@ class ShoppingCart extends Component {
     })}
 
     selectDestination = () => {
-      return(
+      return (
         <div className="list-group">
-        <li className="list-group-item pl-0">
-          <p>Kodepos</p>
-          <select
-            type="text"
-            className="form-control"
-            ref={input => {
-              this.kodepos = input;
-            }}
-          >
-            {this.selectKodepos()}
-          </select>
-        </li>
-        <li className="list-group-item pl-0">
-          <p>Provinsi</p>
-          <select
-            type="text"
-            className="form-control"
-            ref={input => {
-              this.provinsi = input;
-            }}
-            onChange={this.filterKabupaten}
-          >
-            {this.selectProvinsi()}
-          </select>
-        </li>
-        <li className="list-group-item pl-0">
-          <p>Kota/Kabupaten</p>
-          <select
-            type="text"
-            className="form-control"
-            ref={input => {
-              this.kabupaten = input;
-            }}
-            onChange={this.filterKecamatan}
-          >
-            {this.selectKabupaten()}
-          </select>
-        </li>
-        <li className="list-group-item pl-0">
-          <p>Kecamatan</p>
-          <select
-            type="text"
-            className="form-control"
-            ref={input => {
-              this.kecamatan = input;
-            }}
-            onChange={this.filterKelurahan}
-          >
-            {this.selectKecamatan()}
-          </select>
-        </li>
-        <li className="list-group-item pl-0">
-          <p>Kelurahan</p>
-          <select
-            type="text"
-            className="form-control"
-            ref={input => {
-              this.kelurahan = input;
-            }}
-            onChange={this.filterKodepos}
-          >
-            {this.selectKelurahan()}
-          </select>
-        </li>
-        
+          <li className="list-group-item pl-1">
+            <p>Detail Address</p>
+            <input
+              type="text"
+              className="form-control"
+              ref={input => {
+                this.address = input;
+              }}
+            >
+            </input>
+          </li>
+          <li className="list-group-item pl-1">
+            <p>Kodepos</p>
+            <select
+              type="text"
+              className="form-control"
+              ref={input => {
+                this.kodepos = input;
+              }}
+            >
+              {this.selectKodepos()}
+            </select>
+          </li>
+          <li className="list-group-item pl-1">
+            <p>Provinsi</p>
+            <select
+              type="text"
+              className="form-control"
+              ref={input => {
+                this.provinsi = input;
+              }}
+              onChange={this.filterKabupaten}
+            >
+              {this.selectProvinsi()}
+            </select>
+          </li>
+          <li className="list-group-item pl-1">
+            <p>Kota/Kabupaten</p>
+            <select
+              type="text"
+              className="form-control"
+              ref={input => {
+                this.kabupaten = input;
+              }}
+              onChange={this.filterKecamatan}
+            >
+              {this.selectKabupaten()}
+            </select>
+          </li>
+          <li className="list-group-item pl-1">
+            <p>Kecamatan</p>
+            <select
+              type="text"
+              className="form-control"
+              ref={input => {
+                this.kecamatan = input;
+              }}
+              onChange={this.filterKelurahan}
+            >
+              {this.selectKecamatan()}
+            </select>
+          </li>
+          <li className="list-group-item pl-1">
+            <p>Kelurahan</p>
+            <select
+              type="text"
+              className="form-control"
+              ref={input => {
+                this.kelurahan = input;
+              }}
+              onChange={this.filterKodepos}
+            >
+              {this.selectKelurahan()}
+            </select>
+          </li>
+          <div className="d-flex flex-fill">
+            <button
+              className="btn btn-success btn-block mx-1"
+              onClick={() => {this.setState({
+                destination: [`${this.address.value}`,` ${this.kodepos.value}`]
+              })}}
+            >
+              Set Address
+            </button>
+            {this.btnUseAddress()}
+          </div>
         </div>
-      )
+      );
       
     }
   addQty = async(index,userid,productid) => {
@@ -352,6 +400,11 @@ class ShoppingCart extends Component {
       
     }
 };
+
+showSetDestination = () => {
+  const card = document.getElementById('destination')
+  card.style.display = 'block'
+}
 
   renderList = () => { 
       return this.state.cartItem.map((product,index) => {        
@@ -442,7 +495,6 @@ class ShoppingCart extends Component {
   }
   
   render() {
-
     if (cookie.get('idLogin')) {
       if(this.state.cartItem.length !== 0){
         if(parseInt(cookie.get('cartqty')) !== this.state.cartItem.length) this.getCart()
@@ -458,47 +510,61 @@ class ShoppingCart extends Component {
             <div className="col-md-8 col-sm-12 order-sm-2">
               <div className="card">
                 <div className="card-header d-flex justify-content-between">
-                  <p className="lead text-dark">SHOPPING CART :  {cookie.get('cartqty')} ITEMS</p>
+                  <p className="lead text-dark">
+                    SHOPPING CART : {cookie.get("cartqty")} ITEMS
+                  </p>
                 </div>
-                <div className="card-body">
-            {this.renderList()}
-                </div>
+                <div className="card-body">{this.renderList()}</div>
               </div>
             </div>
             <div className="d-flex flex-column col-md-4 col-sm-12 order-sm-1 ">
               <div className="card m-2 fixed" id="cekout">
                 <div className="card-header">Tagihan</div>
                 <div className="card-body">
-                {this.renderListCheckout()}
+                  {this.renderListCheckout()}
                   <p className="card-text">Delivery Fee</p>
                   <p className="card-text text-right"> FREE </p>
                   <p className="card-text">Total</p>
-                  <p className="card-text text-right">Rp. {total.toLocaleString()}</p>
+                  <p className="card-text text-right">
+                    Rp. {total.toLocaleString()}
+                  </p>
+                  <p className="card-text text-left">Shipping to</p>
+                  <p className="card-text text-right">
+                    {" "}
+                    {`${this.state.destination[0]}`}{" "}
+                  </p>
+                  <div className="d-flex justify-content-end">
+                  <button className="btn btn-outline-success" onClick={this.showSetDestination}> Set Destination </button>
+                  </div>
                 </div>
                 <div className="card-footer">
-                <button className="btn btn-outline-secondary btn-block" onClick={() => {this.placeOrder(cookie.get('idLogin'))}}>Checkout</button>
+                  <button
+                    className="btn btn-outline-secondary btn-block"
+                    onClick={() => {
+                      this.placeOrder(cookie.get("idLogin"));
+                    }}
+                  >
+                    Checkout
+                  </button>
                 </div>
               </div>
-              <div className="card m-2 fixed">
+              <div className="card m-2 fixed" id="destination" style={{display:'none'}}>
                 <div className="card-header">Select Destination</div>
-                <div className="card-body">
-                {this.selectDestination()}
+                <div className="card-body p-0">
+                  {this.selectDestination()}
                 </div>
                 <div className="card-footer">
-                  <div className="d-flex flex-fill">
-          <button className="btn btn-success btn-block mx-1" >Set Address</button>
-          <button className="btn btn-primary btn-block mx-1">Use your Address</button>
-        </div>
+                 
                 </div>
-            </div>
               </div>
+            </div>
           </div>
         </div>
       );
       }else{
         return(
-          <div className="container">
-          <div className="card">
+          <div className="container" style={{height:'500px'}}>
+          <div className="card mt-5">
             <div className="card-title mx-auto">
               <h1 className="display-4">Your ShoppingCart is Empty</h1>
             </div>

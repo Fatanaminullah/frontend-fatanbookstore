@@ -204,7 +204,11 @@ class ManageAuthorPublisher extends Component {
         <div id="App">
           <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
           <div id="page-wrap">
-            <div className="container">
+            <div className="container" style={{
+              overflowY: "scroll",
+              overflowX: "hidden",
+              height: "700px"
+            }}>
                 <div className="row">
 
                 <div className="col-6">

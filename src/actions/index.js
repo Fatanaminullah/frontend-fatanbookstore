@@ -14,22 +14,29 @@ export const onLoginClick = (username, password) => {
         password
       })
       .then(
-        res => {
-          cookie.set("idLogin", res.data.id, { path: "/" });
-          cookie.set("stillLogin", res.data.username, { path: "/" });
-          cookie.set("role", res.data.role, { path: "/" });
-          cookie.set("cartqty", res.data.cart, { path: "/" });
-          cookie.set("avatar", res.data.avatar, { path: "/" });
-
-          dispatch({
-            type: "LOGIN_SUCCESS",
-            payload: {
-              id: res.data.id,
-              username: res.data.username,
-              role: res.data.role,
-              quantity: res.data.cart
-            }
-          });
+        async res1 => {
+          console.log(res1);
+          
+          await axios.get(`/user/notification/${res1.data.id}`).then(res => {
+            cookie.set("idLogin", res1.data.id, { path: "/" });
+            cookie.set("stillLogin", res1.data.username, { path: "/" });
+            cookie.set("role", res1.data.role, { path: "/" });
+            cookie.set("cartqty", res1.data.cart, { path: "/" });
+            cookie.set("avatar", res1.data.avatar, { path: "/" });
+            cookie.set("notification", res.data, { path: "/" });
+  
+            dispatch({
+              type: "LOGIN_SUCCESS",
+              payload: {
+                id: res1.data.id,
+                username: res1.data.username,
+                role: res1.data.role,
+                quantity: res1.data.cart,
+                notification: res.data
+              }
+            });
+          })
+          
         },
         err => {
           console.log(err);
@@ -41,6 +48,30 @@ export const onLoginClick = (username, password) => {
       );
   };
 };
+
+export const getNotif = (userid) => {
+  return async dispatch => {
+    await axios
+      .get(`/user/notification/${userid}`)
+      .then(res =>{
+            cookie.set("notification", res.data, { path: "/" });
+            dispatch({
+              type: "GET_NOTIF",
+              payload: {
+                notification: res.data
+              }
+              })
+        },
+        err => {
+          console.log(err);
+          dispatch({
+            type: "AUTH_ERROR",
+            payload: "Username or Password incorrect"
+          });
+        }
+      )
+    }
+  }
 export const onLoginAdmin = (username, password) => {
   return async dispatch => {
     await axios
@@ -116,22 +147,24 @@ export const Logout = () => {
   cookie.remove("idLogin");
   cookie.remove("stillLogin");
   cookie.remove("role");
-  cookie.remove('cartqty')
+  cookie.remove('cartqty');
+  cookie.remove('norification')
 
   return {
     type: "LOGOUT_USER"
   };
 };
-export const keepLogin = (username, id, role,quantity) => {
+export const keepLogin = (username, id, role,quantity,notification) => {
   return dispatch => {
-    if (username === undefined || id === undefined || role === undefined || quantity === undefined) {
+    if (username === undefined || id === undefined || role === undefined || quantity === undefined || notification === undefined) {
       dispatch({
         type: "KEEP_LOGIN",
         payload: {
           id: "",
           username: "",
           role: "",
-          quantity: 0
+          quantity: 0,
+          notification: []
         }
       });
     }
@@ -141,7 +174,8 @@ export const keepLogin = (username, id, role,quantity) => {
         id,
         username,
         role,
-        quantity
+        quantity,
+        notification
       }
     });
   };

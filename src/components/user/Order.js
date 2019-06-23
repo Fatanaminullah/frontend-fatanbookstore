@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import axios from "../../config/axios";
 import cookies from "universal-cookie";
 import {Link} from 'react-router-dom'
+import swal from 'sweetalert'
 
 const cookie = new cookies();
 
@@ -36,6 +37,23 @@ class Order extends Component {
             console.log(e);
           }
     }
+    updateOrder = (id,orderstatus) => {
+      const order_status = orderstatus + 1
+
+      axios.patch(`/updateorder/${id}`,{
+        order_status
+      }).then(res => {
+        swal({
+          title:"Success",
+          text:"Thank you for your confirmation!",
+          icon:"success"
+        })
+        this.getOrder(cookie.get('idLogin'))
+      },err => {
+        console.log(err);
+        
+      })
+    }
 
     renderOrder = () => {
         if(this.state.order === undefined){
@@ -50,7 +68,28 @@ class Order extends Component {
         return this.state.order.map(item => {
           var date = moment(item.order_date)
           var order_date = date.utc().format('DD-MM-YYYY')
+          if(item.order_status_description === 'On Delivery'){
+            console.log(item);
             
+            return(
+                <div className="card m-4">
+                    <div className="card-header d-flex justify-content-between text-secondary">
+                        <p className="lead font-weight-bold"> Order Code : {item.order_code} </p>
+                        <button className="btn btn-outline-success" onClick={() => {this.updateOrder(item.id,item.order_status)}}>Item Delivered</button>
+                    </div>
+                    <div className="card-body">
+                        <p className="lead">Order Date : {order_date} </p>
+                        <p className="lead">Order Status : {item.order_status_description} </p>
+                        <p className="lead"> Items : {item.quantity} </p>
+                    </div>
+                    <div className="card-footer text-right">
+                        <Link to={`/orderitem/${item.order_code}`} className="text-dark">
+                        <p className="lead font-weight-bold"> See Order Detail <i class="fas fa-arrow-right"></i></p>
+                        </Link>
+                    </div>
+                </div>
+            )
+          }else{
             return(
                 <div className="card m-4">
                     <div className="card-header d-flex justify-content-between text-secondary">
@@ -68,6 +107,8 @@ class Order extends Component {
                     </div>
                 </div>
             )
+          }
+            
         })
 
     }

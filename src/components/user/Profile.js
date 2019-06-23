@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
-import axios from "axios";
+import axios from "../../config/axios";
 import cookies from "universal-cookie";
 import { onEdit } from '../../actions'
 import {Link} from 'react-router-dom'
 import image from '../../img/avatar2.jpg'
+import swal from "sweetalert";
 
 
 const cookie = new cookies();
@@ -50,7 +51,7 @@ class Profile extends Component {
     formData.append("avatar", imagefile.files[0]);
     try {
       await axios.post(
-        `http://localhost:2000/avatar/uploads/${userid}`,
+        `/avatar/uploads/${userid}`,
         formData,
         {
           headers: {
@@ -59,6 +60,7 @@ class Profile extends Component {
         }
       );
       this.getProfile(userid);
+
     } catch (e) {
       console.log("upload gagal" + e);
     }
@@ -73,9 +75,10 @@ class Profile extends Component {
   getProfile = async userid => {
     try {
       const res = await axios.get(
-        `http://localhost:2000/users/profile/${userid}`
+        `/users/profile/${userid}`
       );
-
+      
+      cookie.set('avatar', res.data.photo, {path: "/"})
       this.setState({
         data: res.data
       });
@@ -86,7 +89,7 @@ class Profile extends Component {
   getUserGenre = async userid => {
     try {
       const res = await axios.get(
-        `http://localhost:2000/users/genre/${userid}`
+        `/users/genre/${userid}`
       );
 
       this.setState({
@@ -100,13 +103,34 @@ class Profile extends Component {
     }
   }
   getGenre = (userid) => {
-    axios.get(`http://localhost:2000/genre/${userid}`).then(res => {
+    axios.get(`/genre/${userid}`).then(res => {
       this.setState({
         genre: res.data
       });
     });
   };
   
+  updatePassword = userid => {
+    const password = this.passwordOld.value
+    const newpass = this.passwordNew.value;
+    const confirmpass = this.passwordConfirm.value;
+
+    axios.patch(`/password/${userid}`,{
+      password,newpass,confirmpass
+    }).then(res => {
+      swal({
+        title:'Success',
+        text:'your pass has successfully changed',
+        icon:'success'
+      })
+      this.setState({
+        edit:!this.state.edit
+      })
+    },err => {
+      console.log(err.message);
+      
+    })
+  }
   profile = () => {
     const {username,firstname,lastname,age,id,email,address,birthday} = this.state.data.user;
     var birth = moment(birthday);
@@ -250,7 +274,7 @@ class Profile extends Component {
   addGenreUser = async (userid,genreid) =>{
     try {
       await axios.post(
-        `http://localhost:2000/users/addgenre/${userid}/${genreid}`,{
+        `/users/addgenre/${userid}/${genreid}`,{
         }
       );
       console.log(`success`);
@@ -265,7 +289,7 @@ class Profile extends Component {
   removeGenreUser = async (userid,genreid) => {
     try {
       await axios.delete(
-        `http://localhost:2000/users/deletegenre/${userid}/${genreid}`,{
+        `/users/deletegenre/${userid}/${genreid}`,{
         }
       );
       this.getUserGenre(userid);
@@ -306,6 +330,38 @@ class Profile extends Component {
     )
 
   }
+  }
+
+  privacy = () => {
+    if(this.state.edit){
+      return(
+      <div className="card-body p-5">
+        <p className="lead"> Password </p>
+        <p className="font-weight-bold" style={{fontSize:'10px'}}>
+        <i class="fas fa-circle"></i>{" "}
+        <i class="fas fa-circle"></i>{" "}
+        <i class="fas fa-circle"></i>{" "}
+        <i class="fas fa-circle"></i>{" "}
+        <i class="fas fa-circle"></i>{" "}
+        <i class="fas fa-circle"></i>{" "}
+        <i class="fas fa-circle"></i>{" "}
+        <i class="fas fa-circle"></i>{" "}
+        </p>
+      </div>
+      )
+      }else{
+        return(
+        <div className="card-body p-5">
+        <p className="lead"> Old Password </p>
+        <input className="form-control" type="password" ref={input => {this.passwordOld = input}} />
+        <p className="lead"> New Password </p>
+        <input className="form-control" type="password" ref={input => {this.passwordNew = input}} />
+        <p className="lead"> Confirm New Password </p>
+        <input className="form-control" type="password" ref={input => {this.passwordConfirm = input}} />
+        <button className="btn btn-primary mt-3" onClick={() => {this.updatePassword(cookie.get('idLogin'))}}>Save Password</button>
+      </div>
+        )
+    }
   }
   genre = () => {
     const userid = cookie.get("idLogin");
@@ -419,7 +475,38 @@ class Profile extends Component {
                 </div>
               </div>
               <div className="col-9">
-                <div className="card py-1">
+              <ul className="nav nav-tabs" id="myTab" role="tablist">
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead active"
+                    id="home-tab"
+                    data-toggle="tab"
+                    href="#profile"
+                    role="tab"
+                    aria-controls="home"
+                    aria-selected="true"
+                  >
+                    Profile
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead"
+                    id="profile-tab"
+                    data-toggle="tab"
+                    href="#privacy"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Privacy
+                  </a>
+                </li>
+              </ul>
+              <div className="tab-content profile-tab" id="myTabContent">
+                <div className="tab-pane fade show active" id="profile" role="tabpanel"
+                  aria-labelledby="home-tab">
+                    <div className="card py-1">
                   <div className="row">
                     <div className="col-8">
                       <ul className="list-group list-group-flush">
@@ -467,7 +554,7 @@ class Profile extends Component {
                       </div>
                     </div>
                   </div>
-                </div>
+                  </div>
                 <div className="card my-2">
                   <div className="row">
                     <div className="col-12">
@@ -488,6 +575,19 @@ class Profile extends Component {
                     </div>
                   </div>
                 </div>
+                </div>
+                <div className="card py-1 tab-pane fade" id="privacy" role="tabpanel"
+                  aria-labelledby="home-tab">
+                  <div className="card py-1">
+                    <div className="card-header d-flex justify-content-between">
+                      <p className="text-center lead"> User's Password </p>
+                      <button className="btn btn-outline-success" onClick={() => {this.setState({edit:!this.state.edit})}}>Change Password</button>
+                    </div>
+                    {this.privacy()}
+                  </div>
+                </div>
+              </div>
+                
               </div>
             </div>
           </div>
