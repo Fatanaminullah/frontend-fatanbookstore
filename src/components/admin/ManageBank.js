@@ -58,7 +58,7 @@ class ManageBank extends Component {
   }
  
 
-  renderAuthor = () => {
+  renderBank = () => {
     return this.state.bank.map(item => {
       if (item.id !== this.state.selectedBank) {
         return (
@@ -144,10 +144,43 @@ class ManageBank extends Component {
           <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
           <div id="page-wrap">
             <div className="container">
-                <div className="row">
-                <div className="col-md-12">
-              <h3 className="text-center">Bank Table</h3>
-              <table className="table table-hover mb-5">
+            <ul className="nav nav-tabs" id="myTab" role="tablist">
+            <li className="nav-item">
+                  <a
+                    className="nav-link lead active"
+                    id="home-tab"
+                    data-toggle="tab"
+                    href="#bank"
+                    role="tab"
+                    aria-controls="home"
+                    aria-selected="true"
+                  >
+                    Bank Table
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead"
+                    id="profile-tab"
+                    data-toggle="tab"
+                    href="#input"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Input Bank
+                  </a>
+                </li>
+
+            </ul>
+            <div className="tab-content profile-tab" id="myTabContent">
+                <div
+                  className="tab-pane fade show active"
+                  id="bank"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                  <table className="table table-hover mb-5">
                 <thead>
                   <tr>
                     <th scope="col">Kode Bank</th>
@@ -156,10 +189,17 @@ class ManageBank extends Component {
                     <th scope="col">ACTION</th>
                   </tr>
                 </thead>
-                <tbody>{this.renderAuthor()}</tbody>
+                <tbody>{this.renderBank()}</tbody>
               </table>
-              <h3 className="text-center">Input Author</h3>
-              <table className="table text-center">
+                  
+                </div>
+                <div
+                  className="tab-pane fade"
+                  id="input"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                   <table className="table text-center">
                 <thead>
                   <tr>
                   <th scope="col">ID</th>
@@ -204,8 +244,12 @@ class ManageBank extends Component {
                   </tr>
                 </tbody>
               </table>
+
                 </div>
-                </div>
+            
+            
+            </div>
+              
             </div>
           </div>
         </div>

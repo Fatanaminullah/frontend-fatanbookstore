@@ -76,7 +76,7 @@ class DashboardAdmin extends Component {
       return (
         <div>
           <div class="card-header">
-          <p class="lead text-center"> User's Information</p>
+          <p class="lead text-center"> Admin's Information</p>
           </div>
           <div class="card-body">
           <li class="list-group-item pl-0">{`Firstname: ${firstname}`}</li>
@@ -191,17 +191,17 @@ class DashboardAdmin extends Component {
     );
   };
   render() {
-    if(cookie.get('stillLogin')){
+    if(this.props.user.role === 1){
       if(this.state.data !== undefined){
         return (
-          <div id="App">
+          <div id="App" style={{height:'700px '}}>
             <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
             <div id="page-wrap">
               <h1>Profile Admin</h1>
               <div className="container">
               <div class="row">
-                <div class="col-md-4 col-sm-12">
-                  <div class="card">
+                <div class="col-md-3 col-sm-12">
+                  <div class="card ml-5" style={{width:'235px'}}>
                     <div class="card-header">
                       <p class="lead text-center">Profile Picture</p>
                     </div>
@@ -216,7 +216,7 @@ class DashboardAdmin extends Component {
                           ref={input => (this.gambar = input)}
                           className="custom-file-input"
                         />
-                        <label className="custom-file-label" for="myfile">choose your file here . . . . . . . . . . . . . . .</label>
+                        <label className="custom-file-label" for="myfile">choose your file here</label>
                       </div>
                       <div class="d-flex justify-content-between py-2">
                         <p></p>
@@ -227,7 +227,7 @@ class DashboardAdmin extends Component {
                     </div>
                   </div>
                 </div>
-                <div class="col-md-8 col-sm-12">
+                <div class="col-md-9 col-sm-12">
                 <div class="card">
                   <ul class="list-group list-group-flush mt-3">{this.profile()}</ul>
                 </div>

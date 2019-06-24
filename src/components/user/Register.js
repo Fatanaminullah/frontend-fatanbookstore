@@ -23,7 +23,14 @@ class Register extends Component {
     const password = this.password.value;
     const birthday = this.birthday.value;
     const address = this.address.value;
-    const kodepos = this.kodepos.value;
+    var kodepos = ''
+    if (this.kodepos.value !== ''){
+      kodepos = this.kodepos.value;
+    }else{
+      kodepos = null
+    }
+    console.log(kodepos);
+    
     this.props.onRegister(
       firstname,
       lastname,
@@ -239,7 +246,7 @@ class Register extends Component {
                 }}
                 className="form-control"
                 type="date"
-              />
+              /><p className="text-danger" style={{fontSize:25}}>*</p>
             </form>
             <div className="card-title mt-1">
               <h4>Address</h4>

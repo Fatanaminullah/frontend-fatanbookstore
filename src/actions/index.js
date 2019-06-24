@@ -125,7 +125,7 @@ export const onRegister = (firstname,lastname,username,email,password,birthday,a
           console.log(err);
             dispatch({
               type: "AUTH_ERROR",
-              payload:"REgister Failed"
+              payload:"Register Failed"
             });
       })
     }
@@ -148,7 +148,7 @@ export const Logout = () => {
   cookie.remove("stillLogin");
   cookie.remove("role");
   cookie.remove('cartqty');
-  cookie.remove('norification')
+  cookie.remove('notification')
 
   return {
     type: "LOGOUT_USER"
@@ -206,24 +206,28 @@ export const onEdit = (id,firstname, lastname, username,birthday,address,email) 
 
 export const addToCart = (productId,userId) => {
   return async dispatch => {
-    try{
-      const res = await axios.post(`/cart/add`,{
-        user_id:userId,
-        product_id:productId
-      });
-      console.log(userId,productId);
-      
-      cookie.set("cartqty", res.data.length, { path: "/" });
-      dispatch({
-        type: "ADD_CART",
-        payload: {
-          quantity:res.data.length
-        }
-      });
-      Swal('Success','This item is succesfully added to your cart!','success')
-    } catch (e) {
-      console.log("upload gagal" + e)
-      Swal('','This item is already added to your cart!','error')
+    if(cookie.get('idLogin')){
+      try{
+        const res = await axios.post(`/cart/add`,{
+          user_id:userId,
+          product_id:productId
+        });
+        console.log(userId,productId);
+        
+        cookie.set("cartqty", res.data.length, { path: "/" });
+        dispatch({
+          type: "ADD_CART",
+          payload: {
+            quantity:res.data.length
+          }
+        });
+        Swal('Success','This item is succesfully added to your cart!','success')
+      } catch (e) {
+        console.log("upload gagal" + e)
+        Swal('','This item is already added to your cart!','error')
+      }
+    }else{
+      Swal('Failed','Please Login to Continue','error')
     }
     }
   }
@@ -260,7 +264,7 @@ export const deleteCart = (productId,userId) => {
       } else {
         Swal(
           'Cancelled',
-          'Your imaginary file is safe :)',
+          'Your Cart is Deleted',
           'error'
         )
       }

@@ -41,7 +41,6 @@ class ManageGenre extends Component {
         selectedGenre: 0
       });
       console.log(this.state.genre);
-      
     });
   };
   getGenreproduct = async () => {
@@ -51,7 +50,6 @@ class ManageGenre extends Component {
         genreProductSearch: res.data,
         selectedProduct: 0
       });
-      
     });
   };
   getGenreusers = async () => {
@@ -65,29 +63,27 @@ class ManageGenre extends Component {
   };
   saveGenre = async id => {
     const name = this.editGenreName.value;
-    const formData = new FormData()
-    const genre_image = this.editImage.files[0]
+    const formData = new FormData();
+    const genre_image = this.editImage.files[0];
 
     formData.append("genre_image", genre_image);
     formData.append("name", name);
 
-    try{
+    try {
       await axios
         .patch(`http://localhost:2000/genre/edit/${id}`, formData, {
-         headers : {
-          "Content-Type": "multipart/form-data"
-         }
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
         })
         .then(() => {
           this.getGenre();
           this.getGenreproduct();
           this.getGenreusers();
         });
-    }catch(err){
+    } catch (err) {
       console.log(err);
-      
     }
-      
   };
   saveGenPro = id => {
     const productId = parseInt(this.selectProductId.value);
@@ -119,10 +115,11 @@ class ManageGenre extends Component {
         this.getGenre();
       });
   };
-  addGenreProduct = (product_id,genre_id) => {
+  addGenreProduct = (product_id, genre_id) => {
     axios
       .post(`http://localhost:2000/product/addgenre`, {
-        product_id ,genre_id
+        product_id,
+        genre_id
       })
       .then(res => {
         console.log(res);
@@ -138,7 +135,7 @@ class ManageGenre extends Component {
     const genre_id = parseInt(this.GenreId.value);
     const product_id = parseInt(this.ProductId.value);
 
-    this.addGenreProduct(product_id,genre_id);
+    this.addGenreProduct(product_id, genre_id);
   };
 
   selectGenre = () => {
@@ -174,7 +171,10 @@ class ManageGenre extends Component {
     const search = this.searchGenreProduct.value;
 
     var arrSearch = this.state.genreProduct.filter(item => {
-      return item.name.toLowerCase().includes(search.toLowerCase()) || item.product_name.toLowerCase().includes(search.toLowerCase())
+      return (
+        item.name.toLowerCase().includes(search.toLowerCase()) ||
+        item.product_name.toLowerCase().includes(search.toLowerCase())
+      );
     });
     this.setState({ genreProductSearch: arrSearch });
   };
@@ -197,7 +197,7 @@ class ManageGenre extends Component {
           <tr key={item.id}>
             <td>{item.id}</td>
             <td>
-              <img className="list" src={item.genre_image} alt={item.name}/>
+              <img className="list" src={item.genre_image} alt={item.name} />
             </td>
             <td>{item.name}</td>
             <td>
@@ -217,16 +217,16 @@ class ManageGenre extends Component {
           <tr key={item.id}>
             <td>{item.id}</td>
             <td>
-            <div className="custom-file">
-              <input
-                className="w-100"
-                ref={input => {
-                  this.editImage = input;
-                }}
-                type="file"
-                id="customFile"
-              />
-              <label class="custom-file-label" for="customFile"></label>
+              <div className="custom-file">
+                <input
+                  className="w-100"
+                  ref={input => {
+                    this.editImage = input;
+                  }}
+                  type="file"
+                  id="customFile"
+                />
+                <label class="custom-file-label" for="customFile" />
               </div>
             </td>
             <td>
@@ -352,13 +352,88 @@ class ManageGenre extends Component {
           <Redirect to="/managegenre" />
           <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
           <div id="page-wrap">
-            <div className="container" style={{
-              overflowY: "scroll",
-              overflowX: "scroll",
-              height: "700px"
-            }}>
-              <div className="row">
-                <div className="col-4">
+            <div
+              className="container"
+              style={{
+                overflowY: "scroll",
+                overflowX: "scroll",
+                height: "700px"
+              }}
+            >
+              <ul className="nav nav-tabs" id="myTab" role="tablist">
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead active"
+                    id="home-tab"
+                    data-toggle="tab"
+                    href="#genre"
+                    role="tab"
+                    aria-controls="home"
+                    aria-selected="true"
+                  >
+                    Genre Table
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead"
+                    id="profile-tab"
+                    data-toggle="tab"
+                    href="#genreproduct"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Product Genre Table
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead"
+                    id="profile-tab"
+                    data-toggle="tab"
+                    href="#genreuser"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Genre User Table
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead"
+                    id="profile-tab"
+                    data-toggle="tab"
+                    href="#inputgenre"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Input Genre
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead"
+                    id="profile-tab"
+                    data-toggle="tab"
+                    href="#inputgenreproduct"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Input Genre Product
+                  </a>
+                </li>
+              </ul>
+              <div className="tab-content profile-tab" id="myTabContent">
+                <div
+                  className="tab-pane fade show active"
+                  id="genre"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
                   <h4 className="text-center">Genre</h4>
                   <div className="input-group search-box">
                     <input
@@ -383,6 +458,74 @@ class ManageGenre extends Component {
                     </thead>
                     <tbody>{this.renderGenre()}</tbody>
                   </table>
+                </div>
+                <div
+                  className="tab-pane fade"
+                  id="genreproduct"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                  <h4 className="text-center">Product Genre</h4>
+                  <div className="input-group search-box">
+                    <input
+                      type="text"
+                      ref={input => (this.searchGenreProduct = input)}
+                      className="form-control"
+                      placeholder="Search Product Genre here..."
+                      onKeyUp={this.filterGenreProduct}
+                    />
+                    <span className="input-group-addon">
+                      <i className="fas fa-search" />
+                    </span>
+                  </div>
+                  <table className="table table-hover mb-5">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">PRODUCT</th>
+                        <th scope="col">GENRE</th>
+                        <th scope="col">ACTION</th>
+                      </tr>
+                    </thead>
+                    <tbody>{this.renderGenreProduct()}</tbody>
+                  </table>
+                </div>
+                <div
+                  className="tab-pane fade"
+                  id="genreuser"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                  <h4 className="text-center">User Genre</h4>
+                  <div className="input-group search-box">
+                    <input
+                      type="text"
+                      ref={input => (this.searchGenreUser = input)}
+                      className="form-control"
+                      placeholder="Search User Genre here..."
+                      onKeyUp={this.filterGenreUser}
+                    />
+                    <span className="input-group-addon">
+                      <i className="fas fa-search" />
+                    </span>
+                  </div>
+                  <table className="table table-hover mb-5">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">USER</th>
+                        <th scope="col">GENRE</th>
+                      </tr>
+                    </thead>
+                    <tbody>{this.renderGenreUser()}</tbody>
+                  </table>
+                </div>
+                <div
+                  className="tab-pane fade"
+                  id="inputgenre"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
                   <h3 className="text-center">Input Genre</h3>
                   <table className="table text-center">
                     <thead>
@@ -413,44 +556,23 @@ class ManageGenre extends Component {
                     </tbody>
                   </table>
                 </div>
-                <div className="col-4">
-                  <h4 className="text-center">Product Genre</h4>
-                  <div className="input-group search-box">
-                    <input
-                      type="text"
-                      ref={input => (this.searchGenreProduct = input)}
-                      className="form-control"
-                      placeholder="Search Product Genre here..."
-                      onKeyUp={this.filterGenreProduct}
-                    />
-                    <span className="input-group-addon">
-                      <i className="fas fa-search" />
-                    </span>
-                  </div>
-                  <table className="table table-hover mb-5">
-                    <thead>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">PRODUCT</th>
-                        <th scope="col">GENRE</th>
-                        <th scope="col">ACTION</th>
-                      </tr>
-                    </thead>
-                    <tbody>{this.renderGenreProduct()}</tbody>
-                  </table>
+                <div
+                  className="tab-pane fade"
+                  id="inputgenreproduct"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
                   <h3 className="text-center">Input Product Genre</h3>
                   <table className="table text-center">
                     <thead>
                       <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">PRODUCT</th>
-                        <th scope="col">GENRE</th>
-                        <th scope="col">ACTION</th>
+                        <th scope="col" />
+                        <th scope="col" />
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <th scope="col">ID</th>
+                        <th scope="col">Product</th>
                         <th>
                           <select
                             className="form-control"
@@ -461,6 +583,10 @@ class ManageGenre extends Component {
                             {this.selectProduct()}
                           </select>
                         </th>
+                      </tr>
+                      <tr>
+                        <th scope="col">Genre</th>
+
                         <th>
                           <select
                             className="form-control"
@@ -471,9 +597,12 @@ class ManageGenre extends Component {
                             {this.selectGenre()}
                           </select>
                         </th>
+                      </tr>
+                      <tr>
+                        <th />
                         <th scope="col">
                           <button
-                            className="btn btn-outline-warning"
+                            className="btn btn-outline-success btn-block"
                             onClick={this.onAddGenreProduct}
                           >
                             Add
@@ -481,31 +610,6 @@ class ManageGenre extends Component {
                         </th>
                       </tr>
                     </tbody>
-                  </table>
-                </div>
-                <div className="col-4">
-                  <h4 className="text-center">User Genre</h4>
-                  <div className="input-group search-box">
-                    <input
-                      type="text"
-                      ref={input => (this.searchGenreUser = input)}
-                      className="form-control"
-                      placeholder="Search User Genre here..."
-                      onKeyUp={this.filterGenreUser}
-                    />
-                    <span className="input-group-addon">
-                      <i className="fas fa-search" />
-                    </span>
-                  </div>
-                  <table className="table table-hover mb-5">
-                    <thead>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">USER</th>
-                        <th scope="col">GENRE</th>
-                      </tr>
-                    </thead>
-                    <tbody>{this.renderGenreUser()}</tbody>
                   </table>
                 </div>
               </div>

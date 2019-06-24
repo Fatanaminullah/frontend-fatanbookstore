@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios';
 import {addToCart} from '../../actions'
 import cookies from "universal-cookie";
+import {connect} from 'react-redux'
 
 const cookie = new cookies();
 
@@ -85,4 +86,4 @@ class DetailProduct extends Component {
 
 
 
-export default DetailProduct;
+export default connect(null,{addToCart})(DetailProduct);

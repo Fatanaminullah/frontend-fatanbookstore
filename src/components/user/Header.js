@@ -463,7 +463,7 @@ class Header extends Component {
                                 Orders
                               </p>
                             </Link>
-                            <Link to="/">
+                            <Link to="/orderhistory">
                               <p className="text-center text-dark">
                                 History Orders
                               </p>

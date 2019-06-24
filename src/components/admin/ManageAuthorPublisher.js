@@ -2,17 +2,18 @@ import React, { Component } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import cookies from 'universal-cookie'
+import cookies from "universal-cookie";
+import swal from 'sweetalert'
 
 import Sidebar from "./Sidebar";
 import "../style.css";
 
-const cookie = new cookies()
+const cookie = new cookies();
 
 class ManageAuthorPublisher extends Component {
   state = {
     author: [],
-    publisher:[],
+    publisher: [],
     selectedAuthor: 0,
     selectedPublisher: 0
   };
@@ -32,56 +33,70 @@ class ManageAuthorPublisher extends Component {
       this.setState({ publisher: res.data, selectedPublisher: 0 });
     });
   };
-  saveAuthor = (id) => {
-      const author_name = this.editAuthor.value
-      axios.patch(`http://localhost:2000/author/edit/${id}`, {
-          author_name
-      }).then(() => {
-          this.getAuthor()
+  saveAuthor = id => {
+    const author_name = this.editAuthor.value;
+    axios
+      .patch(`http://localhost:2000/author/edit/${id}`, {
+        author_name
       })
-  }
-  savePublisher = (id) => {
-      const publisher_name = this.editPublisher.value
-      console.log(publisher_name);
-      
-      axios.patch(`http://localhost:2000/publisher/edit/${id}`, {
-          publisher_name
-      }).then(() => {
-          this.getPublisher()
+      .then(() => {
+        this.getAuthor();
+      });
+  };
+  savePublisher = id => {
+    const publisher_name = this.editPublisher.value;
+    console.log(publisher_name);
+
+    axios
+      .patch(`http://localhost:2000/publisher/edit/${id}`, {
+        publisher_name
       })
-  }
-  editAuthorName = (id) => {
-      this.setState({ selectedAuthor: id })
-  }
-  editPublisherName = (id) => {
-      this.setState({ selectedPublisher: id })
-  }
+      .then(() => {
+        this.getPublisher();
+      });
+  };
+  editAuthorName = id => {
+    this.setState({ selectedAuthor: id });
+  };
+  editPublisherName = id => {
+    this.setState({ selectedPublisher: id });
+  };
   onAddAuthor = () => {
-    const author_name = this.author.value
-      this.addAuthor(author_name)
-
-  }
+    const author_name = this.author.value;
+    this.addAuthor(author_name);
+  };
   onAddPublisher = () => {
-    const publisher_name = this.publisher.value
-      this.addPublisher(publisher_name)
-
-  }
-  addAuthor = (author_name) => {
-    axios.post("http://localhost:2000/author/add", {
-      author_name
-    }).then(res => {
-      console.log(res);
-          this.getAuthor()
+    const publisher_name = this.publisher.value;
+    this.addPublisher(publisher_name);
+  };
+  addAuthor = author_name => {
+    axios
+      .post("http://localhost:2000/author/add", {
+        author_name
       })
-  }
-  addPublisher = (publisher_name) => {
-    axios.post("http://localhost:2000/publisher/add", {
-      publisher_name
-    }).then(res => {
-      console.log(res);
-          this.getPublisher()
+      .then(res => {
+        swal({
+          title:"Success",
+          text:"Add Author Name Successfull",
+          icon:"success"
+        })
+        this.getAuthor();
+      });
+  };
+  addPublisher = publisher_name => {
+    axios
+      .post("http://localhost:2000/publisher/add", {
+        publisher_name
       })
-  }
+      .then(res => {
+        swal({
+          title:"Success",
+          text:"Add Publisher Name Successfull",
+          icon:"success"
+        })
+        this.getPublisher();
+      });
+  };
 
   renderAuthor = () => {
     return this.state.author.map(item => {
@@ -107,14 +122,16 @@ class ManageAuthorPublisher extends Component {
           <tr key={item.id}>
             <td>{item.id}</td>
             <td>
-              <input 
+              <input
                 className="form-control"
-                ref={input => {this.editAuthor = input}}
+                ref={input => {
+                  this.editAuthor = input;
+                }}
                 type="text"
                 defaultValue={item.author_name}
               />
             </td>
-            <td>
+            <td className="d-flex flex-column">
               <button
                 onClick={() => {
                   this.saveAuthor(item.id);
@@ -161,14 +178,16 @@ class ManageAuthorPublisher extends Component {
           <tr key={item.id}>
             <td>{item.id}</td>
             <td>
-              <input 
+              <input
                 className="form-control"
-                ref={input => {this.editPublisher = input}}
+                ref={input => {
+                  this.editPublisher = input;
+                }}
                 type="text"
                 defaultValue={item.publisher_name}
               />
             </td>
-            <td>
+            <td className="d-flex flex-column">
               <button
                 onClick={() => {
                   this.savePublisher(item.id);
@@ -195,114 +214,188 @@ class ManageAuthorPublisher extends Component {
   render() {
     var userCookie = cookie.get("stillLogin");
 
-    if (userCookie === undefined ) {
-      return (
-        <Redirect to="/admin/login" />
-      ) 
-    } else{
+    if (userCookie === undefined) {
+      return <Redirect to="/admin/login" />;
+    } else {
       return (
         <div id="App">
           <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
           <div id="page-wrap">
-            <div className="container" style={{
-              overflowY: "scroll",
-              overflowX: "hidden",
-              height: "700px"
-            }}>
-                <div className="row">
-
-                <div className="col-6">
-              <h3 className="text-center">Author Table</h3>
-              <table className="table table-hover mb-5">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">NAME</th>
-                    <th scope="col">ACTION</th>
-                  </tr>
-                </thead>
-                <tbody>{this.renderAuthor()}</tbody>
-              </table>
-              <h3 className="text-center">Input Author</h3>
-              <table className="table text-center">
-                <thead>
-                  <tr>
-                  <th scope="col">ID</th>
-                    <th scope="col">NAME</th>
-                    <th scope="col">ACTION</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                  <th scope="col">ID</th>
-                    <th scope="col">
-                      <input
-                        ref={input => (this.author = input)}
-                        className="form-control"
-                        type="text"
-                      />
-                    </th>
-                    <th scope="col">
-                      <button
-                        className="btn btn-outline-warning"
-                        onClick={this.onAddAuthor}
-                      >
-                        Add
-                      </button>
-                    </th>
-                  </tr>
-                </tbody>
-              </table>
+            <div
+              className="container"
+              style={{
+                overflowY: "scroll",
+                overflowX: "hidden",
+                height: "700px"
+              }}
+            >
+              <ul className="nav nav-tabs" id="myTab" role="tablist">
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead active"
+                    id="home-tab"
+                    data-toggle="tab"
+                    href="#tableauthor"
+                    role="tab"
+                    aria-controls="home"
+                    aria-selected="true"
+                  >
+                    Author Table
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead"
+                    id="profile-tab"
+                    data-toggle="tab"
+                    href="#tablepublisher"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Publisher Table
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead"
+                    id="profile-tab"
+                    data-toggle="tab"
+                    href="#inputauthor"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Input Author
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link lead"
+                    id="profile-tab"
+                    data-toggle="tab"
+                    href="#inputpublisher"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Input Publisher
+                  </a>
+                </li>
+              </ul>
+              <div className="tab-content profile-tab" id="myTabContent">
+                <div
+                  className="tab-pane fade show active"
+                  id="tableauthor"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                    <table className="table table-hover mb-5">
+                      <thead>
+                        <tr>
+                          <th scope="col">ID</th>
+                          <th scope="col">NAME</th>
+                          <th scope="col">ACTION</th>
+                        </tr>
+                      </thead>
+                      <tbody>{this.renderAuthor()}</tbody>
+                    </table>
                 </div>
-                <div className="col-6">
-              <h3 className="text-center">Publisher Table</h3>
-              <table className="table table-hover mb-5">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">NAME</th>
-                    <th scope="col">ACTION</th>
-                  </tr>
-                </thead>
-                <tbody>{this.renderPublisher()}</tbody>
-              </table>
-              <h3 className="text-center">Input Publisher</h3>
-              <table className="table text-center">
-                <thead>
-                  <tr>
-                  <th scope="col">ID</th>
-                    <th scope="col">NAME</th>
-                    <th scope="col">ACTION</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                  <th scope="col">ID</th>
-                    <th scope="col">
-                      <input
-                        ref={input => (this.publisher = input)}
-                        className="form-control"
-                        type="text"
-                      />
-                    </th>
-                    <th scope="col">
-                      <button
-                        className="btn btn-outline-warning"
-                        onClick={this.onAddPublisher}
-                      >
-                        Add
-                      </button>
-                    </th>
-                  </tr>
-                </tbody>
-              </table>
+                <div
+                  className="tab-pane fade"
+                  id="tablepublisher"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                    <table className="table table-hover mb-5">
+                      <thead>
+                        <tr>
+                          <th scope="col">ID</th>
+                          <th scope="col">NAME</th>
+                          <th scope="col">ACTION</th>
+                        </tr>
+                      </thead>
+                      <tbody>{this.renderPublisher()}</tbody>
+                    </table>
                 </div>
+                <div
+                  className="tab-pane fade"
+                  id="inputauthor"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                    <table className="table text-center">
+                      <thead>
+                        <tr>
+                          <th scope="col">ID</th>
+                          <th scope="col">NAME</th>
+                          <th scope="col">ACTION</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="col">ID</th>
+                          <th scope="col">
+                            <input
+                              ref={input => (this.author = input)}
+                              className="form-control"
+                              type="text"
+                            />
+                          </th>
+                          <th scope="col">
+                            <button
+                              className="btn btn-outline-warning"
+                              onClick={this.onAddAuthor}
+                            >
+                              Add
+                            </button>
+                          </th>
+                        </tr>
+                      </tbody>
+                    </table>
                 </div>
+                <div
+                  className="tab-pane fade"
+                  id="inputpublisher"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                  <table className="table text-center">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">NAME</th>
+                        <th scope="col">ACTION</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">
+                          <input
+                            ref={input => (this.publisher = input)}
+                            className="form-control"
+                            type="text"
+                          />
+                        </th>
+                        <th scope="col">
+                          <button
+                            className="btn btn-outline-warning"
+                            onClick={this.onAddPublisher}
+                          >
+                            Add
+                          </button>
+                        </th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       );
-    } 
+    }
   }
 }
 

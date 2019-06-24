@@ -68,12 +68,13 @@ class Products extends Component {
         const namaDesc = this.namaDesc.value;
         const priceAsc = this.priceAsc.value;
         const priceDesc = this.priceDesc.value;
+        
         var arrSearch = this.state.products.sort((a, b) => {
             switch (sort) {
                 case namaAsc:
-                    return a.product_name.toLowerCase() > b.product_name.toLowerCase()
+                        if(a.product_name.toLowerCase() < b.product_name.toLowerCase()) return -1
                 case namaDesc:
-                    return a.product_name.toLowerCase() < b.product_name.toLowerCase()
+                        if(a.product_name.toLowerCase() < b.product_name.toLowerCase()) return 1
                 case priceAsc:
                     return a.price - b.price
                 case priceDesc:
@@ -85,7 +86,7 @@ class Products extends Component {
             }
         })
         this.setState({ productSearch: arrSearch })
-        this.searchProduct()
+        // this.searchProduct()
 
     }
     
@@ -109,12 +110,12 @@ class Products extends Component {
                     <div className="col-9"></div>
                     <div className="col-3">
                         <p>
-                            <select ref={input => this.sorting = input} className="form-control">
+                            <select ref={input => this.sorting = input} className="form-control" onChange={this.sortProduct}>
                                 <option ref={input => this.namaAsc = input} value="namaAsc" className="text-center" onClick={this.sortProduct}>Name &uarr;</option>
                                 <option ref={input => this.namaDesc = input} value="namaDesc" className="text-center" onClick={this.sortProduct}>Name &darr;</option>
                                 <option ref={input => this.priceAsc = input} value="priceAsc" className="text-center" onClick={this.sortProduct}>Price &uarr;</option>
                                 <option ref={input => this.priceDesc = input} value="priceDesc" className="text-center" onClick={this.sortProduct}>Price &darr;</option>
-                                <option ref={input => this.bestSeller = input} value="sale" className="text-center" onClick={this.sortProduct}>Best Seller</option>
+                                {/* <option ref={input => this.bestSeller = input} value="sale" className="text-center" onClick={this.sortProduct}>Best Seller</option> */}
                             </select>
                         </p>
                     </div>

@@ -1,5 +1,6 @@
 img.rounded-circle.avatar{
     width: 50px !important;
+    height: 50px !important;
 }
 .badge {
     padding-left: 9px;
