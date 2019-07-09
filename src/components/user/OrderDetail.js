@@ -52,7 +52,7 @@ class Order extends Component {
         }
         return this.state.orderitem.map((product,index) => {
             return(
-                <div className="card m-2 col-12" key={product.id}>
+                <div className="card  col-12" key={product.id}>
             <div className="card-body">
               <div className="row">
                 <div className="col-4">
@@ -74,42 +74,10 @@ class Order extends Component {
                   <p className="card-text text-danger">
                     Rp {product.price.toLocaleString()}
                   </p>
-                  <div className="input-group">
-                    <span className="input-group-btn">
-                      <button
-                        className="btn btn-danger btn-number"
-                        onClick={() => {this.reduceQty(index,cookie.get('idLogin'),product.id)}}
-                      >
-                        <i className="fas fa-minus"></i>
-                      </button>
-                    </span>
-                    <input
-                      type="number"
-                      className="form-control input-number"
-                      value={product.quantity}
-                      min="1"
-                      max={product.stock}
-                      />
-                    <span className="input-group-btn">
-                      <button
-                        className="btn btn-success btn-number"
-                        onClick={() => {this.addQty(index,cookie.get('idLogin'),product.id)}}
-                        >
-                        <i className="fas fa-plus"></i>
-                      </button>
-                    </span>
-                  </div>
+                  <p className="card-text text-danger">
+                    Quantity : {product.quantity}
+                  </p>
                 </div>
-              </div>
-              <div className="row">
-                <button
-                  className="btn btn-outline-secondary btn-circle ml-auto"
-                  onClick={() => {
-                    this.onDeleteCart(product.id, cookie.get("idLogin"));
-                  }}
-                >
-                  &times;
-                </button>
               </div>
             </div>
           </div>

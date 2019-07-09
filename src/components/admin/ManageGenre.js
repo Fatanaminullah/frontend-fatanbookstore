@@ -3,6 +3,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import cookies from "universal-cookie";
+import Swal from 'sweetalert'
 
 import Sidebar from "./Sidebar";
 import "../style.css";
@@ -106,11 +107,22 @@ class ManageGenre extends Component {
     this.setState({ selectedProduct: id });
   };
   addGenre = name => {
+    const formData = new FormData();
+    const genre_image = this.image.files[0];
+
+    formData.append("genre_image", genre_image);
+    formData.append("name", name);
+
+
     axios
-      .post("http://localhost:2000/genre/add", {
-        name
-      })
+      .post("http://localhost:2000/genre/add", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }}
+        )
       .then(res => {
+        Swal('Success','Genre Addes','success')
+        
         console.log(res);
         this.getGenre();
       });
@@ -134,6 +146,8 @@ class ManageGenre extends Component {
   onAddGenreProduct = () => {
     const genre_id = parseInt(this.GenreId.value);
     const product_id = parseInt(this.ProductId.value);
+    console.log(genre_id,product_id);
+    
 
     this.addGenreProduct(product_id, genre_id);
   };
@@ -531,12 +545,23 @@ class ManageGenre extends Component {
                     <thead>
                       <tr>
                         <th scope="col">ID</th>
+                        <th scope="col">IMAGE</th>
                         <th scope="col">NAME</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
                         <th scope="col">ID</th>
+                        <th scope="col">
+                        <input
+                  className="w-100"
+                  ref={input => {
+                    this.image = input;
+                  }}
+                  type="file"
+                  id="customFile"
+                />
+                        </th>
                         <th scope="col">
                           <input
                             ref={input => (this.genre = input)}

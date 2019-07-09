@@ -27,6 +27,7 @@ import Order from './user/Order';
 import OrderDetail from './user/OrderDetail';
 import OrderHistory from './user/OrderHistory';
 import Payment from './user/Payment';
+import Notification from './user/Notification';
 
 const cookie = new cookies()
 
@@ -62,6 +63,7 @@ class App extends Component {
                 <Route path="/order" component={Order}/>
                 <Route path="/orderhistory" component={OrderHistory}/>
                 <Route path="/payment" component={Payment}/>
+                <Route path="/notification" component={Notification}/>
                 <Route path="/orderitem/:orderid" component={OrderDetail}/>
                 <Route path="/addresscontact" component={AddressContact}/>
                 <Route path="/manageproduct" component={ManageProduct}/>

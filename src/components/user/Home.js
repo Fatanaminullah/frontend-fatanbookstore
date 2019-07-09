@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Link} from 'react-router-dom'
+import {Link,Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 import axios from "../../config/axios";
 import cookies from "universal-cookie";
@@ -9,7 +9,8 @@ import 'slick-carousel/slick/slick-theme.css';
 import newArrival from '../../img/newarrival.jpg'
 import recommended from '../../img/recommend.jpg'
 import fantasy from '../../img/fantasybook.jpg'
-import Swal from 'sweetalert2'
+import comicbook from '../../img/comicbook.jpg'
+import swal from 'sweetalert'
 
 import {addToCart} from '../../actions'
 import "../slick.css";
@@ -18,7 +19,7 @@ const cookie = new cookies();
 
 class Home extends Component {
   state = {
-    products: [],
+    products: undefined,
     comics:[],
     promo: [],
     images: [],
@@ -142,9 +143,305 @@ class Home extends Component {
       slidesToScroll:1
     }
 if(cookie.get('idLogin')){
-  return (
-    <div>
-<nav className="navbar navbar-expand-lg" style={{backgroundColor:'#f5f5f5'}}>
+  if(this.state.products !== undefined){
+
+    if(this.state.products.length !== 0){
+      return (
+        <div>
+    <nav className="navbar navbar-expand-lg" style={{backgroundColor:'#f5f5f5'}}>
+      <div className="container">
+              <div className="navbar-nav row w-100">
+                  <div className="col">
+                    <li className="nav-item">
+                <Link className="ml-5" to="/products">
+                  <span>
+                  <i class="far fa-list-alt" />
+                  </span>
+                  <span className="ml-1 align-content-center text-dark">
+                    All Product
+                  </span>
+                </Link>
+                    </li>
+                  </div>
+                  <div className="col-auto">
+                    <li className="nav-item">
+                <button className="mr-5 btn btn-transparent" onClick={this.showCategory}>
+                  <span className="mr-1 align-content-center text-dark ">
+                    Show Category
+                  </span>
+                  <span className="align-content-center">
+                  <i class="fas fa-caret-down" />
+                  </span>
+                </button>
+                    </li>
+                  </div>
+                </div>
+              </div>
+            </nav>
+            {this.renderListCategory()}
+        <div className="container">
+          <div className="row promo py-5">
+            <p className="text-center text-white lead font-weight-bold mx-auto" style={{background:'grey',fontSize:'35px',width:'80%'}}> Free delivery to where ever you are!</p>
+
+            <Slider {...settingPromo}>
+              {this.state.images.map((item,index) => {
+          return (
+              <img className="d-block w-100" src={item} alt={`image` + index} />
+          );
+        })}
+            </Slider>
+            
+          </div>
+          <div className="row text-center py-5">
+            <div className="text-center mx-auto pb-2" style={{ width: "80%" }}>
+              <h3
+                style={{
+                  fontFamily: "Verdana, Geneva, sans-serif",
+                  textAlign: "center"
+                }}
+              >
+                Just For You, {cookie.get('stillLogin')} !
+              </h3>
+            </div>
+            <div className="d-flex w-100 left">
+              <img
+                src={recommended}
+                alt="buku"
+                className="home-category-image img-thumbnail"
+              />
+              <Slider {...settings}>
+                {this.state.products.map((item, index) => {
+                  return (
+                    <div className="card a">
+                      <Link to={`/detailproduct/${item.product_id}`}>
+                        <img
+                          className="card-img-top"
+                          src={item.image}
+                          alt={`image` + index}
+                        />
+                        <div className="card-body">
+                          <p className="card-title font-weight-bold">
+                            {item.product_name}
+                          </p>
+                          <p className="card-text text-secondary">
+                            {item.author_name}
+                          </p>
+                          <p className="card-text font-weight-bold text-danger">
+                            {`Rp. ` + item.price.toLocaleString()}
+                          </p>
+                        </div>
+                      </Link>
+                      <div className="card-footer">
+                        <button
+                          className="btn btn-outline-secondary btn-block"
+                          onClick={() => {
+                            this.props.addToCart(
+                              item.product_id,
+                              cookie.get("idLogin")
+                            );
+                          }}
+                        >
+                          Add to Cart
+                        </button>
+                        <button className="btn btn-outline-dark btn-block">
+                          Add to Wishlist
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </Slider>
+            </div>
+          </div>
+          <div className="row text-center py-5">
+            <div className="text-center mx-auto pb-2" style={{ width: "80%" }}>
+              <h3
+                style={{
+                  fontFamily: "Verdana, Geneva, sans-serif",
+                  textAlign: "center"
+                }}
+              >
+                Feels bored to read novel? here our best comics!
+              </h3>
+            </div>
+            <div className="d-flex w-100 right">
+    
+            <Slider {...settings}>
+              {this.state.comics.map((item, index) => {
+                return (
+                  <div className="card">
+                    <img
+                      className="card-img-top"
+                      src={item.image}
+                      alt={`image` + index}
+                    />
+                    <div className="card-body">
+                      <p className="card-title font-weight-bold">
+                        {item.product_name}
+                      </p>
+                      <p className="card-text text-secondary">
+                        {item.author_name}
+                      </p>
+                      <p className="card-text font-weight-bold text-danger">
+                        {`Rp. ` + item.price.toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="card-footer">
+                      <button
+                        className="btn btn-outline-secondary btn-block"
+                        onClick={() => {
+                          this.props.addToCart(item.id, cookie.get("idLogin"));
+                        }}
+                      >
+                        Add to Cart
+                      </button>
+                      <button className="btn btn-outline-dark btn-block">
+                        Add to Wishlist
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </Slider>
+            <img
+              src={comicbook}
+              alt="buku"
+              className="home-category-image img-thumbnail"
+            />
+            </div>
+    
+          </div>
+          <div className="row text-center py-5">
+            <div className="text-center mx-auto pb-2" style={{ width: "80%" }}>
+              <h3
+                style={{
+                  fontFamily: "Verdana, Geneva, sans-serif",
+                  textAlign: "center"
+                }}
+              >
+                Need Something Fresh?
+              </h3>
+            </div>
+            <div className="d-flex w-100 left">
+              <img
+                src={newArrival}
+                alt="buku"
+                className="home-category-image img-thumbnail"
+              />
+              <Slider {...settings}>
+                {this.state.new.map((item, index) => {
+                  return (
+                    <div className="card a">
+                      <img
+                        className="card-img-top"
+                        src={item.image}
+                        alt={`image` + index}
+                      />
+                      <div className="card-body">
+                        <p className="card-title font-weight-bold">
+                          {item.product_name}
+                        </p>
+                        <p className="card-text text-secondary">
+                          {item.author_name}
+                        </p>
+                        <p className="card-text font-weight-bold text-danger">
+                          {`Rp. ` + item.price.toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="card-footer">
+                        <button
+                          className="btn btn-outline-secondary btn-block"
+                          onClick={() => {
+                            this.props.addToCart(item.id, cookie.get("idLogin"));
+                          }}
+                        >
+                          Add to Cart
+                        </button>
+                        <button className="btn btn-outline-dark btn-block">
+                          Detail Product
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </Slider>
+            </div>
+          </div>
+          <div className="row text-center py-5">
+            <div className="text-center mx-auto pb-2" style={{ width: "80%" }}>
+              <h3
+                style={{
+                  fontFamily: "Verdana, Geneva, sans-serif",
+                  textAlign: "center"
+                }}
+              >
+                You May Like It
+              </h3>
+            </div>
+            <div className="d-flex w-100 right">
+              <Slider {...settings}>
+                {this.state.thriller.map((item, index) => {
+                  return (
+                    <div className="card a">
+                      <img
+                        className="card-img-top"
+                        src={item.image}
+                        alt={`image` + index}
+                      />
+                      <div className="card-body">
+                        <p className="card-title font-weight-bold">
+                          {item.product_name}
+                        </p>
+                        <p className="card-text text-secondary">
+                          {item.author_name}
+                        </p>
+                        <p className="card-text font-weight-bold text-danger">
+                          {`Rp. ` + item.price.toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="card-footer">
+                        <button
+                          className="btn btn-outline-secondary btn-block"
+                          onClick={() => {
+                            this.props.addToCart(item.id, cookie.get("idLogin"));
+                          }}
+                        >
+                          Add to Cart
+                        </button>
+                        <button className="btn btn-outline-dark btn-block">
+                          Detail Product
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </Slider>
+              <img
+                src={fantasy}
+                alt="buku"
+                className="home-category-image img-thumbnail"
+              />
+            </div>
+          </div>
+        </div>
+        </div>
+      );
+    }else{
+      swal({
+        title:'Choose your genre first!',
+        text:'You havent choose your genre, please choose it first to get recommended products!',
+        icon:'warning'
+      })
+      return <Redirect to="/profile" />
+    }
+  }else{
+    return <h1>Loading</h1>
+  }
+  
+}
+    return (
+      <div>
+      <nav className="navbar navbar-expand-lg" style={{backgroundColor:'#f5f5f5'}}>
   <div className="container">
           <div className="navbar-nav row w-100">
               <div className="col">
@@ -175,264 +472,16 @@ if(cookie.get('idLogin')){
           </div>
         </nav>
         {this.renderListCategory()}
-    <div className="container">
-      <div className="row promo py-5">
-        <Slider {...settingPromo}>
-          {this.state.images.map((item,index) => {
-      return (
-          <img className="d-block w-100" src={item} alt={`image` + index} />
-      );
-    })}
-        </Slider>
-        
-      </div>
-      <div className="row text-center py-5">
-        <div className="text-center mx-auto pb-2" style={{ width: "80%" }}>
-          <h3
-            style={{
-              fontFamily: "Verdana, Geneva, sans-serif",
-              textAlign: "center"
-            }}
-          >
-            Just For You, {cookie.get('stillLogin')} !
-          </h3>
-        </div>
-        <div className="d-flex w-100 left">
-          <img
-            src={recommended}
-            alt="buku"
-            className="home-category-image img-thumbnail"
-          />
-          <Slider {...settings}>
-            {this.state.products.map((item, index) => {
-              return (
-                <div className="card a">
-                  <Link to={`/detailproduct/${item.product_id}`}>
-                    <img
-                      className="card-img-top"
-                      src={item.image}
-                      alt={`image` + index}
-                    />
-                    <div className="card-body">
-                      <p className="card-title font-weight-bold">
-                        {item.product_name}
-                      </p>
-                      <p className="card-text text-secondary">
-                        {item.author_name}
-                      </p>
-                      <p className="card-text font-weight-bold text-danger">
-                        {`Rp. ` + item.price.toLocaleString()}
-                      </p>
-                    </div>
-                  </Link>
-                  <div className="card-footer">
-                    <button
-                      className="btn btn-outline-secondary btn-block"
-                      onClick={() => {
-                        this.props.addToCart(
-                          item.product_id,
-                          cookie.get("idLogin")
-                        );
-                      }}
-                    >
-                      Add to Cart
-                    </button>
-                    <button className="btn btn-outline-dark btn-block">
-                      Add to Wishlist
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </Slider>
-        </div>
-      </div>
-      <div className="row text-center py-5">
-        <div className="text-center mx-auto pb-2" style={{ width: "80%" }}>
-          <h3
-            style={{
-              fontFamily: "Verdana, Geneva, sans-serif",
-              textAlign: "center"
-            }}
-          >
-            Feels bored to read novel? here our best comics!
-          </h3>
-        </div>
-        <div className="d-flex w-100 right">
-
-        <Slider {...settings}>
-          {this.state.comics.map((item, index) => {
-            return (
-              <div className="card">
-                <img
-                  className="card-img-top"
-                  src={item.image}
-                  alt={`image` + index}
-                />
-                <div className="card-body">
-                  <p className="card-title font-weight-bold">
-                    {item.product_name}
-                  </p>
-                  <p className="card-text text-secondary">
-                    {item.author_name}
-                  </p>
-                  <p className="card-text font-weight-bold text-danger">
-                    {`Rp. ` + item.price.toLocaleString()}
-                  </p>
-                </div>
-                <div className="card-footer">
-                  <button
-                    className="btn btn-outline-secondary btn-block"
-                    onClick={() => {
-                      this.props.addToCart(item.id, cookie.get("idLogin"));
-                    }}
-                  >
-                    Add to Cart
-                  </button>
-                  <button className="btn btn-outline-dark btn-block">
-                    Add to Wishlist
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </Slider>
-        <img
-          src={recommended}
-          alt="buku"
-          className="home-category-image img-thumbnail"
-        />
-        </div>
-
-      </div>
-      <div className="row text-center py-5">
-        <div className="text-center mx-auto pb-2" style={{ width: "80%" }}>
-          <h3
-            style={{
-              fontFamily: "Verdana, Geneva, sans-serif",
-              textAlign: "center"
-            }}
-          >
-            Need Something Fresh?
-          </h3>
-        </div>
-        <div className="d-flex w-100 left">
-          <img
-            src={newArrival}
-            alt="buku"
-            className="home-category-image img-thumbnail"
-          />
-          <Slider {...settings}>
-            {this.state.new.map((item, index) => {
-              return (
-                <div className="card a">
-                  <img
-                    className="card-img-top"
-                    src={item.image}
-                    alt={`image` + index}
-                  />
-                  <div className="card-body">
-                    <p className="card-title font-weight-bold">
-                      {item.product_name}
-                    </p>
-                    <p className="card-text text-secondary">
-                      {item.author_name}
-                    </p>
-                    <p className="card-text font-weight-bold text-danger">
-                      {`Rp. ` + item.price.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="card-footer">
-                    <button
-                      className="btn btn-outline-secondary btn-block"
-                      onClick={() => {
-                        this.props.addToCart(item.id, cookie.get("idLogin"));
-                      }}
-                    >
-                      Add to Cart
-                    </button>
-                    <button className="btn btn-outline-dark btn-block">
-                      Detail Product
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </Slider>
-        </div>
-      </div>
-      <div className="row text-center py-5">
-        <div className="text-center mx-auto pb-2" style={{ width: "80%" }}>
-          <h3
-            style={{
-              fontFamily: "Verdana, Geneva, sans-serif",
-              textAlign: "center"
-            }}
-          >
-            You May Like It
-          </h3>
-        </div>
-        <div className="d-flex w-100 right">
-          <Slider {...settings}>
-            {this.state.thriller.map((item, index) => {
-              return (
-                <div className="card a">
-                  <img
-                    className="card-img-top"
-                    src={item.image}
-                    alt={`image` + index}
-                  />
-                  <div className="card-body">
-                    <p className="card-title font-weight-bold">
-                      {item.product_name}
-                    </p>
-                    <p className="card-text text-secondary">
-                      {item.author_name}
-                    </p>
-                    <p className="card-text font-weight-bold text-danger">
-                      {`Rp. ` + item.price.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="card-footer">
-                    <button
-                      className="btn btn-outline-secondary btn-block"
-                      onClick={() => {
-                        this.props.addToCart(item.id, cookie.get("idLogin"));
-                      }}
-                    >
-                      Add to Cart
-                    </button>
-                    <button className="btn btn-outline-dark btn-block">
-                      Detail Product
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </Slider>
-          <img
-            src={fantasy}
-            alt="buku"
-            className="home-category-image img-thumbnail"
-          />
-        </div>
-      </div>
-    </div>
-    </div>
-  );
-  
-}
-    return (
       <div className="container">
        <div className="row promo py-5">
+       <p className="text-center text-white lead font-weight-bold mx-auto" style={{background:'grey',fontSize:'35px',width:'80%'}}> Free delivery to where ever you are!</p>
         <Slider {...settingPromo}>
           {this.state.images.map((item,index) => {
       return (
           <img className="d-block w-100" src={item} alt={`image` + index} />
       );
     })}
-        </Slider>
-        
+        </Slider>   
       </div>
         <div className="row text-center py-5">
           <div className="text-center mx-auto pb-2" style={{width:'80%'}}>
@@ -537,7 +586,7 @@ if(cookie.get('idLogin')){
   })}
           </Slider>
           <img
-            src={newArrival}
+            src={comicbook}
             alt="buku"
             className="home-category-image img-thumbnail"
           />
@@ -586,6 +635,7 @@ if(cookie.get('idLogin')){
         </div>
   
         </div>
+      </div>
       </div>
     );
   }

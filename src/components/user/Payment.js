@@ -108,7 +108,7 @@ class Payment extends Component {
           Swal({
             title: "Payment Failed",
             icon: "error",
-            text: "halo"
+            text: err.response.data
           });
       });
         

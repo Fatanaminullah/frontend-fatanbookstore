@@ -135,7 +135,7 @@ class Header extends Component {
         this.props.Logout()
     }
     profilePicture = () => {
-      if (cookie.get('avatar') !== null) {
+      if (!cookie.get('avatar').includes('null')) {
         return (
           <img
             src={cookie.get('avatar')}
@@ -149,6 +149,7 @@ class Header extends Component {
         <img
           src={image}
           alt="avatar"
+          style={{width:'50px'}}
           key={new Date()}
           className="rounded-circle float-left"
         />
@@ -158,24 +159,45 @@ class Header extends Component {
     notification = () => {
       if(cookie.get('role') == 1){
         return this.state.notification.map(item => {
-          return(
-            <div className="card w-80 my-1" style={{height:'110px'}}>
-              <div className="card-horizontal">
-                <img src={item.payment_confirm} className="img-thumbnail" style={{width:'25%'}} onClick={() => {this.confirmImage(item.payment_confirm,item.id)}} role="button" />
-                <div className="card-body p-0">
-                  <p className="ml-1 my-1"> {item.username} has finished payment confirmation! </p>
-                  <p className="ml-1 mb-1"> Order Code : {item.order_code} </p>
-                  <p className="ml-1 mb-1"> Order Date : {item.order_date.split('T')[0]} </p>
-                  <div className="d-flex justify-content-between">
-                  <p className="ml-1 mb-1"> Transfer to : {item.bank_name} </p>
-                  <Link to="/manageuser" >
-                  <i className="fas fa-external-link-alt mr-2 text-secondary"></i>
-                  </Link>
+          if(item.order_status === 2){
+            return(
+              <div className="card w-80 my-1" style={{height:'110px'}}>
+                <div className="card-horizontal">
+                  <img src={item.payment_confirm} className="img-thumbnail" style={{width:'25%'}} onClick={() => {this.confirmImage(item.payment_confirm,item.id)}} role="button" />
+                  <div className="card-body p-0">
+                    <p className="ml-1 my-1"> {item.username} has finished payment confirmation! </p>
+                    <p className="ml-1 mb-1"> Order Code : {item.order_code} </p>
+                    <p className="ml-1 mb-1"> Order Date : {item.order_date.split('T')[0]} </p>
+                    <div className="d-flex justify-content-between">
+                    <p className="ml-1 mb-1"> Transfer to : {item.bank_name} </p>
+                    <Link to="/manageuser" >
+                    <i className="fas fa-external-link-alt mr-2 text-secondary"></i>
+                    </Link>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )
+            )
+          }else{
+            return(
+              <div className="card w-80 my-1" style={{height:'110px'}}>
+                <div className="card-horizontal">
+                  <img src={success} className="img-thumbnail" style={{width:'25%'}}  />
+                  <div className="card-body p-0">
+                    <p className="ml-1 my-1"> {item.username} order has delivered! </p>
+                    <p className="ml-1 mb-1"> Order Code : {item.order_code} </p>
+                    <p className="ml-1 mb-1"> Order Date : {item.order_date.split('T')[0]} </p>
+                    <div className="d-flex justify-content-between">
+                    <p className="ml-1 mb-1"> Transfer to : {item.bank_name} </p>
+                    <Link to="/manageuser" >
+                    <i className="fas fa-external-link-alt mr-2 text-secondary"></i>
+                    </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          }
         })
       }else if(cookie.get('role') == 2){
         if(cookie.get('notification').length !== 0){
@@ -289,7 +311,7 @@ class Header extends Component {
       return (
         <div>
           {/* <Redirect to="/admin/dashboard" /> */}
-            {/* <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} /> */}
+          {/* <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} /> */}
           <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-3">
             <div className="container">
               <Link className="navbar-brand" to="/">
@@ -308,40 +330,47 @@ class Header extends Component {
                 id="navbarNav2"
               >
                 <ul className="navbar-nav col-12">
-                  <li className="nav-item m-2 ml-auto">
-
-                  </li>
+                  <li className="nav-item m-2 ml-auto" />
                   <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
                     <Link
                       className="nav-link"
                       to="/admin/dashboard"
                       data-toggle="dropdown"
                     >
-                      <i class="fas fa-bell fa-2x text-secondary"></i>
-                      <span className='badge badge-warning' id='lblCartCount'>{this.state.notification.length}</span>
+                      <i class="fas fa-bell fa-2x text-secondary" />
+                      <span
+                        className="badge badge-warning"
+                        id="lblCartCount"
+                      >
+                        {this.state.notification.length}
+                      </span>
                     </Link>
                     <div className="dropdown-menu notification">
-                      <div className="mx-auto card" style={{width:'400px'}}>
+                      <div
+                        className="mx-auto card"
+                        style={{ width: "400px" }}
+                      >
                         <div className="card-header text-center py-1">
                           <div className="card-title text-dark font-weight-bold">
                             <p>Notification</p>
                           </div>
                         </div>
-                        <div className="card-body">
+                        <div
+                          className="card-body"
+                          style={{
+                            overflowY: "scroll",
+                            height: "400px"
+                          }}
+                        >
                           {this.notification()}
                         </div>
                       </div>
                     </div>
-                    
                   </li>
                   <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
-                    <Link
-                      className="nav-link"
-                      to="/admin/dashboard"
-                    >
+                    <Link className="nav-link" to="/admin/dashboard">
                       <i className="fas fa-home fa-2x text-secondary" />
                     </Link>
-                    
                   </li>
                   <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
                     <Link
@@ -351,10 +380,12 @@ class Header extends Component {
                     >
                       <i className="fas fa-user fa-2x text-secondary" />
                     </Link>
-                      <div className="dropdown-menu form-wrapper">
+                    <div className="dropdown-menu form-wrapper">
                       <div className="mx-auto card">
                         <div className="card-body">
-                          <p className="lead text-center">Halo admin {username} !</p>
+                          <p className="lead text-center">
+                            Halo admin {username} !
+                          </p>
                           <button
                             className="btn btn-secondary btn-block mt-5"
                             onClick={this.logout}
@@ -427,8 +458,16 @@ class Header extends Component {
                               <p>Notification</p>
                             </div>
                           </div>
-                          <div className="card-body">
+                          <div className="card-body" style={{
+                            overflowY: "scroll",
+                            height: "400px"
+                          }}>
                             {this.notification()}
+                          </div>
+                          <div className="card-footer text-center">
+                            <p>
+                              <Link to="/notification" className="text-dark"> See All Order Notification </Link>
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -507,7 +546,7 @@ class Header extends Component {
     }else{
       return (
         <div>
-          <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-3">
+          <nav className="navbar navbar-expand-md navbar-dark bg-dark">
             <div className="container">
               <Link className="navbar-brand" to="/">
                 FATANONLINEBOOKSTORE
@@ -544,10 +583,10 @@ class Header extends Component {
                     <i className="fas fa-user fa-2x text-secondary" />
                     <div className="dropdown-menu form-wrapper">
                       <Link to="/login" className="text-center text-dark">
-                        <p className="font-weight-bold lead my-2">Login</p>
+                        <p className="font-weight-bold lead my-2"><i class="fas fa-sign-in-alt"></i>  Login</p>
                       </Link>
                       <Link to="/register" className="text-center text-dark">
-                        <p className="font-weight-bold lead my-2">Register</p>
+                        <p className="font-weight-bold lead my-2"><i class="fas fa-address-card"></i>  Register</p>
                       </Link>
                     </div>
                   </li>

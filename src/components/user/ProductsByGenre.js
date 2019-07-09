@@ -123,10 +123,10 @@ class ProductsByGenre extends Component {
                     <div className="col-3">
                         <p>
                             <select ref={input => this.sorting = input} className="form-control" onClick={this.sortProduct}>
-                                <option ref={input => this.namaAsc = input} value="namaAsc" className="text-center" onClick={this.sortProduct}>Name &uarr;</option>
-                                <option ref={input => this.namaDesc = input} value="namaDesc" className="text-center" onClick={this.sortProduct}>Name &darr;</option>
-                                <option ref={input => this.priceAsc = input} value="priceAsc" className="text-center" onClick={this.sortProduct}>Price &uarr;</option>
-                                <option ref={input => this.priceDesc = input} value="priceDesc" className="text-center" onClick={this.sortProduct}>Price &darr;</option>
+                                <option ref={input => this.namaAsc = input} value="namaAsc" className="text-center" onClick={this.sortProduct}>Name Z - A</option>
+                                <option ref={input => this.namaDesc = input} value="namaDesc" className="text-center" onClick={this.sortProduct}>Name A - Z</option>
+                                <option ref={input => this.priceAsc = input} value="priceAsc" className="text-center" onClick={this.sortProduct}>Price Low - High</option>
+                                <option ref={input => this.priceDesc = input} value="priceDesc" className="text-center" onClick={this.sortProduct}>Price High - Low</option>
                                 {/* <option ref={input => this.bestSeller = input} value="sale" className="text-center" onClick={this.sortProduct}>Best Seller</option> */}
                             </select>
                         </p>

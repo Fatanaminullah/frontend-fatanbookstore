@@ -47,7 +47,7 @@
 }
 
 .promo .slick-next:before{
-    color : white;
+    color : black;
     font-size: 50px;
 }
 
@@ -56,11 +56,12 @@
     font-size: 50px;
 }
 .promo .slick-next{
-    right: 30px
+    right: -25px
 }
 .promo .slick-prev{
-    left: 40px !important
+    left: -55px
 }
+
 .promo .slick-dots button::before{
     font-size: 20px
 }

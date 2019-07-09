@@ -39,10 +39,7 @@ class ManageUser extends Component {
 
   updateOrder = (id,orderstatus) => {
     const order_status = orderstatus + 1
-    console.log(order_status);
-    console.log(orderstatus);
     
-
     axios.patch(`/updateorder/${id}`,{
       order_status
     }).then(res => {
@@ -109,7 +106,7 @@ class ManageUser extends Component {
       ) 
     }else{
       return (
-        <div id="App">
+        <div id="App" style={{height:'1000px'}}>
           <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
           <div id="page-wrap">
             <div className="container">

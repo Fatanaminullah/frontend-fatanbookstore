@@ -59,6 +59,11 @@ class Profile extends Component {
           }
         }
       );
+      swal({
+        title:'Success',
+        text:'your profile picture has successfully updated',
+        icon:'success'
+      })
       this.getProfile(userid);
 
     } catch (e) {
