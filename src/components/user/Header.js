@@ -331,7 +331,7 @@ class Header extends Component {
               >
                 <ul className="navbar-nav col-12">
                   <li className="nav-item m-2 ml-auto" />
-                  <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
+                  <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2 pt-2">
                     <Link
                       className="nav-link"
                       to="/admin/dashboard"
@@ -367,33 +367,33 @@ class Header extends Component {
                       </div>
                     </div>
                   </li>
-                  <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2">
+                  <li className="nav-item m-1 mx-auto mx-lg-0 m-lg-2 pt-2">
                     <Link className="nav-link" to="/admin/dashboard">
-                      <i className="fas fa-home fa-2x text-secondary" />
+                      <i className="fas fa-home fa-2x text-secondary mt-auto" />
                     </Link>
                   </li>
                   <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
                     <Link
-                      className="nav-link"
+                      className="nav-link d-flex"
                       data-toggle="dropdown"
                       to="/"
                     >
-                      <i className="fas fa-user fa-2x text-secondary" />
-                    </Link>
-                    <div className="dropdown-menu form-wrapper">
-                      <div className="mx-auto card">
-                        <div className="card-body">
-                          <p className="lead text-center">
-                            Halo admin {username} !
-                          </p>
-                          <button
-                            className="btn btn-secondary btn-block mt-5"
-                            onClick={this.logout}
-                          >
-                            Logout
-                          </button>
-                        </div>
+                      <i className="fas fa-user fa-2x text-secondary my-auto" />
+                      <div className="d-flex flex-column text-left mx-2">
+                        <p className="text-center my-0">{username}</p>
+                        <p className="text-center my-0 mr-auto">Admin</p>
                       </div>
+                      <i class="fas fa-caret-down mb-auto" />
+                    </Link>
+                    <div className="arrow-up ml-auto mr-2 mb-0"  />
+                    <div className="dropdown-menu form-wrapper admin">
+                      <button
+                        className="btn btn-transparent btn-block text-white"
+                        onClick={this.logout}
+                      >
+                        <i class="fas fa-sign-out-alt" />
+                        Logout
+                      </button>
                     </div>
                   </li>
                 </ul>
@@ -451,7 +451,8 @@ class Header extends Component {
                         <i class="fas fa-bell fa-2x text-secondary"></i>
                         <span className='badge badge-warning' id='lblCartCount'>{cookie.get('notification').length}</span>
                       </Link>
-                      <div className="dropdown-menu notification">
+                      {/* <div className="arrow-up user ml-auto mr-2 mb-0"  /> */}
+                      <div className="dropdown-menu notification py-0">
                         <div className="mx-auto card" style={{width:'400px'}}>
                           <div className="card-header text-center py-1">
                             <div className="card-title text-dark font-weight-bold">
@@ -475,8 +476,9 @@ class Header extends Component {
                     </li>
                     <li className="nav-item dropdown mx-auto mx-lg-0 my-auto">
                       <i className="fas fa-user fa-2x text-secondary" />
-                      <div className="dropdown-menu form-wrapper">
-                        <div className="card">
+                      {/* <div className="arrow-up user ml-auto mr-2 mb-0"  /> */}
+                      <div className="dropdown-menu form-wrapper mt-0 py-0">
+                        <div className="card mt-0">
                           <div className="d-flex justify-content-between card-header">
                             {this.profilePicture()}
                             <p

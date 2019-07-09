@@ -3,6 +3,7 @@ import axios from "../../config/axios";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import cookies from 'universal-cookie'
+import { MDBDataTable } from 'mdbreact';
 
 import Sidebar from "./Sidebar";
 import "../style.css";
@@ -96,6 +97,7 @@ class ManageUser extends Component {
       }
     )
   }
+  
  
   render() {
     var userCookie = cookie.get("stillLogin");
@@ -106,10 +108,15 @@ class ManageUser extends Component {
       ) 
     }else{
       return (
-        <div id="App" style={{height:'1000px'}}>
+        <div id="App">
           <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
           <div id="page-wrap">
-            <div className="container">
+            <div className="container" style={{
+              overflowY: "scroll",
+              overflowX: "auto",
+              height: "700px"
+            }}
+            >
               <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item">
                   <a
