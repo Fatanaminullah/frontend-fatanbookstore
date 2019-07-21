@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import cookies from "universal-cookie";
 import { MDBDataTable } from "mdbreact";
-import BootstrapSwitchButton from "bootstrap-switch-button-react";
+import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 import Sidebar from "./Sidebar";
 import "../style.css";

@@ -95,7 +95,7 @@ export const onLoginAdmin = (username, password) => {
           });
         },
         err => {
-          console.log(err);
+          console.log(err.response);
           dispatch({
             type: "AUTH_ERROR",
             payload: "Username or Password incorrect"
