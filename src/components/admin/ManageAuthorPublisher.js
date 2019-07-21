@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import axios from "../../config/axios";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import cookies from "universal-cookie";
@@ -24,19 +24,19 @@ class ManageAuthorPublisher extends Component {
   }
 
   getAuthor = () => {
-    axios.get("http://localhost:2000/author").then(res => {
+    axios.get("/author").then(res => {
       this.setState({ author: res.data, selectedAuthor: 0 });
     });
   };
   getPublisher = () => {
-    axios.get("http://localhost:2000/publisher").then(res => {
+    axios.get("/publisher").then(res => {
       this.setState({ publisher: res.data, selectedPublisher: 0 });
     });
   };
   saveAuthor = id => {
     const author_name = this.editAuthor.value;
     axios
-      .patch(`http://localhost:2000/author/edit/${id}`, {
+      .patch(`/author/edit/${id}`, {
         author_name
       })
       .then(() => {
@@ -48,7 +48,7 @@ class ManageAuthorPublisher extends Component {
     console.log(publisher_name);
 
     axios
-      .patch(`http://localhost:2000/publisher/edit/${id}`, {
+      .patch(`/publisher/edit/${id}`, {
         publisher_name
       })
       .then(() => {
@@ -71,7 +71,7 @@ class ManageAuthorPublisher extends Component {
   };
   addAuthor = author_name => {
     axios
-      .post("http://localhost:2000/author/add", {
+      .post("/author/add", {
         author_name
       })
       .then(res => {
@@ -85,7 +85,7 @@ class ManageAuthorPublisher extends Component {
   };
   addPublisher = publisher_name => {
     axios
-      .post("http://localhost:2000/publisher/add", {
+      .post("/publisher/add", {
         publisher_name
       })
       .then(res => {

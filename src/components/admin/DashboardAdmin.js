@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
-import axios from "axios";
+import axios from "../../config/axios";
 import cookies from "universal-cookie";
 import { onEdit } from '../../actions'
 
@@ -37,7 +37,7 @@ class DashboardAdmin extends Component {
 
     formData.append("avatar", imagefile.files[0]);
     try {
-      await axios.post(`http://localhost:2000/avatar/uploads/${userid}`, formData, {
+      await axios.post(`/avatar/uploads/${userid}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -55,7 +55,7 @@ class DashboardAdmin extends Component {
   getProfile = async (userid) => {        
     
     try {
-        const res = await axios.get(`http://localhost:2000/users/profile/${userid}`);
+        const res = await axios.get(`/users/profile/${userid}`);
         
         this.setState({
           data: res.data

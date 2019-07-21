@@ -35,7 +35,6 @@ class Home extends Component {
     this.getThrillerRecommended();
     this.getProductNew();
     this.getPromo();
-    this.getProvince();
     this.getGenre();
   }
   getGenre = async () => {
@@ -86,18 +85,6 @@ class Home extends Component {
     });
   };
 
-  getProvince = () => {
-    axios.get(`${'https://cors-anywhere.herokuapp.com/'}https://starter.rajaongkir.com/api/province`,{
-      headers:{
-        'key':'3ff51db00cb996364b49206f71d895a3',
-        
-      },
-      crossDomain: true
-    }).then(res => {
-      console.log(res);
-      
-    })
-  }
   listCategory = () => {
     return this.state.genre.map(item => {
       return(
@@ -628,7 +615,7 @@ if(cookie.get('idLogin')){
   })}
           </Slider>
           <img
-            src={newArrival}
+            src={fantasy}
             alt="buku"
             className="home-category-image img-thumbnail"
           />

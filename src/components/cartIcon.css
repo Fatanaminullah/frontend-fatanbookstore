@@ -30,19 +30,23 @@ img.rounded-circle.avatar{
 .dropdown-item:hover {
     color: white;
     background-color: #dc3545;
+    cursor: pointer;
 }
 
-.dropdown:hover>.dropdown-menu {
+.dropdown:hover>.dropdown-menu.form-wrapper.notlogin    {
     display: block;
 }
-.dropdown:hover>.arrow-up {
-    display: block;
-}
-.dropdown-menu.form-wrapper{
+
+.dropdown-menu.form-wrapper.user{
     width: 250px;
     left: -50px;
     border: 0px;
     top:57px;
+}
+.dropdown-menu.form-wrapper.notlogin{
+    width: 250px;
+    left: -50px;
+    border: 0px;
 }
 .dropdown-menu.form-wrapper.admin{
     width: 250px;
@@ -53,6 +57,7 @@ img.rounded-circle.avatar{
 }
 .dropdown-menu.notification{
     width: 400px;
+    height: 400px;
     left: -200px;
     transition: all 2s ;
     top:63px;
@@ -71,7 +76,8 @@ img.rounded-circle.avatar{
 .fa-heart:hover{
     color: white !important
 }
-.fa-shopping-cart:hover{
+.fa-shopping-cart:hover,
+.fa-bell:hover{
     color: white !important
 }
 .fa-user:hover{

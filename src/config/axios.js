@@ -1,5 +1,5 @@
 import axios from 'axios'
 
 export default axios.create({
-    baseURL: 'http://localhost:2000'
+    baseURL: 'https://fatanbookstore-api.herokuapp.com'
 })

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import axios from "../../config/axios";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import cookies from "universal-cookie";
@@ -30,12 +30,12 @@ class ManageGenre extends Component {
     this.getGenreusers();
   }
   getProduct = async () => {
-    await axios.get("http://localhost:2000/products").then(res => {
+    await axios.get("/products").then(res => {
       this.setState({ products: res.data });
     });
   };
   getGenre = async () => {
-    await axios.get("http://localhost:2000/genre").then(res => {
+    await axios.get("/genre").then(res => {
       this.setState({
         genre: res.data,
         genreSearch: res.data,
@@ -45,7 +45,7 @@ class ManageGenre extends Component {
     });
   };
   getGenreproduct = async () => {
-    await axios.get("http://localhost:2000/genreproducts").then(res => {
+    await axios.get("/genreproducts").then(res => {
       this.setState({
         genreProduct: res.data,
         genreProductSearch: res.data,
@@ -54,7 +54,7 @@ class ManageGenre extends Component {
     });
   };
   getGenreusers = async () => {
-    await axios.get("http://localhost:2000/genreusers").then(res => {
+    await axios.get("/genreusers").then(res => {
       this.setState({
         genreUser: res.data,
         genreUserSearch: res.data,
@@ -72,7 +72,7 @@ class ManageGenre extends Component {
 
     try {
       await axios
-        .patch(`http://localhost:2000/genre/edit/${id}`, formData, {
+        .patch(`/genre/edit/${id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data"
           }
@@ -92,7 +92,7 @@ class ManageGenre extends Component {
     console.log(productId);
     console.log(genreId);
     axios
-      .patch(`http://localhost:2000/genreproducts/edit/${id}`, {
+      .patch(`/genreproducts/edit/${id}`, {
         product_id: productId,
         genre_id: genreId
       })
@@ -115,7 +115,7 @@ class ManageGenre extends Component {
 
 
     axios
-      .post("http://localhost:2000/genre/add", formData, {
+      .post("/genre/add", formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }}
@@ -129,7 +129,7 @@ class ManageGenre extends Component {
   };
   addGenreProduct = (product_id, genre_id) => {
     axios
-      .post(`http://localhost:2000/product/addgenre`, {
+      .post(`/product/addgenre`, {
         product_id,
         genre_id
       })

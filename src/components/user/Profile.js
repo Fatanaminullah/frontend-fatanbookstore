@@ -132,7 +132,7 @@ class Profile extends Component {
         edit:!this.state.edit
       })
     },err => {
-      console.log(err.message);
+      console.log(err.response);
       
     })
   }

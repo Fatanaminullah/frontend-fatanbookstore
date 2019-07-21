@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import axios from "axios";
+import axios from "../../config/axios"
 
 import { onRegister } from "../../actions";
 import { afterTwoSeconds } from "../../actions";
@@ -72,7 +72,7 @@ class Register extends Component {
   };
   getKodepos = async () => {
     try {
-      const res = await axios.get(`http://localhost:2000/kodepos`);
+      const res = await axios.get(`/kodepos`);
       this.setState({
         kodepos: res.data
       });
@@ -113,7 +113,7 @@ class Register extends Component {
         })
       }
       axios
-        .get(`http://localhost:2000/address/${id}` 
+        .get(`/address/${id}` 
         )
         .then(res => {
           console.log(res.data);

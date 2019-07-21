@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import axios from "../../config/axios";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import cookies from 'universal-cookie'
@@ -20,7 +20,7 @@ class ManageBank extends Component {
   }
 
   getBank = () => {
-    axios.get("http://localhost:2000/bank").then(res => {
+    axios.get("/bank").then(res => {
       this.setState({ bank: res.data, selectedAuthor: 0 });
     });
   };
@@ -29,7 +29,7 @@ class ManageBank extends Component {
       const kode_bank = this.editKodeBank.value
       const bank_name = this.editNamaBank.value
       const no_rek = this.editNoRek.value
-      axios.patch(`http://localhost:2000/bank/edit/${id}`, {
+      axios.patch(`/bank/edit/${id}`, {
           kode_bank,bank_name,no_rek
       }).then(() => {
           this.getBank()
@@ -49,7 +49,7 @@ class ManageBank extends Component {
   }
   
   addBank = (kode_bank,bank_name,no_rek) => {
-    axios.post("http://localhost:2000/bank/add", {
+    axios.post("/bank/add", {
       kode_bank,bank_name,no_rek
     }).then(res => {
       console.log(res);

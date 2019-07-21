@@ -184,7 +184,7 @@ export const keepLogin = (username, id, role,quantity,notification) => {
 export const onEdit = (id,firstname, lastname, username,birthday,address,email) => {
   return async dispatch => {
     try {
-      const res = await axios.patch(`http://localhost:2000/users/${id}`, {
+      const res = await axios.patch(`/users/${id}`, {
         firstname, lastname, username,birthday,address,email
       });
       console.log(res.data[0].id);

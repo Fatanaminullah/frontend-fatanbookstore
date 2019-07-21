@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
-import axios from "axios";
+import axios from "../../config/axios"
 import cookies from "universal-cookie";
 import {Link} from 'react-router-dom'
 
@@ -28,7 +28,7 @@ class AddressContact extends Component {
   };
   getKodepos = async () => {
     try {
-      const res = await axios.get(`http://localhost:2000/kodepos`);
+      const res = await axios.get(`/kodepos`);
       this.setState({
         kodepos: res.data
       });
@@ -39,7 +39,7 @@ class AddressContact extends Component {
   };
   getProvinsi = async () => {
     try {
-      const res = await axios.get(`http://localhost:2000/province`);
+      const res = await axios.get(`/province`);
       this.setState({
         provinsi: res.data
       });
@@ -105,7 +105,7 @@ class AddressContact extends Component {
     const kelurahan = this.kelurahan.value;
     
     try {
-      const res = await axios.get(`http://localhost:2000/kodepos/${kelurahan}`);
+      const res = await axios.get(`/kodepos/${kelurahan}`);
       this.setState({
         filterKodepos: res.data
       });
@@ -118,7 +118,7 @@ class AddressContact extends Component {
     const provinsi = this.provinsi.value;
 
     try {
-      const res = await axios.get(`http://localhost:2000/kabupaten/${provinsi}`);
+      const res = await axios.get(`/kabupaten/${provinsi}`);
       this.setState({
         kabupaten: res.data
       });
@@ -131,7 +131,7 @@ class AddressContact extends Component {
     const kabupaten = this.kabupaten.value;
 
     try {
-      const res = await axios.get(`http://localhost:2000/kecamatan/${kabupaten}`);
+      const res = await axios.get(`/kecamatan/${kabupaten}`);
       this.setState({
         kecamatan: res.data
       });
@@ -145,7 +145,7 @@ class AddressContact extends Component {
     
     
     try {
-      const res = await axios.get(`http://localhost:2000/kelurahan/${kecamatan}`);
+      const res = await axios.get(`/kelurahan/${kecamatan}`);
       console.log(res.data);
       this.setState({
         kelurahan: res.data
@@ -168,7 +168,7 @@ class AddressContact extends Component {
 
   onEdit = async (id,kodepos,address,phone_number) => {
       try{
-        const res = await axios.patch(`http://localhost:2000/users/${id}`, {
+        const res = await axios.patch(`/users/${id}`, {
           kodepos,address,phone_number
         });
         console.log(res.data);
@@ -189,7 +189,7 @@ class AddressContact extends Component {
   getAddress = async userid => {
     try {
       const res = await axios.get(
-        `http://localhost:2000/user/info/${userid}`
+        `/user/info/${userid}`
       );
 
       this.setState({

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import axios from 'axios';
+import axios from '../../config/axios';
 import {addToCart} from '../../actions'
 import cookies from "universal-cookie";
 import {connect} from 'react-redux'
@@ -16,7 +16,7 @@ class DetailProduct extends Component {
     componentDidMount() {
         const idproduct = parseInt(this.props.match.params.idproduct)
         
-        axios.get(`http://localhost:2000/product/genre/${idproduct}`)
+        axios.get(`/product/genre/${idproduct}`)
         .then(res => {
             this.setState({products: res.data.product, genre: res.data.result2})
         })

@@ -57,7 +57,7 @@ class ManageProduct extends Component {
     formData.append("promo_status", promo_status);
     try {
       const res = await axios.post(
-        `http://localhost:2000/promo/add`,
+        `/promo/add`,
         formData,
         {
           headers: {
@@ -74,7 +74,7 @@ class ManageProduct extends Component {
     this.setState({ selectedPromo: id });
   };
   getProduct = async () => {
-    await axios.get("http://localhost:2000/products").then(res => {
+    await axios.get("/products").then(res => {
       this.setState({
         product: res.data,
         productSearch: res.data,
@@ -83,12 +83,12 @@ class ManageProduct extends Component {
     });
   };
   getAuthor = () => {
-    axios.get("http://localhost:2000/author").then(res => {
+    axios.get("/author").then(res => {
       this.setState({ author: res.data });
     });
   };
   getPublisher = () => {
-    axios.get("http://localhost:2000/publisher").then(res => {
+    axios.get("/publisher").then(res => {
       this.setState({ publisher: res.data });
     });
   };
@@ -119,7 +119,7 @@ class ManageProduct extends Component {
     formData.append("publisher", publisher);
 
     try {
-      await axios.patch(`http://localhost:2000/products/edit/${id}`, formData, {
+      await axios.patch(`/products/edit/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -152,7 +152,7 @@ class ManageProduct extends Component {
     formData.append("promo_status", promo_status);
     try {
       const res = await axios.patch(
-        `http://localhost:2000/promo/edit/${id}`,
+        `/promo/edit/${id}`,
         formData,
         {
           headers: {
@@ -189,7 +189,7 @@ class ManageProduct extends Component {
     formData.append("synopsis", synopsis);
     try {
       const res = await axios.post(
-        `http://localhost:2000/products/add`,
+        `/products/add`,
         formData,
         {
           headers: {

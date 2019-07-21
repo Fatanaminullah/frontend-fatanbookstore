@@ -345,10 +345,10 @@ class Header extends Component {
                         {this.state.notification.length}
                       </span>
                     </Link>
-                    <div className="dropdown-menu notification">
+                    <div className="dropdown-menu notification py-0">
                       <div
                         className="mx-auto card"
-                        style={{ width: "400px" }}
+                        style={{ width: "100%" }}
                       >
                         <div className="card-header text-center py-1">
                           <div className="card-title text-dark font-weight-bold">
@@ -359,7 +359,7 @@ class Header extends Component {
                           className="card-body"
                           style={{
                             overflowY: "scroll",
-                            height: "400px"
+                            height: "100%"
                           }}
                         >
                           {this.notification()}
@@ -385,7 +385,6 @@ class Header extends Component {
                       </div>
                       <i class="fas fa-caret-down mb-auto" />
                     </Link>
-                    <div className="arrow-up ml-auto mr-2 mb-0"  />
                     <div className="dropdown-menu form-wrapper admin">
                       <button
                         className="btn btn-transparent btn-block text-white"
@@ -445,13 +444,12 @@ class Header extends Component {
                     <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
                       <Link
                         className="nav-link"
-                        to="/admin/dashboard"
+                        to="/"
                         data-toggle="dropdown"
                       >
                         <i class="fas fa-bell fa-2x text-secondary"></i>
                         <span className='badge badge-warning' id='lblCartCount'>{cookie.get('notification').length}</span>
                       </Link>
-                      {/* <div className="arrow-up user ml-auto mr-2 mb-0"  /> */}
                       <div className="dropdown-menu notification py-0">
                         <div className="mx-auto card" style={{width:'400px'}}>
                           <div className="card-header text-center py-1">
@@ -475,9 +473,15 @@ class Header extends Component {
                       
                     </li>
                     <li className="nav-item dropdown mx-auto mx-lg-0 my-auto">
-                      <i className="fas fa-user fa-2x text-secondary" />
-                      {/* <div className="arrow-up user ml-auto mr-2 mb-0"  /> */}
-                      <div className="dropdown-menu form-wrapper mt-0 py-0">
+                    <Link
+                        className="nav-link"
+                        to="/"
+                        data-toggle="dropdown"
+                      >
+                       <i className="fas fa-user fa-2x text-secondary" />
+                      </Link>
+                      
+                      <div className="dropdown-menu form-wrapper user mt-0 py-0">
                         <div className="card mt-0">
                           <div className="d-flex justify-content-between card-header">
                             {this.profilePicture()}
@@ -583,12 +587,12 @@ class Header extends Component {
                   </li>
                   <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
                     <i className="fas fa-user fa-2x text-secondary" />
-                    <div className="dropdown-menu form-wrapper">
-                      <Link to="/login" className="text-center text-dark">
-                        <p className="font-weight-bold lead my-2"><i class="fas fa-sign-in-alt"></i>  Login</p>
+                    <div className="dropdown-menu form-wrapper notlogin bg-secondary">
+                      <Link to="/login" className="text-center text-white">
+                        <p className="font-weight-bold lead my-2"><i className="fas fa-sign-in-alt"></i>  Login</p>
                       </Link>
-                      <Link to="/register" className="text-center text-dark">
-                        <p className="font-weight-bold lead my-2"><i class="fas fa-address-card"></i>  Register</p>
+                      <Link to="/register" className="text-center text-white">
+                        <p className="font-weight-bold lead my-2"><i className ="fas fa-address-card"></i>  Register</p>
                       </Link>
                     </div>
                   </li>
@@ -613,7 +617,7 @@ class Header extends Component {
 }
 
 const mapStateToProps = state => {
-  return { user: state.auth,error : state.auth.error, empty: state.auth.empty, quantity:state.auth.quantity, notification:state.auth.notification };
+  return { user: state.auth ,error : state.auth.error, empty: state.auth.empty, quantity:state.auth.quantity, notification:state.auth.notification };
 };
 
 export default connect(
