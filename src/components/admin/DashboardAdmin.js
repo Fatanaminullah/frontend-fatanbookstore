@@ -4,6 +4,8 @@ import {connect} from 'react-redux'
 import axios from "../../config/axios";
 import cookies from "universal-cookie";
 import { onEdit } from '../../actions'
+import swal from 'sweetalert'
+
 
 
 import Sidebar from "./Sidebar";
@@ -18,7 +20,8 @@ var moment = require('moment');
 class DashboardAdmin extends Component {
   state = {
     edit: true,
-    data:undefined
+    data:undefined,
+    photo:undefined
   };
   saveProfile = async id => {
     const firstname = this.firstname.value;
@@ -43,6 +46,12 @@ class DashboardAdmin extends Component {
         }
       });
       this.getProfile(userid)
+      swal({
+        title:'Upload Photo Success!',
+        text:'Your profile picture successfully changed!',
+        icon:'success'
+      })
+      
     } catch (e) {
       console.log("upload gagal"+e);
     }
@@ -52,13 +61,20 @@ class DashboardAdmin extends Component {
     const userid = cookie.get('idLogin')
     this.getProfile(userid);
 }
+handleChange = event => {
+  this.setState({
+    photo : URL.createObjectURL(event.target.files[0])
+  })
+}
   getProfile = async (userid) => {        
     
     try {
         const res = await axios.get(`/users/profile/${userid}`);
+        console.log(res.data);
         
         this.setState({
-          data: res.data
+          data: res.data,
+          photo:res.data.photo
         });
         
     } catch (e) {
@@ -199,14 +215,14 @@ class DashboardAdmin extends Component {
             <div id="page-wrap">
               <h1>Profile Admin</h1>
               <div className="container">
-              <div class="row">
-                <div class="col-md-3 col-sm-12">
-                  <div class="card ml-5" style={{width:'235px'}}>
-                    <div class="card-header">
-                      <p class="lead text-center">Profile Picture</p>
+              <div className="row">
+                <div className="col-md-3 col-sm-12">
+                  <div className="card ml-5" style={{width:'235px'}}>
+                    <div className="card-header">
+                      <p className="lead text-center">Profile Picture</p>
                     </div>
                     <img
-                      src={this.state.data.photo} alt={this.state.data.user.username} key={new Date()} className="card-img-top"
+                      src={this.state.photo} alt={this.state.data.user.username} key={new Date()} className="card-img-top" style={{height:'250px'}}
                     />
                     <div class="card-body">
                       <div className="custom-file">
@@ -215,6 +231,7 @@ class DashboardAdmin extends Component {
                           id="myfile"
                           ref={input => (this.gambar = input)}
                           className="custom-file-input"
+                          onChange={this.handleChange}
                         />
                         <label className="custom-file-label" for="myfile">choose your file here</label>
                       </div>
