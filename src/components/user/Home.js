@@ -544,8 +544,10 @@ if(cookie.get('idLogin')){
                       Add to Cart
                     </button>
                     <button className="btn btn-outline-dark btn-block">
+                    <Link to={`/detailproduct/${item.id}`}>
                       Detail Product
-                    </button>
+                      </Link>
+                      </button>
                   </div>
                 </div>
               );
@@ -591,7 +593,9 @@ if(cookie.get('idLogin')){
                   </button>
                   <Link to={`/detailproduct/${item.id}`}>
                     <button className="btn btn-outline-dark btn-block">
+                    <Link to={`/detailproduct/${item.id}`}>
                       Detail Product
+                      </Link>
                     </button>
                   </Link>
                 </div>

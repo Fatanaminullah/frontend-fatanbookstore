@@ -26,14 +26,14 @@ class DetailProduct extends Component {
         const {products} = this.state
         
         return (
-          <div className="container">
+          <div className="container mt-5">
             <div className="card">
               <div className="card-header bg-warning">
                 <p className="lead text-center">Book's Detail</p>
               </div>
               <div className="card-body">
                 <div className="row">
-                  <div className="col-md-8 col-sm-12">
+                  <div className="col-md-8 col-sm-12 order-2 order-md-1">
                     <ul className="list-group mt-3">
                       <li className="list-group-item pl-3">{`Title: ${
                         products.product_name
@@ -57,7 +57,7 @@ class DetailProduct extends Component {
                       }`}</li>
                     </ul>
                   </div>
-                  <div className="col-md-4 col-sm-12">
+                  <div className="col-md-4 col-sm-12 order-md-2">
                     <img
                       src={products.image}
                       alt={products.product_name}
