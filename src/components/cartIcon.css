@@ -82,6 +82,8 @@ img.rounded-circle.avatar{
     top: 77px;
     background: #868e96;
     border: 0px;
+    z-index: 1;
+    position: absolute;
 }
 
 @media screen and (max-width: 480px){

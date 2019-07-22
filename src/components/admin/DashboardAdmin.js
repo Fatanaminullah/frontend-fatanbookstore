@@ -194,7 +194,7 @@ class DashboardAdmin extends Component {
     if(this.props.user.role === 1){
       if(this.state.data !== undefined){
         return (
-          <div id="App" style={{height:'700px '}}>
+          <div id="App" style={{height:'1000px '}}>
             <Sidebar pageWrapId={"page-wrap"} outerContainerId={"App"} />
             <div id="page-wrap">
               <h1>Profile Admin</h1>
