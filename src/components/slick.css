@@ -1,14 +1,5 @@
 /* carousel size */
-.slick-slider{
-    width: 80%;
-    height: 600px;
-    margin: auto;
 
-}
-.slick-slide{
-    height: 600px;
-    box-sizing: border-box;
-}
 
 .slick-slide img.card-img-top{
     height: 300px;
@@ -17,14 +8,27 @@
     padding-right:10px;
     padding-left:10px;
 }
-.home-category-image{
-    height: 560px;
-    width: 20%
-}
-/* arrow carousel */
+@media screen and (min-width: 480px){
+    .home-category-image{
+        height: 560px;
+        width: 20%
+    }
+    /* carousel size */
+    .slick-slider{
+        width: 80%;
+        height: 600px;
+        margin: auto;
+    
+    }
+    .slick-slide{
+        height: 600px;
+        box-sizing: border-box;
+    }
+    /* arrow carousel */
 .slick-slide .card .card-body{
     height: 150px;
 }
+
 .d-flex.right .slick-prev:before{
     color: black;
     font-size: 40px;
@@ -70,8 +74,91 @@
     bottom: 5px;
 }
 
+.promo-tagline{
+    background: grey;
+    font-size: 35px;
+    width: 80%
+}
+}
+@media screen and (max-width: 480px){
+    .home-category-image{
+        display: none;
+    }
+    /* carousel size */
+    .slick-slider{
+        width: 80%;
+        height: auto;
+        margin: auto;
+    
+    }
+    .slick-slide{
+        height: auto;
+        box-sizing: border-box;
+    }
+    /* arrow carousel */
+.slick-slide .card .card-body{
+    height: 150px;
+}
+.d-flex.right .slick-prev:before{
+    color: black;
+    font-size: 25px;
+}
+.d-flex.right .slick-next:before{
+    color: black;
+    font-size: 25px;
+}
+.slick-prev{
+    left: -25px;
+}
+.d-flex.left .slick-next:before{
+    color: black;
+    font-size: 25px;
+}
+.d-flex.left .slick-prev:before{
+    color: black;
+    font-size: 25px;
+}
+.slick-next{
+    right: -25px;
+}
+
+.promo .slick-next:before{
+    color : black;
+    font-size: 30px;
+}
+
+.promo .slick-prev:before{
+    color :black;
+    font-size: 30px;
+}
+.promo .slick-next{
+    right: -20px
+}
+.promo .slick-prev{
+    left: -30px
+}
+
+.promo .slick-dots button::before{
+    font-size: 10px
+}
+.promo .slick-dots{
+    bottom: -45px
+}
+.promo-tagline{
+    background: grey;
+    font-size: 15px;
+    width: 80%
+}
+
+
+}
+
+
 .list-category:hover{
     background-color: gray
 }
+
+
+
 
 

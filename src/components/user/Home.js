@@ -120,7 +120,34 @@ class Home extends Component {
       autoplay: true,
       infinite: true,
       slidesToShow: 4,
-      slidesToScroll: 1
+      slidesToScroll: 1,
+      responsive:[
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            infinite: true,
+            dots: true
+          }
+        },
+        {
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 1,
+            infinite: true
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            infinite: true
+          }
+        }
+      ]
 };
     const settingPromo = {
       autoplay:true,
@@ -430,10 +457,10 @@ if(cookie.get('idLogin')){
       <div>
       <nav className="navbar navbar-expand-lg" style={{backgroundColor:'#f5f5f5'}}>
   <div className="container">
-          <div className="navbar-nav row w-100">
-              <div className="col">
+          <div className="navbar-nav row w-100 m-1">
+              <div className="col-md-6 col-sm-12 text-center text-md-left">
                 <li className="nav-item">
-            <Link className="ml-5" to="/products">
+            <Link className="mr-md-5" to="/products">
               <span>
               <i class="far fa-list-alt" />
               </span>
@@ -443,7 +470,7 @@ if(cookie.get('idLogin')){
             </Link>
                 </li>
               </div>
-              <div className="col-auto">
+              <div className="col-md-6 col-sm-12 text-right">
                 <li className="nav-item">
             <button className="mr-5 btn btn-transparent" onClick={this.showCategory}>
               <span className="mr-1 align-content-center text-dark ">
@@ -461,7 +488,7 @@ if(cookie.get('idLogin')){
         {this.renderListCategory()}
       <div className="container">
        <div className="row promo py-5">
-       <p className="text-center text-white lead font-weight-bold mx-auto" style={{background:'grey',fontSize:'35px',width:'80%'}}> Free delivery to where ever you are!</p>
+       <p className="text-center text-white lead font-weight-bold mx-auto promo-tagline"> Free delivery to where ever you are!</p>
         <Slider {...settingPromo}>
           {this.state.images.map((item,index) => {
       return (
