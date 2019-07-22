@@ -470,7 +470,7 @@ if(cookie.get('idLogin')){
             </Link>
                 </li>
               </div>
-              <div className="col-md-6 col-sm-12 text-right">
+              <div className="col-md-6 col-sm-12 text-center text-md-right">
                 <li className="nav-item">
             <button className="mr-5 btn btn-transparent" onClick={this.showCategory}>
               <span className="mr-1 align-content-center text-dark ">

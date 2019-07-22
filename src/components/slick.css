@@ -82,11 +82,12 @@
 }
 @media screen and (max-width: 480px){
     .home-category-image{
-        display: none;
+        width: 45%;
+        height: auto;
     }
     /* carousel size */
     .slick-slider{
-        width: 80%;
+        width: 55%;
         height: auto;
         margin: auto;
     
