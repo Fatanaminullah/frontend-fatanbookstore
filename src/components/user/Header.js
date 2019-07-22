@@ -586,7 +586,13 @@ class Header extends Component {
                     </form>
                   </li>
                   <li className="nav-item dropdown m-1 mx-auto mx-lg-0 m-lg-2">
-                    <i className="fas fa-user fa-2x text-secondary" />
+                  <Link
+                        className="nav-link"
+                        to="/"
+                        data-toggle="dropdown"
+                      >
+                       <i className="fas fa-user fa-2x text-secondary" />
+                      </Link>
                     <div className="dropdown-menu form-wrapper notlogin bg-secondary">
                       <Link to="/login" className="text-center text-white">
                         <p className="font-weight-bold lead my-2"><i className="fas fa-sign-in-alt"></i>  Login</p>

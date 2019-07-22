@@ -44,20 +44,19 @@ export default class Footer extends Component {
         	<div className="col-md-2 footer-social animated fadeInDown">
             	<h4>Follow Us</h4>
             	<ul>
-                	<li><a href="#">Facebook</a></li>
-                	<li><a href="#">Twitter</a></li>
-                	<li><a href="#">Instagram</a></li>
-                	<li><a href="#">RSS</a></li>
+                	<li><i class="fab fa-facebook"></i> <a href="https://www.facebook.com/yudhantidl/">Facebook</a></li>
+                	<li><i class="fab fa-instagram"></i> <a href="https://www.instagram.com/fatanonlinebookstore/">Instagram</a></li>
+                	<li><i class="fab fa-whatsapp"></i> <a href="https://api.whatsapp.com/send?phone=628158141434&text=Halo,%20saya%20mau%20pesan%20buku">Whatsapp</a></li>
                 </ul>
             </div>
         	<div className="col-md-3 footer-ns animated fadeInRight">
-            	<h4>Newsletter</h4>
-                <p>A rover wearing a fuzzy suit doesn’t alarm the real penguins</p>
+            	<h4>Criticts and Suggestion</h4>
+                <p>Please let us now if you have Critics and Suggestion for our services!</p>
                 <p>
                     <div className="input-group">
-                      <input type="text" className="form-control" placeholder="Search for..." />
+                      <input type="textarea" className="form-control" placeholder="Write here..." />
                       <span className="input-group-btn">
-                        <button className="btn btn-default" type="button"><span className="glyphicon glyphicon-envelope"></span></button>
+                        <button className="btn btn-outline-light"> Send </button>
                       </span>
                     </div>
                  </p>
